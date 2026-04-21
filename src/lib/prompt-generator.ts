@@ -1,8 +1,11 @@
 import { Selection, generatePrompts as generatePromptsFromData } from "./data";
 
 export interface PromptResult {
+  title: string;
   english: string;
   chinese: string;
+  englishNegative: string;
+  chineseNegative: string;
   sections: PromptSection[];
 }
 
@@ -12,6 +15,40 @@ export interface PromptSection {
   value: string;
   valueEn: string;
 }
+
+const englishNegativeParts = [
+  "blurry",
+  "low resolution",
+  "distorted perspective",
+  "warped geometry",
+  "incorrect cabinet proportions",
+  "messy composition",
+  "oversaturated colors",
+  "underexposed scene",
+  "harsh shadows",
+  "duplicate furniture",
+  "people",
+  "text",
+  "watermark",
+  "logo",
+];
+
+const chineseNegativeParts = [
+  "模糊",
+  "低清晰度",
+  "透视错误",
+  "空间比例失真",
+  "柜体结构错误",
+  "构图杂乱",
+  "颜色过饱和",
+  "画面过暗",
+  "阴影生硬",
+  "家具重复",
+  "人物",
+  "文字",
+  "水印",
+  "Logo",
+];
 
 export const generatePrompts = (selection: Selection): PromptResult => {
   const { english, chinese } = generatePromptsFromData(selection);
@@ -30,16 +67,16 @@ export const generatePrompts = (selection: Selection): PromptResult => {
       valueEn: selection.space.nameEn,
     },
     {
-      label: "风格",
-      labelEn: "Style",
-      value: selection.style.name,
-      valueEn: selection.style.nameEn,
-    },
-    {
       label: "柜体",
       labelEn: "Cabinet",
       value: selection.cabinet.name,
       valueEn: selection.cabinet.nameEn,
+    },
+    {
+      label: "风格",
+      labelEn: "Style",
+      value: selection.style.name,
+      valueEn: selection.style.nameEn,
     },
     {
       label: "材质",
@@ -61,7 +98,16 @@ export const generatePrompts = (selection: Selection): PromptResult => {
     },
   ];
 
-  return { english, chinese, sections };
+  const title = `${selection.space.name} · ${selection.style.name} · ${selection.cabinet.name}`;
+
+  return {
+    title,
+    english,
+    chinese,
+    englishNegative: englishNegativeParts.join(", "),
+    chineseNegative: chineseNegativeParts.join("，"),
+    sections,
+  };
 };
 
 export const copyToClipboard = async (text: string): Promise<boolean> => {

@@ -1,7 +1,13 @@
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
 
-const SECRET_KEY = process.env.JWT_SECRET || "your-secret-key-change-in-production";
+const DEFAULT_SECRET = "your-secret-key-change-in-production";
+const SECRET_KEY = process.env.JWT_SECRET || DEFAULT_SECRET;
+
+if (process.env.NODE_ENV === "production" && SECRET_KEY === DEFAULT_SECRET) {
+  throw new Error("JWT_SECRET must be configured in production.");
+}
+
 const secret = new TextEncoder().encode(SECRET_KEY);
 
 export const hashPassword = async (password: string): Promise<string> => {

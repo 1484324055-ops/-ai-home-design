@@ -4,7 +4,9 @@ import { hashPassword } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, password } = await request.json();
+    const body = await request.json();
+    const username = typeof body.username === "string" ? body.username.trim() : "";
+    const password = typeof body.password === "string" ? body.password : "";
 
     if (!username || !password) {
       return NextResponse.json(
@@ -15,14 +17,28 @@ export async function POST(request: NextRequest) {
 
     if (username.length < 3 || username.length > 20) {
       return NextResponse.json(
-        { error: "用户名长度应为3-20个字符" },
+        { error: "用户名长度需要在 3 到 20 个字符之间" },
+        { status: 400 }
+      );
+    }
+
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+      return NextResponse.json(
+        { error: "用户名只能包含字母、数字、下划线或短横线" },
         { status: 400 }
       );
     }
 
     if (password.length < 6) {
       return NextResponse.json(
-        { error: "密码长度至少为6个字符" },
+        { error: "密码长度至少需要 6 位" },
+        { status: 400 }
+      );
+    }
+
+    if (password.length > 128) {
+      return NextResponse.json(
+        { error: "密码长度不能超过 128 位" },
         { status: 400 }
       );
     }
@@ -33,7 +49,7 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "用户名已存在" },
+        { error: "用户名已经存在" },
         { status: 409 }
       );
     }
