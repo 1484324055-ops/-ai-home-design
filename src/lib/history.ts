@@ -15,8 +15,6 @@ export interface HistoryRecord {
   title: string;
   englishPrompt: string;
   chinesePrompt: string;
-  englishNegative: string;
-  chineseNegative: string;
   spaceId: string;
   spaceName: string;
   cabinetId: string;
@@ -39,8 +37,6 @@ export interface HistoryPayload {
   title: string;
   englishPrompt: string;
   chinesePrompt: string;
-  englishNegative: string;
-  chineseNegative: string;
   spaceId: string;
   spaceName: string;
   cabinetId: string;
@@ -64,8 +60,6 @@ export const buildHistoryPayload = (
   title: promptResult.title,
   englishPrompt: promptResult.english,
   chinesePrompt: promptResult.chinese,
-  englishNegative: promptResult.englishNegative,
-  chineseNegative: promptResult.chineseNegative,
   spaceId: selection.space.id,
   spaceName: selection.space.name,
   cabinetId: selection.cabinet.id,
@@ -131,8 +125,6 @@ export const promptResultFromHistory = (record: HistoryRecord): PromptResult => 
   title: record.title,
   english: record.englishPrompt,
   chinese: record.chinesePrompt,
-  englishNegative: record.englishNegative,
-  chineseNegative: record.chineseNegative,
   sections: buildSectionsFromRecord(record),
 });
 

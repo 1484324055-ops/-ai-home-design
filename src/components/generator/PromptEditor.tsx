@@ -7,27 +7,17 @@ interface PromptEditorProps {
   promptResult: PromptResult | null;
 }
 
-type CopyTarget =
-  | ""
-  | "chinese"
-  | "english"
-  | "negativeChinese"
-  | "negativeEnglish"
-  | "bundle";
+type CopyTarget = "" | "chinese" | "english" | "bundle";
 
 export default function PromptEditor({ promptResult }: PromptEditorProps) {
   const [editedChinese, setEditedChinese] = useState("");
   const [editedEnglish, setEditedEnglish] = useState("");
-  const [editedChineseNegative, setEditedChineseNegative] = useState("");
-  const [editedEnglishNegative, setEditedEnglishNegative] = useState("");
   const [copySuccess, setCopySuccess] = useState<CopyTarget>("");
 
   useEffect(() => {
     if (promptResult) {
       setEditedChinese("");
       setEditedEnglish("");
-      setEditedChineseNegative("");
-      setEditedEnglishNegative("");
       setCopySuccess("");
     }
   }, [promptResult]);
@@ -59,8 +49,6 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
 
   const chinesePrompt = editedChinese || promptResult.chinese;
   const englishPrompt = editedEnglish || promptResult.english;
-  const chineseNegative = editedChineseNegative || promptResult.chineseNegative;
-  const englishNegative = editedEnglishNegative || promptResult.englishNegative;
 
   const copyWithFeedback = async (target: CopyTarget, text: string) => {
     const success = await copyToClipboard(text);
@@ -79,12 +67,6 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
       "",
       "英文提示词：",
       englishPrompt,
-      "",
-      "中文反向提示词：",
-      chineseNegative,
-      "",
-      "英文反向提示词：",
-      englishNegative,
     ].join("\n");
 
     await copyWithFeedback("bundle", bundle);
@@ -142,32 +124,24 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
               {promptResult.title}
             </h4>
             <p className="mt-2 text-sm text-[var(--foreground-secondary)]">
-              中文提示词现在会以英文提示词的结构为底稿重新译写，语气会比简单拼词更完整自然。
+              这里保留的是可直接用于生图的正向提示词，你可以复制后直接去外部平台继续出图。
             </p>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            {renderEditor("中文", "中文正向提示词（可编辑）", chinesePrompt, setEditedChinese, "中文提示词...")}
+            {renderEditor(
+              "中文",
+              "中文正向提示词（可编辑）",
+              chinesePrompt,
+              setEditedChinese,
+              "中文提示词..."
+            )}
             {renderEditor(
               "English",
               "English positive prompt (editable)",
               englishPrompt,
               setEditedEnglish,
               "English prompt..."
-            )}
-            {renderEditor(
-              "中文反向",
-              "中文反向提示词（可编辑）",
-              chineseNegative,
-              setEditedChineseNegative,
-              "中文反向提示词..."
-            )}
-            {renderEditor(
-              "Negative",
-              "English negative prompt (editable)",
-              englishNegative,
-              setEditedEnglishNegative,
-              "English negative prompt..."
             )}
           </div>
 
@@ -225,28 +199,6 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
           }`}
         >
           {copySuccess === "english" ? "已复制英文" : "复制英文提示词"}
-        </button>
-
-        <button
-          onClick={() => copyWithFeedback("negativeChinese", chineseNegative)}
-          className={`rounded-lg px-5 py-3 font-medium transition-all ${
-            copySuccess === "negativeChinese"
-              ? "bg-[var(--success)] text-white"
-              : "border border-[var(--border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)]"
-          }`}
-        >
-          {copySuccess === "negativeChinese" ? "已复制反向中文" : "复制中文反向提示词"}
-        </button>
-
-        <button
-          onClick={() => copyWithFeedback("negativeEnglish", englishNegative)}
-          className={`rounded-lg px-5 py-3 font-medium transition-all ${
-            copySuccess === "negativeEnglish"
-              ? "bg-[var(--success)] text-white"
-              : "border border-[var(--border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)]"
-          }`}
-        >
-          {copySuccess === "negativeEnglish" ? "已复制反向英文" : "复制英文反向提示词"}
         </button>
 
         <button
