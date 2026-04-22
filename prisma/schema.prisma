@@ -14,6 +14,7 @@ model User {
   createdAt       DateTime        @default(now())
   promptHistories PromptHistory[]
   feedbacks       Feedback[]
+  loginEvents     LoginEvent[]
 }
 
 model PromptHistory {
@@ -55,5 +56,16 @@ model Feedback {
   userId     Int
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, createdAt])
+}
+
+model LoginEvent {
+  id        Int      @id @default(autoincrement())
+  source    String?
+  createdAt DateTime @default(now())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
   @@index([userId, createdAt])
 }

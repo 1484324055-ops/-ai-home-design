@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 interface User {
   username: string;
+  isAdmin?: boolean;
 }
 
 interface AuthResponse {
@@ -35,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await fetch("/api/user");
       if (response.ok) {
         const data = await response.json();
-        setUser({ username: data.username });
+        setUser({ username: data.username, isAdmin: Boolean(data.isAdmin) });
       }
     } catch (error) {
       console.error("Auth check error:", error);
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (response.ok) {
-        setUser({ username: data.username });
+        setUser({ username: data.username, isAdmin: Boolean(data.isAdmin) });
         return { success: true, message: data.message };
       }
 

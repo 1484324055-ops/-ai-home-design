@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAuthenticatedUser } from "@/lib/session";
+import { sendFeedbackNotificationEmail } from "@/lib/feedback-email";
 
 const isMissingFeedbackTableError = (error: unknown) =>
   typeof error === "object" &&
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "联系方式太长了，精简一点就行。" }, { status: 400 });
     }
 
-    await prisma.feedback.create({
+    const feedback = await prisma.feedback.create({
       data: {
         content,
         contact: contact || null,
@@ -41,6 +42,18 @@ export async function POST(request: NextRequest) {
         userId: authUser.userId,
       },
     });
+
+    try {
+      await sendFeedbackNotificationEmail({
+        username: authUser.username,
+        content,
+        contact: contact || null,
+        source,
+        createdAt: feedback.createdAt,
+      });
+    } catch (error) {
+      console.error("Send feedback email error:", error);
+    }
 
     return NextResponse.json({ message: "反馈已收到，后续优化我会优先参考这类高频建议。" }, { status: 201 });
   } catch (error) {

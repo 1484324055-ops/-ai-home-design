@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyPassword, createToken } from "@/lib/auth";
+import { isAdminUsername } from "@/lib/admin";
 import { createMemoryRateLimiter, getClientIp } from "@/lib/rate-limit";
 
 const loginFailureLimiter = createMemoryRateLimiter("login-failure", {
@@ -18,6 +19,12 @@ const buildRateLimitResponse = (retryAfterSeconds: number) => {
   response.headers.set("Retry-After", String(retryAfterSeconds));
   return response;
 };
+
+const isMissingLoginEventTableError = (error: unknown) =>
+  typeof error === "object" &&
+  error !== null &&
+  "code" in error &&
+  error.code === "P2021";
 
 export async function POST(request: NextRequest) {
   try {
@@ -61,10 +68,23 @@ export async function POST(request: NextRequest) {
 
     loginFailureLimiter.reset(loginKey);
 
+    try {
+      await prisma.loginEvent.create({
+        data: {
+          userId: user.id,
+          source: "web",
+        },
+      });
+    } catch (error) {
+      if (!isMissingLoginEventTableError(error)) {
+        console.error("Create login event error:", error);
+      }
+    }
+
     const token = await createToken(user.id, user.username);
 
     const response = NextResponse.json(
-      { message: "登录成功。", username: user.username },
+      { message: "登录成功。", username: user.username, isAdmin: isAdminUsername(user.username) },
       { status: 200 }
     );
 

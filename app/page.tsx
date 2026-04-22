@@ -67,6 +67,34 @@ export default function HomePage() {
   }, [authLoading, user]);
 
   useEffect(() => {
+    if (availableCabinets.length !== 1) {
+      return;
+    }
+
+    const [onlyCabinet] = availableCabinets;
+
+    if (selectedCabinet?.id === onlyCabinet.id) {
+      return;
+    }
+
+    setSelectedCabinet(onlyCabinet);
+  }, [availableCabinets, selectedCabinet]);
+
+  useEffect(() => {
+    if (availableMaterials.length !== 1) {
+      return;
+    }
+
+    const [onlyMaterial] = availableMaterials;
+
+    if (selectedMaterial?.id === onlyMaterial.id) {
+      return;
+    }
+
+    setSelectedMaterial(onlyMaterial);
+  }, [availableMaterials, selectedMaterial]);
+
+  useEffect(() => {
     if (saveState === "saved" || saveState === "error") {
       const timer = setTimeout(() => setSaveState("idle"), 2400);
       return () => clearTimeout(timer);
