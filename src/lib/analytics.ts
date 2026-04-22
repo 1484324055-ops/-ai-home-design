@@ -23,3 +23,13 @@ export const getShanghaiDayRange = () => {
     end: endOfShanghaiDayUtc,
   };
 };
+
+export const getTrailingShanghaiDayRange = (days: number) => {
+  const { end } = getShanghaiDayRange();
+  const start = new Date(end.getTime() - days * 24 * 60 * 60 * 1000);
+
+  return {
+    start,
+    end,
+  };
+};

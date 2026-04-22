@@ -52,11 +52,15 @@ model Feedback {
   content    String   @db.Text
   contact    String?
   source     String?
+  status     String   @default("new")
+  adminNote  String?  @db.Text
   createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   userId     Int
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+  @@index([status, createdAt])
 }
 
 model LoginEvent {
