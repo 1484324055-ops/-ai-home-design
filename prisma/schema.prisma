@@ -13,6 +13,7 @@ model User {
   password        String
   createdAt       DateTime        @default(now())
   promptHistories PromptHistory[]
+  feedbacks       Feedback[]
 }
 
 model PromptHistory {
@@ -41,6 +42,18 @@ model PromptHistory {
   updatedAt        DateTime @updatedAt
   userId           Int
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Feedback {
+  id         Int      @id @default(autoincrement())
+  content    String   @db.Text
+  contact    String?
+  source     String?
+  createdAt  DateTime @default(now())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
 }

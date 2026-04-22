@@ -10,6 +10,8 @@ import MaterialSelector from "@/components/generator/MaterialSelector";
 import AdvancedOptions from "@/components/generator/AdvancedOptions";
 import PromptEditor from "@/components/generator/PromptEditor";
 import HistoryPanel from "@/components/generator/HistoryPanel";
+import ImageSiteLinks from "@/components/generator/ImageSiteLinks";
+import FeedbackWidget from "@/components/feedback/FeedbackWidget";
 import {
   Space,
   Cabinet,
@@ -354,8 +356,12 @@ export default function HomePage() {
             />
 
             <PromptEditor promptResult={promptResult} />
+
+            <ImageSiteLinks />
           </div>
         </main>
+
+        <FeedbackWidget source="homepage" />
       </div>
     </ProtectedRoute>
   );
