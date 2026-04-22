@@ -40,6 +40,7 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 
 export default function HomePage() {
   const { user, isLoading: authLoading } = useAuth();
+  const [isHistoryDrawerOpen, setIsHistoryDrawerOpen] = useState(false);
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<Style | null>(null);
@@ -71,6 +72,19 @@ export default function HomePage() {
       return () => clearTimeout(timer);
     }
   }, [saveState]);
+
+  useEffect(() => {
+    if (!isHistoryDrawerOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isHistoryDrawerOpen]);
 
   const loadHistories = async () => {
     try {
@@ -215,6 +229,7 @@ export default function HomePage() {
     setPromptResult(promptResultFromHistory(record));
     setActiveHistoryId(record.id);
     setHistoryMessage("已从历史记录恢复这套方案。");
+    setIsHistoryDrawerOpen(false);
   };
 
   const handleToggleFavorite = async (record: HistoryRecord) => {
@@ -280,86 +295,160 @@ export default function HomePage() {
       <div className="min-h-screen bg-[var(--background)]">
         <Header />
 
-        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="space-y-8">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-[var(--foreground)]">AI 全屋定制效果图生成器</h1>
-              <p className="mt-2 text-[var(--foreground-secondary)]">
-                选择空间、柜体、风格和材质，生成更自然的中英文提示词，并自动沉淀你的常用方案。
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <SpaceSelector selectedSpace={selectedSpace} onSelect={handleSpaceSelect} />
-
-              <CabinetSelector
-                cabinets={availableCabinets}
-                selectedCabinet={selectedCabinet}
-                onSelect={handleCabinetSelect}
-              />
-
-              <StyleSelector selectedStyle={selectedStyle} onSelect={handleStyleSelect} />
-
-              <MaterialSelector
-                materials={availableMaterials}
-                selectedMaterial={selectedMaterial}
-                onSelect={handleMaterialSelect}
-              />
-
-              <AdvancedOptions
-                selectedResidenceType={selectedResidenceType}
-                selectedCameraAngle={selectedCameraAngle}
-                selectedLighting={selectedLighting}
-                onResidenceTypeChange={setSelectedResidenceType}
-                onCameraAngleChange={setSelectedCameraAngle}
-                onLightingChange={setSelectedLighting}
-              />
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-4">
-              <button
-                onClick={handleGenerate}
-                disabled={!isComplete}
-                className={`rounded-xl px-8 py-4 text-lg font-semibold transition-all ${
-                  isComplete
-                    ? "bg-[var(--accent)] text-white shadow-lg hover:bg-[var(--accent-hover)] hover:shadow-xl"
-                    : "cursor-not-allowed bg-[var(--border)] text-[var(--foreground-secondary)]"
-                }`}
-              >
-                生成提示词
-              </button>
-
-              {promptResult && (
-                <button
-                  onClick={handleReset}
-                  className="rounded-xl border-2 border-[var(--border)] px-8 py-4 text-lg font-semibold text-[var(--foreground-secondary)] transition-all hover:border-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
-                >
-                  重置
-                </button>
-              )}
-            </div>
-
-            {historyMessage && (
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3 text-sm text-[var(--foreground-secondary)]">
-                {historyMessage}
+        <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+          <div className="lg:grid lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-6">
+            <aside className="hidden lg:block">
+              <div className="sticky top-24">
+                <HistoryPanel
+                  histories={histories}
+                  isLoading={isHistoryLoading}
+                  saveState={saveState}
+                  activeHistoryId={activeHistoryId}
+                  onLoad={handleLoadHistory}
+                  onToggleFavorite={handleToggleFavorite}
+                  onDelete={handleDeleteHistory}
+                  mode="sidebar"
+                />
               </div>
-            )}
+            </aside>
 
-            <HistoryPanel
-              histories={histories}
-              isLoading={isHistoryLoading}
-              saveState={saveState}
-              activeHistoryId={activeHistoryId}
-              onLoad={handleLoadHistory}
-              onToggleFavorite={handleToggleFavorite}
-              onDelete={handleDeleteHistory}
-            />
+            <section className="min-w-0 space-y-8">
+              <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card-bg)] p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:p-7">
+                <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-6">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="max-w-3xl">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--foreground-secondary)]">
+                        Prompt Studio
+                      </p>
+                      <h1 className="mt-2 text-3xl font-bold text-[var(--foreground)]">
+                        AI 全屋定制效果图生成器
+                      </h1>
+                      <p className="mt-2 text-[var(--foreground-secondary)]">
+                        选择空间、柜体、风格和材质，生成更自然的中英文提示词，并把常用方案沉淀在左侧方案库里。
+                      </p>
+                    </div>
 
-            <PromptEditor promptResult={promptResult} />
+                    <button
+                      onClick={() => setIsHistoryDrawerOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3 text-sm font-medium text-[var(--foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] lg:hidden"
+                    >
+                      <span className="text-base">☰</span>
+                      打开历史方案栏
+                    </button>
+                  </div>
 
-            <ImageSiteLinks />
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3">
+                      <p className="text-xs text-[var(--foreground-secondary)]">历史方案总数</p>
+                      <p className="mt-1 text-xl font-semibold text-[var(--foreground)]">{histories.length}</p>
+                    </div>
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3">
+                      <p className="text-xs text-[var(--foreground-secondary)]">当前激活方案</p>
+                      <p className="mt-1 truncate text-sm font-medium text-[var(--foreground)]">
+                        {promptResult?.title || "还未载入方案"}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3">
+                      <p className="text-xs text-[var(--foreground-secondary)]">自动保存状态</p>
+                      <p className="mt-1 text-sm font-medium text-[var(--foreground)]">
+                        {saveState === "saving"
+                          ? "正在保存"
+                          : saveState === "saved"
+                            ? "刚刚已保存"
+                            : saveState === "error"
+                              ? "保存失败"
+                              : "自动保存开启"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 space-y-6">
+                  <SpaceSelector selectedSpace={selectedSpace} onSelect={handleSpaceSelect} />
+
+                  <CabinetSelector
+                    cabinets={availableCabinets}
+                    selectedCabinet={selectedCabinet}
+                    onSelect={handleCabinetSelect}
+                  />
+
+                  <StyleSelector selectedStyle={selectedStyle} onSelect={handleStyleSelect} />
+
+                  <MaterialSelector
+                    materials={availableMaterials}
+                    selectedMaterial={selectedMaterial}
+                    onSelect={handleMaterialSelect}
+                  />
+
+                  <AdvancedOptions
+                    selectedResidenceType={selectedResidenceType}
+                    selectedCameraAngle={selectedCameraAngle}
+                    selectedLighting={selectedLighting}
+                    onResidenceTypeChange={setSelectedResidenceType}
+                    onCameraAngleChange={setSelectedCameraAngle}
+                    onLightingChange={setSelectedLighting}
+                  />
+
+                  <div className="flex flex-wrap justify-center gap-4 border-t border-[var(--border)] pt-2">
+                    <button
+                      onClick={handleGenerate}
+                      disabled={!isComplete}
+                      className={`rounded-xl px-8 py-4 text-lg font-semibold transition-all ${
+                        isComplete
+                          ? "bg-[var(--accent)] text-white shadow-lg hover:bg-[var(--accent-hover)] hover:shadow-xl"
+                          : "cursor-not-allowed bg-[var(--border)] text-[var(--foreground-secondary)]"
+                      }`}
+                    >
+                      生成提示词
+                    </button>
+
+                    {promptResult && (
+                      <button
+                        onClick={handleReset}
+                        className="rounded-xl border-2 border-[var(--border)] px-8 py-4 text-lg font-semibold text-[var(--foreground-secondary)] transition-all hover:border-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+                      >
+                        重置
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {historyMessage && (
+                <div className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3 text-sm text-[var(--foreground-secondary)]">
+                  {historyMessage}
+                </div>
+              )}
+
+              <PromptEditor promptResult={promptResult} />
+
+              <ImageSiteLinks />
+            </section>
           </div>
         </main>
+
+        {isHistoryDrawerOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden">
+            <button
+              aria-label="关闭历史方案栏"
+              className="absolute inset-0 bg-black/35"
+              onClick={() => setIsHistoryDrawerOpen(false)}
+            />
+            <div className="absolute inset-y-0 left-0 w-full max-w-[380px]">
+              <HistoryPanel
+                histories={histories}
+                isLoading={isHistoryLoading}
+                saveState={saveState}
+                activeHistoryId={activeHistoryId}
+                onLoad={handleLoadHistory}
+                onToggleFavorite={handleToggleFavorite}
+                onDelete={handleDeleteHistory}
+                mode="drawer"
+                onClose={() => setIsHistoryDrawerOpen(false)}
+              />
+            </div>
+          </div>
+        )}
 
         <FeedbackWidget source="homepage" />
       </div>
