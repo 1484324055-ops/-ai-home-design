@@ -8,8 +8,39 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id              Int             @id @default(autoincrement())
+  username        String          @unique
+  password        String
+  createdAt       DateTime        @default(now())
+  promptHistories PromptHistory[]
+}
+
+model PromptHistory {
+  id               Int      @id @default(autoincrement())
+  title            String
+  englishPrompt    String   @db.Text
+  chinesePrompt    String   @db.Text
+  englishNegative  String   @db.Text
+  chineseNegative  String   @db.Text
+  spaceId          String
+  spaceName        String
+  cabinetId        String
+  cabinetName      String
+  styleId          String
+  styleName        String
+  materialId       String
+  materialName     String
+  residenceTypeId  String
+  residenceTypeName String
+  cameraAngleId    String
+  cameraAngleName  String
+  lightingId       String
+  lightingName     String
+  isFavorite       Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }

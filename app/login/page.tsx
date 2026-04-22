@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/app/AuthProvider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -9,12 +9,21 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [registeredMessage, setRegisteredMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("registered") === "1") {
+      setRegisteredMessage("注册成功，现在可以直接登录了。");
+    }
+  }, []);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError("");
     setIsLoading(true);
 
@@ -23,19 +32,19 @@ export default function LoginPage() {
     if (result.success) {
       router.push("/");
     } else {
-      setError(result.error || "登录失败");
+      setError(result.error || "登录失败，请稍后再试。");
     }
 
     setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--background)] px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[var(--accent)] rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--accent)]">
             <svg
-              className="w-8 h-8 text-white"
+              className="h-8 w-8 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -48,49 +57,47 @@ export default function LoginPage() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-[var(--foreground)]">
-            AI Home Design
-          </h1>
-          <p className="text-[var(--foreground-secondary)] mt-2">
-            全屋定制效果图生成器
-          </p>
+          <h1 className="text-2xl font-bold text-[var(--foreground)]">AI Home Design</h1>
+          <p className="mt-2 text-[var(--foreground-secondary)]">全屋定制效果图生成器</p>
         </div>
 
-        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--border)] p-8 shadow-sm">
-          <h2 className="text-xl font-semibold text-[var(--foreground)] mb-6 text-center">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-8 shadow-sm">
+          <h2 className="mb-6 text-center text-xl font-semibold text-[var(--foreground)]">
             用户登录
           </h2>
 
+          {registeredMessage && (
+            <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+              {registeredMessage}
+            </div>
+          )}
+
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                用户名
-              </label>
+              <label className="mb-1 block text-sm font-medium text-[var(--foreground)]">用户名</label>
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
+                onChange={(event) => setUsername(event.target.value)}
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-secondary)] transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 placeholder="请输入用户名"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                密码
-              </label>
+              <label className="mb-1 block text-sm font-medium text-[var(--foreground)]">密码</label>
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
+                onChange={(event) => setPassword(event.target.value)}
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-secondary)] transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 placeholder="请输入密码"
                 required
               />
@@ -99,7 +106,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-[var(--accent)] text-white rounded-lg font-medium hover:bg-[var(--accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full rounded-lg bg-[var(--accent)] py-3 font-medium text-white transition-all hover:bg-[var(--accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? "登录中..." : "登录"}
             </button>
@@ -110,7 +117,7 @@ export default function LoginPage() {
               还没有账号？
               <Link
                 href="/register"
-                className="text-[var(--accent)] hover:text-[var(--accent-hover)] font-medium transition-colors"
+                className="ml-1 font-medium text-[var(--accent)] transition-colors hover:text-[var(--accent-hover)]"
               >
                 立即注册
               </Link>

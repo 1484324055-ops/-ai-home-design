@@ -10,21 +10,23 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError("");
+    setSuccessMessage("");
 
     if (password !== confirmPassword) {
-      setError("两次输入的密码不一致");
+      setError("两次输入的密码不一致。");
       return;
     }
 
     if (password.length < 6) {
-      setError("密码长度至少为6个字符");
+      setError("密码长度至少需要 6 位。");
       return;
     }
 
@@ -33,21 +35,24 @@ export default function RegisterPage() {
     const result = await register(username, password);
 
     if (result.success) {
-      router.push("/login");
+      setSuccessMessage(result.message || "注册成功，正在跳转到登录页...");
+      setTimeout(() => {
+        router.push("/login?registered=1");
+      }, 1200);
     } else {
-      setError(result.error || "注册失败");
+      setError(result.error || "注册失败，请稍后再试。");
     }
 
     setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[var(--background)] px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-[var(--accent)] rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--accent)]">
             <svg
-              className="w-8 h-8 text-white"
+              className="h-8 w-8 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -60,36 +65,36 @@ export default function RegisterPage() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-[var(--foreground)]">
-            AI Home Design
-          </h1>
-          <p className="text-[var(--foreground-secondary)] mt-2">
-            全屋定制效果图生成器
-          </p>
+          <h1 className="text-2xl font-bold text-[var(--foreground)]">AI Home Design</h1>
+          <p className="mt-2 text-[var(--foreground-secondary)]">全屋定制效果图生成器</p>
         </div>
 
-        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--border)] p-8 shadow-sm">
-          <h2 className="text-xl font-semibold text-[var(--foreground)] mb-6 text-center">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-8 shadow-sm">
+          <h2 className="mb-6 text-center text-xl font-semibold text-[var(--foreground)]">
             用户注册
           </h2>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
               {error}
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+              {successMessage}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                用户名
-              </label>
+              <label className="mb-1 block text-sm font-medium text-[var(--foreground)]">用户名</label>
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
-                placeholder="请输入用户名（3-20个字符）"
+                onChange={(event) => setUsername(event.target.value)}
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-secondary)] transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                placeholder="请输入用户名（3-20 个字符）"
                 required
                 minLength={3}
                 maxLength={20}
@@ -97,29 +102,25 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                密码
-              </label>
+              <label className="mb-1 block text-sm font-medium text-[var(--foreground)]">密码</label>
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
-                placeholder="请输入密码（至少6个字符）"
+                onChange={(event) => setPassword(event.target.value)}
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-secondary)] transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                placeholder="请输入密码（至少 6 位）"
                 required
                 minLength={6}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
-                确认密码
-              </label>
+              <label className="mb-1 block text-sm font-medium text-[var(--foreground)]">确认密码</label>
               <input
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--foreground-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3 text-[var(--foreground)] placeholder-[var(--foreground-secondary)] transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 placeholder="请再次输入密码"
                 required
               />
@@ -128,7 +129,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-[var(--accent)] text-white rounded-lg font-medium hover:bg-[var(--accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="w-full rounded-lg bg-[var(--accent)] py-3 font-medium text-white transition-all hover:bg-[var(--accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? "注册中..." : "注册"}
             </button>
@@ -139,7 +140,7 @@ export default function RegisterPage() {
               已有账号？
               <Link
                 href="/login"
-                className="text-[var(--accent)] hover:text-[var(--accent-hover)] font-medium transition-colors"
+                className="ml-1 font-medium text-[var(--accent)] transition-colors hover:text-[var(--accent-hover)]"
               >
                 立即登录
               </Link>

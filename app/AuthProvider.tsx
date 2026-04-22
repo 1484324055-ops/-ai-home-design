@@ -6,11 +6,17 @@ interface User {
   username: string;
 }
 
+interface AuthResponse {
+  success: boolean;
+  error?: string;
+  message?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (username: string, password: string) => Promise<AuthResponse>;
+  register: (username: string, password: string) => Promise<AuthResponse>;
   logout: () => Promise<void>;
 }
 
@@ -21,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
+    void checkAuth();
   }, []);
 
   const checkAuth = async () => {
@@ -38,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string): Promise<AuthResponse> => {
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -50,16 +56,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (response.ok) {
         setUser({ username: data.username });
-        return { success: true };
-      } else {
-        return { success: false, error: data.error };
+        return { success: true, message: data.message };
       }
+
+      return { success: false, error: data.error };
     } catch (error) {
+      console.error("Login error:", error);
       return { success: false, error: "登录失败，请稍后重试" };
     }
   };
 
-  const register = async (username: string, password: string) => {
+  const register = async (username: string, password: string): Promise<AuthResponse> => {
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -70,11 +77,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (response.ok) {
-        return { success: true };
-      } else {
-        return { success: false, error: data.error };
+        return { success: true, message: data.message };
       }
+
+      return { success: false, error: data.error };
     } catch (error) {
+      console.error("Register error:", error);
       return { success: false, error: "注册失败，请稍后重试" };
     }
   };
@@ -97,8 +105,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
+
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
+
   return context;
 }

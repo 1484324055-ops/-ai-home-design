@@ -8,6 +8,7 @@ import {
   cameraAngles,
   Lighting,
   lightings,
+  recommendedAdvancedOptions,
 } from "@/lib/data";
 
 interface AdvancedOptionsProps {
@@ -29,10 +30,33 @@ export default function AdvancedOptions({
 }: AdvancedOptionsProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const renderOption = (
+    label: string,
+    isSelected: boolean,
+    isRecommended: boolean,
+    onClick: () => void
+  ) => (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm transition-all ${
+        isSelected
+          ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+          : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--accent)]/50"
+      }`}
+    >
+      <span>{label}</span>
+      {isRecommended && (
+        <span className="rounded-full bg-[var(--accent)]/15 px-2 py-0.5 text-[10px] font-semibold text-[var(--accent)]">
+          推荐
+        </span>
+      )}
+    </button>
+  );
+
   return (
     <div className="space-y-3">
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => setIsExpanded((current) => !current)}
         className="flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
       >
         <svg
@@ -52,67 +76,50 @@ export default function AdvancedOptions({
       </button>
 
       {isExpanded && (
-        <div className="space-y-4 p-4 bg-[var(--card-bg)] rounded-xl border border-[var(--border)]">
+        <div className="space-y-4 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+          <div className="rounded-lg bg-[var(--background-secondary)] px-3 py-2 text-xs text-[var(--foreground-secondary)]">
+            默认推荐：商品房 + 广角全景 + 明亮自然光
+          </div>
+
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--foreground)]">
-              住宅类型
-            </label>
+            <label className="text-sm font-medium text-[var(--foreground)]">住宅类型</label>
             <div className="flex flex-wrap gap-2">
-              {residenceTypes.map((type) => (
-                <button
-                  key={type.id}
-                  onClick={() => onResidenceTypeChange(type)}
-                  className={`px-4 py-2 rounded-lg border-2 text-sm transition-all ${
-                    selectedResidenceType.id === type.id
-                      ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                      : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--accent)]/50"
-                  }`}
-                >
-                  {type.name}
-                </button>
-              ))}
+              {residenceTypes.map((type) =>
+                renderOption(
+                  type.name,
+                  selectedResidenceType.id === type.id,
+                  type.id === recommendedAdvancedOptions.residenceTypeId,
+                  () => onResidenceTypeChange(type)
+                )
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--foreground)]">
-              镜头
-            </label>
+            <label className="text-sm font-medium text-[var(--foreground)]">镜头</label>
             <div className="flex flex-wrap gap-2">
-              {cameraAngles.map((angle) => (
-                <button
-                  key={angle.id}
-                  onClick={() => onCameraAngleChange(angle)}
-                  className={`px-4 py-2 rounded-lg border-2 text-sm transition-all ${
-                    selectedCameraAngle.id === angle.id
-                      ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                      : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--accent)]/50"
-                  }`}
-                >
-                  {angle.name}
-                </button>
-              ))}
+              {cameraAngles.map((angle) =>
+                renderOption(
+                  angle.name,
+                  selectedCameraAngle.id === angle.id,
+                  angle.id === recommendedAdvancedOptions.cameraAngleId,
+                  () => onCameraAngleChange(angle)
+                )
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--foreground)]">
-              光影
-            </label>
+            <label className="text-sm font-medium text-[var(--foreground)]">光影</label>
             <div className="flex flex-wrap gap-2">
-              {lightings.map((lighting) => (
-                <button
-                  key={lighting.id}
-                  onClick={() => onLightingChange(lighting)}
-                  className={`px-4 py-2 rounded-lg border-2 text-sm transition-all ${
-                    selectedLighting.id === lighting.id
-                      ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                      : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--accent)]/50"
-                  }`}
-                >
-                  {lighting.name}
-                </button>
-              ))}
+              {lightings.map((lighting) =>
+                renderOption(
+                  lighting.name,
+                  selectedLighting.id === lighting.id,
+                  lighting.id === recommendedAdvancedOptions.lightingId,
+                  () => onLightingChange(lighting)
+                )
+              )}
             </div>
           </div>
         </div>

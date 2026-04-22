@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/app/AuthProvider";
 import Header from "@/components/layout/Header";
 import SpaceSelector from "@/components/generator/SpaceSelector";
 import CabinetSelector from "@/components/generator/CabinetSelector";
@@ -8,6 +9,7 @@ import StyleSelector from "@/components/generator/StyleSelector";
 import MaterialSelector from "@/components/generator/MaterialSelector";
 import AdvancedOptions from "@/components/generator/AdvancedOptions";
 import PromptEditor from "@/components/generator/PromptEditor";
+import HistoryPanel from "@/components/generator/HistoryPanel";
 import {
   Space,
   Cabinet,
@@ -18,52 +20,151 @@ import {
   Lighting,
   getAvailableCabinets,
   getAvailableMaterials,
-  residenceTypes,
-  cameraAngles,
-  lightings,
+  defaultResidenceType,
+  defaultCameraAngle,
+  defaultLighting,
 } from "@/lib/data";
 import { generatePrompts, PromptResult } from "@/lib/prompt-generator";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
+import {
+  HistoryRecord,
+  buildHistoryPayload,
+  promptResultFromHistory,
+  selectionFromHistory,
+  sortHistories,
+} from "@/lib/history";
+
+type SaveState = "idle" | "saving" | "saved" | "error";
 
 export default function HomePage() {
+  const { user, isLoading: authLoading } = useAuth();
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<Style | null>(null);
   const [selectedMaterial, setSelectedMaterial] = useState<Material | null>(null);
-  const [selectedResidenceType, setSelectedResidenceType] = useState<ResidenceType>(residenceTypes[0]);
-  const [selectedCameraAngle, setSelectedCameraAngle] = useState<CameraAngle>(cameraAngles[0]);
-  const [selectedLighting, setSelectedLighting] = useState<Lighting>(lightings[0]);
+  const [selectedResidenceType, setSelectedResidenceType] =
+    useState<ResidenceType>(defaultResidenceType);
+  const [selectedCameraAngle, setSelectedCameraAngle] =
+    useState<CameraAngle>(defaultCameraAngle);
+  const [selectedLighting, setSelectedLighting] = useState<Lighting>(defaultLighting);
   const [promptResult, setPromptResult] = useState<PromptResult | null>(null);
+  const [histories, setHistories] = useState<HistoryRecord[]>([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [activeHistoryId, setActiveHistoryId] = useState<number | null>(null);
+  const [historyMessage, setHistoryMessage] = useState("");
 
   const availableCabinets = selectedSpace ? getAvailableCabinets(selectedSpace.id) : [];
   const availableMaterials = selectedStyle ? getAvailableMaterials(selectedStyle.id) : [];
 
+  useEffect(() => {
+    if (!authLoading && user) {
+      void loadHistories();
+    }
+  }, [authLoading, user]);
+
+  useEffect(() => {
+    if (saveState === "saved" || saveState === "error") {
+      const timer = setTimeout(() => setSaveState("idle"), 2400);
+      return () => clearTimeout(timer);
+    }
+  }, [saveState]);
+
+  const loadHistories = async () => {
+    try {
+      setIsHistoryLoading(true);
+      const response = await fetch("/api/history");
+      const data = await response.json();
+
+      if (response.ok) {
+        setHistories(sortHistories(data.histories ?? []));
+        if (data.needsSetup && data.message) {
+          setHistoryMessage(data.message);
+        }
+      }
+    } catch (error) {
+      console.error("Load histories error:", error);
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  };
+
+  const resetStatusMessages = () => {
+    setHistoryMessage("");
+  };
+
   const handleSpaceSelect = (space: Space) => {
+    resetStatusMessages();
     setSelectedSpace(space);
     setSelectedCabinet(null);
     setPromptResult(null);
+    setActiveHistoryId(null);
   };
 
   const handleCabinetSelect = (cabinet: Cabinet) => {
+    resetStatusMessages();
     setSelectedCabinet(cabinet);
     setPromptResult(null);
+    setActiveHistoryId(null);
   };
 
   const handleStyleSelect = (style: Style) => {
+    resetStatusMessages();
     setSelectedStyle(style);
     setSelectedMaterial(null);
     setPromptResult(null);
+    setActiveHistoryId(null);
   };
 
   const handleMaterialSelect = (material: Material) => {
+    resetStatusMessages();
     setSelectedMaterial(material);
     setPromptResult(null);
+    setActiveHistoryId(null);
+  };
+
+  const persistHistory = async (selection: {
+    space: Space;
+    cabinet: Cabinet;
+    style: Style;
+    material: Material;
+    residenceType: ResidenceType;
+    cameraAngle: CameraAngle;
+    lighting: Lighting;
+  }, result: PromptResult) => {
+    try {
+      setSaveState("saving");
+
+      const response = await fetch("/api/history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildHistoryPayload(selection, result)),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "保存失败");
+      }
+
+      setHistories((current) => sortHistories([data.history, ...current]));
+      setActiveHistoryId(data.history.id);
+      setSaveState("saved");
+    } catch (error) {
+      console.error("Persist history error:", error);
+      if (error instanceof Error) {
+        setHistoryMessage(error.message);
+      }
+      setSaveState("error");
+    }
   };
 
   const handleGenerate = () => {
     if (!selectedSpace || !selectedCabinet || !selectedStyle || !selectedMaterial) {
       return;
     }
+
+    resetStatusMessages();
 
     const selection = {
       space: selectedSpace,
@@ -77,6 +178,8 @@ export default function HomePage() {
 
     const result = generatePrompts(selection);
     setPromptResult(result);
+    setActiveHistoryId(null);
+    void persistHistory(selection, result);
   };
 
   const handleReset = () => {
@@ -84,94 +187,176 @@ export default function HomePage() {
     setSelectedCabinet(null);
     setSelectedStyle(null);
     setSelectedMaterial(null);
-    setSelectedResidenceType(residenceTypes[0]);
-    setSelectedCameraAngle(cameraAngles[0]);
-    setSelectedLighting(lightings[0]);
+    setSelectedResidenceType(defaultResidenceType);
+    setSelectedCameraAngle(defaultCameraAngle);
+    setSelectedLighting(defaultLighting);
     setPromptResult(null);
+    setActiveHistoryId(null);
+    resetStatusMessages();
+  };
+
+  const handleLoadHistory = (record: HistoryRecord) => {
+    const selection = selectionFromHistory(record);
+
+    if (!selection) {
+      setHistoryMessage("这条历史记录对应的选项已经不存在了，暂时无法直接载入。");
+      return;
+    }
+
+    setSelectedSpace(selection.space);
+    setSelectedCabinet(selection.cabinet);
+    setSelectedStyle(selection.style);
+    setSelectedMaterial(selection.material);
+    setSelectedResidenceType(selection.residenceType);
+    setSelectedCameraAngle(selection.cameraAngle);
+    setSelectedLighting(selection.lighting);
+    setPromptResult(promptResultFromHistory(record));
+    setActiveHistoryId(record.id);
+    setHistoryMessage("已从历史记录恢复这套方案。");
+  };
+
+  const handleToggleFavorite = async (record: HistoryRecord) => {
+    const nextFavorite = !record.isFavorite;
+    const previousHistories = histories;
+    const optimistic = histories.map((item) =>
+      item.id === record.id ? { ...item, isFavorite: nextFavorite } : item
+    );
+    setHistories(sortHistories(optimistic));
+
+    try {
+      const response = await fetch("/api/history", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: record.id, isFavorite: nextFavorite }),
+      });
+
+      if (!response.ok) {
+        throw new Error("收藏状态更新失败");
+      }
+    } catch (error) {
+      console.error("Toggle favorite error:", error);
+      setHistories(previousHistories);
+      setHistoryMessage("收藏状态更新失败了，请稍后再试。");
+    }
+  };
+
+  const handleDeleteHistory = async (record: HistoryRecord) => {
+    const confirmed = window.confirm(`确定要删除“${record.title}”这条历史记录吗？`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/history?id=${record.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "删除失败");
+      }
+
+      const nextHistories = histories.filter((item) => item.id !== record.id);
+      setHistories(sortHistories(nextHistories));
+
+      if (activeHistoryId === record.id) {
+        setActiveHistoryId(null);
+      }
+
+      setHistoryMessage("历史记录已删除。");
+    } catch (error) {
+      console.error("Delete history error:", error);
+      setHistoryMessage("删除历史记录失败，请稍后再试。");
+    }
   };
 
   const isComplete = selectedSpace && selectedCabinet && selectedStyle && selectedMaterial;
 
   return (
     <ProtectedRoute>
-    <div className="min-h-screen bg-[var(--background)]">
-      <Header />
+      <div className="min-h-screen bg-[var(--background)]">
+        <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-8">
-          {/* 标题 */}
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-[var(--foreground)]">
-              AI 全屋定制效果图生成器
-            </h1>
-            <p className="mt-2 text-[var(--foreground-secondary)]">
-              选择空间、柜体、风格和材质，生成专业的AI效果图提示词
-            </p>
-          </div>
+        <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="space-y-8">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-[var(--foreground)]">AI 全屋定制效果图生成器</h1>
+              <p className="mt-2 text-[var(--foreground-secondary)]">
+                选择空间、柜体、风格和材质，生成更自然的中英文提示词，并自动沉淀你的常用方案。
+              </p>
+            </div>
 
-          {/* 选择器区域 */}
-          <div className="space-y-6">
-            <SpaceSelector
-              selectedSpace={selectedSpace}
-              onSelect={handleSpaceSelect}
-            />
+            <div className="space-y-6">
+              <SpaceSelector selectedSpace={selectedSpace} onSelect={handleSpaceSelect} />
 
-            <CabinetSelector
-              cabinets={availableCabinets}
-              selectedCabinet={selectedCabinet}
-              onSelect={handleCabinetSelect}
-            />
+              <CabinetSelector
+                cabinets={availableCabinets}
+                selectedCabinet={selectedCabinet}
+                onSelect={handleCabinetSelect}
+              />
 
-            <StyleSelector
-              selectedStyle={selectedStyle}
-              onSelect={handleStyleSelect}
-            />
+              <StyleSelector selectedStyle={selectedStyle} onSelect={handleStyleSelect} />
 
-            <MaterialSelector
-              materials={availableMaterials}
-              selectedMaterial={selectedMaterial}
-              onSelect={handleMaterialSelect}
-            />
+              <MaterialSelector
+                materials={availableMaterials}
+                selectedMaterial={selectedMaterial}
+                onSelect={handleMaterialSelect}
+              />
 
-            <AdvancedOptions
-              selectedResidenceType={selectedResidenceType}
-              selectedCameraAngle={selectedCameraAngle}
-              selectedLighting={selectedLighting}
-              onResidenceTypeChange={setSelectedResidenceType}
-              onCameraAngleChange={setSelectedCameraAngle}
-              onLightingChange={setSelectedLighting}
-            />
-          </div>
+              <AdvancedOptions
+                selectedResidenceType={selectedResidenceType}
+                selectedCameraAngle={selectedCameraAngle}
+                selectedLighting={selectedLighting}
+                onResidenceTypeChange={setSelectedResidenceType}
+                onCameraAngleChange={setSelectedCameraAngle}
+                onLightingChange={setSelectedLighting}
+              />
+            </div>
 
-          {/* 生成按钮 */}
-          <div className="flex flex-wrap gap-4 justify-center">
-            <button
-              onClick={handleGenerate}
-              disabled={!isComplete}
-              className={`px-8 py-4 rounded-xl font-semibold text-lg transition-all ${
-                isComplete
-                  ? "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] shadow-lg hover:shadow-xl"
-                  : "bg-[var(--border)] text-[var(--foreground-secondary)] cursor-not-allowed"
-              }`}
-            >
-              🎯 生成提示词
-            </button>
-
-            {promptResult && (
+            <div className="flex flex-wrap justify-center gap-4">
               <button
-                onClick={handleReset}
-                className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-[var(--border)] text-[var(--foreground-secondary)] hover:text-[var(--foreground)] hover:border-[var(--foreground-secondary)] transition-all"
+                onClick={handleGenerate}
+                disabled={!isComplete}
+                className={`rounded-xl px-8 py-4 text-lg font-semibold transition-all ${
+                  isComplete
+                    ? "bg-[var(--accent)] text-white shadow-lg hover:bg-[var(--accent-hover)] hover:shadow-xl"
+                    : "cursor-not-allowed bg-[var(--border)] text-[var(--foreground-secondary)]"
+                }`}
               >
-                🔄 重置
+                生成提示词
               </button>
-            )}
-          </div>
 
-          {/* 提示词编辑区 */}
-          <PromptEditor promptResult={promptResult} />
-        </div>
-      </main>
-    </div>
+              {promptResult && (
+                <button
+                  onClick={handleReset}
+                  className="rounded-xl border-2 border-[var(--border)] px-8 py-4 text-lg font-semibold text-[var(--foreground-secondary)] transition-all hover:border-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+                >
+                  重置
+                </button>
+              )}
+            </div>
+
+            {historyMessage && (
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3 text-sm text-[var(--foreground-secondary)]">
+                {historyMessage}
+              </div>
+            )}
+
+            <HistoryPanel
+              histories={histories}
+              isLoading={isHistoryLoading}
+              saveState={saveState}
+              activeHistoryId={activeHistoryId}
+              onLoad={handleLoadHistory}
+              onToggleFavorite={handleToggleFavorite}
+              onDelete={handleDeleteHistory}
+            />
+
+            <PromptEditor promptResult={promptResult} />
+          </div>
+        </main>
+      </div>
     </ProtectedRoute>
   );
 }

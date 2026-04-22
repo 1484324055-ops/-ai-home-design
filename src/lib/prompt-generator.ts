@@ -1,4 +1,4 @@
-import { Selection, generatePrompts as generatePromptsFromData } from "./data";
+import { Selection, buildEnglishPrompt } from "./data";
 
 export interface PromptResult {
   title: string;
@@ -50,8 +50,20 @@ const chineseNegativeParts = [
   "Logo",
 ];
 
+const buildChinesePrompt = (selection: Selection) =>
+  [
+    `请生成一张${selection.residenceType.name}尺度的${selection.space.name}全屋定制效果图`,
+    `整体以${selection.style.name}为设计基调`,
+    `重点展示${selection.cabinet.name}与${selection.material.name}的组合关系`,
+    `画面采用${selection.cameraAngle.name}构图，呈现${selection.lighting.name}氛围`,
+    "突出柜体比例、材质肌理、收纳秩序、空间层次和真实居住感",
+    "整体视觉高级、统一、干净，具备建筑杂志级的空间表达",
+    "8K超清，写实室内设计渲染，适合高质量生图模型直接使用",
+  ].join("，") + "。";
+
 export const generatePrompts = (selection: Selection): PromptResult => {
-  const { english, chinese } = generatePromptsFromData(selection);
+  const english = buildEnglishPrompt(selection);
+  const chinese = buildChinesePrompt(selection);
 
   const sections: PromptSection[] = [
     {
@@ -98,10 +110,8 @@ export const generatePrompts = (selection: Selection): PromptResult => {
     },
   ];
 
-  const title = `${selection.space.name} · ${selection.style.name} · ${selection.cabinet.name}`;
-
   return {
-    title,
+    title: `${selection.space.name} · ${selection.style.name} · ${selection.cabinet.name}方案`,
     english,
     chinese,
     englishNegative: englishNegativeParts.join(", "),
@@ -114,8 +124,8 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
   try {
     await navigator.clipboard.writeText(text);
     return true;
-  } catch (err) {
-    console.error("Failed to copy:", err);
+  } catch (error) {
+    console.error("Failed to copy:", error);
     return false;
   }
 };

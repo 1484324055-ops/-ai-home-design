@@ -9,10 +9,7 @@ export async function POST(request: NextRequest) {
     const password = typeof body.password === "string" ? body.password : "";
 
     if (!username || !password) {
-      return NextResponse.json(
-        { error: "用户名和密码不能为空" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "用户名和密码不能为空。" }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
@@ -20,25 +17,19 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "用户名或密码错误" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "用户名或密码错误。" }, { status: 401 });
     }
 
     const isValid = await verifyPassword(password, user.password);
 
     if (!isValid) {
-      return NextResponse.json(
-        { error: "用户名或密码错误" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "用户名或密码错误。" }, { status: 401 });
     }
 
     const token = await createToken(user.id, user.username);
 
     const response = NextResponse.json(
-      { message: "登录成功", username: user.username },
+      { message: "登录成功。", username: user.username },
       { status: 200 }
     );
 
@@ -53,9 +44,6 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     console.error("Login error:", error);
-    return NextResponse.json(
-      { error: "登录失败，请稍后重试" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "登录失败，请稍后重试。" }, { status: 500 });
   }
 }
