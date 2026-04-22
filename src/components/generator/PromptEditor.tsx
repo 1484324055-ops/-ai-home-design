@@ -178,10 +178,10 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="grid gap-3 sm:flex sm:flex-wrap">
         <button
           onClick={() => copyWithFeedback("chinese", chinesePrompt)}
-          className={`rounded-lg px-5 py-3 font-medium transition-all ${
+          className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
             copySuccess === "chinese"
               ? "bg-[var(--success)] text-white"
               : "border border-[var(--border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)]"
@@ -192,7 +192,7 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
 
         <button
           onClick={() => copyWithFeedback("english", englishPrompt)}
-          className={`rounded-lg px-5 py-3 font-medium transition-all ${
+          className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
             copySuccess === "english"
               ? "bg-[var(--success)] text-white"
               : "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
@@ -203,7 +203,7 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
 
         <button
           onClick={handleCopyBundle}
-          className={`rounded-lg px-5 py-3 font-medium transition-all ${
+          className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
             copySuccess === "bundle"
               ? "bg-[var(--success)] text-white"
               : "bg-[var(--foreground)] text-white hover:opacity-90"

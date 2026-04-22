@@ -295,7 +295,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-[var(--background)]">
         <Header />
 
-        <main className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-[1600px] px-4 py-6 pb-28 sm:px-6 sm:pb-32 lg:px-8 lg:pb-6">
           <div className="lg:grid lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-6">
             <aside className="hidden lg:block">
               <div className="sticky top-24">
@@ -330,7 +330,7 @@ export default function HomePage() {
 
                     <button
                       onClick={() => setIsHistoryDrawerOpen(true)}
-                      className="inline-flex items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3 text-sm font-medium text-[var(--foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] lg:hidden"
+                      className="inline-flex min-h-[48px] items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3 text-sm font-medium text-[var(--foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] lg:hidden"
                     >
                       <span className="text-base">☰</span>
                       打开历史方案栏
@@ -389,7 +389,7 @@ export default function HomePage() {
                     onLightingChange={setSelectedLighting}
                   />
 
-                  <div className="flex flex-wrap justify-center gap-4 border-t border-[var(--border)] pt-2">
+                  <div className="hidden flex-wrap justify-center gap-4 border-t border-[var(--border)] pt-2 sm:flex">
                     <button
                       onClick={handleGenerate}
                       disabled={!isComplete}
@@ -449,6 +449,38 @@ export default function HomePage() {
             </div>
           </div>
         )}
+
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--border)] bg-[var(--background)]/92 px-4 pb-[calc(env(safe-area-inset-bottom)+0.9rem)] pt-3 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur lg:hidden">
+          <div className="mx-auto flex max-w-3xl items-center gap-3">
+            <button
+              onClick={() => setIsHistoryDrawerOpen(true)}
+              className="inline-flex min-h-[50px] shrink-0 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] px-4 text-sm font-medium text-[var(--foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+            >
+              方案栏
+            </button>
+
+            <button
+              onClick={handleGenerate}
+              disabled={!isComplete}
+              className={`min-h-[50px] flex-1 rounded-2xl px-4 text-base font-semibold transition-all ${
+                isComplete
+                  ? "bg-[var(--accent)] text-white shadow-lg hover:bg-[var(--accent-hover)]"
+                  : "cursor-not-allowed bg-[var(--border)] text-[var(--foreground-secondary)]"
+              }`}
+            >
+              生成提示词
+            </button>
+
+            {promptResult && (
+              <button
+                onClick={handleReset}
+                className="inline-flex min-h-[50px] shrink-0 items-center justify-center rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] px-4 text-sm font-medium text-[var(--foreground-secondary)] transition-colors hover:border-[var(--foreground-secondary)] hover:text-[var(--foreground)]"
+              >
+                重置
+              </button>
+            )}
+          </div>
+        </div>
 
         <FeedbackWidget source="homepage" />
       </div>

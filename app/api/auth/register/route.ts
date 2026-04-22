@@ -1,9 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { createMemoryRateLimiter, getClientIp } from "@/lib/rate-limit";
+
+const registerLimiter = createMemoryRateLimiter("register-attempts", {
+  windowMs: 30 * 60 * 1000,
+  maxHits: 4,
+  blockMs: 30 * 60 * 1000,
+});
+
+const buildRateLimitResponse = (retryAfterSeconds: number) => {
+  const response = NextResponse.json(
+    { error: `注册操作太频繁了，请 ${retryAfterSeconds} 秒后再试。` },
+    { status: 429 }
+  );
+
+  response.headers.set("Retry-After", String(retryAfterSeconds));
+  return response;
+};
 
 export async function POST(request: NextRequest) {
   try {
+    const ipAddress = getClientIp(request);
+    const limitResult = registerLimiter.hit(ipAddress);
+
+    if (!limitResult.allowed) {
+      return buildRateLimitResponse(limitResult.retryAfterSeconds);
+    }
+
     const body = await request.json();
     const username = typeof body.username === "string" ? body.username.trim() : "";
     const password = typeof body.password === "string" ? body.password : "";

@@ -61,7 +61,7 @@ export default function FeedbackWidget({ source = "homepage" }: FeedbackWidgetPr
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-[var(--foreground)] px-4 py-3 text-sm font-medium text-white shadow-lg transition-transform hover:scale-[1.02] hover:opacity-95 sm:bottom-6 sm:right-6"
+        className="fixed bottom-24 right-4 z-40 inline-flex items-center gap-2 rounded-full bg-[var(--foreground)] px-4 py-3 text-sm font-medium text-white shadow-lg transition-transform hover:scale-[1.02] hover:opacity-95 sm:bottom-6 sm:right-6"
       >
         <span>💬</span>
         反馈建议

@@ -11,14 +11,14 @@ export default function StyleSelector({ selectedStyle, onSelect }: StyleSelector
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
+        <div className="h-8 w-8 rounded-lg bg-[var(--accent)]/10 flex items-center justify-center">
           <span className="text-sm font-bold text-[var(--accent)]">3</span>
         </div>
-        <h3 className="text-lg font-semibold text-[var(--foreground)]">
+        <h3 className="text-base font-semibold text-[var(--foreground)] sm:text-lg">
           选择风格
         </h3>
         {selectedStyle && (
-          <span className="ml-auto text-sm text-[var(--accent)] font-medium">
+          <span className="ml-auto text-xs font-medium text-[var(--accent)] sm:text-sm">
             ✓ 已选择
           </span>
         )}
@@ -28,13 +28,13 @@ export default function StyleSelector({ selectedStyle, onSelect }: StyleSelector
           <button
             key={style.id}
             onClick={() => onSelect(style)}
-            className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+            className={`min-h-[72px] rounded-xl border-2 p-3 text-left transition-all duration-200 sm:p-4 ${
               selectedStyle?.id === style.id
                 ? "border-[var(--accent)] bg-[var(--accent)]/10 shadow-md"
                 : "border-[var(--border)] bg-[var(--card-bg)] hover:border-[var(--accent)]/50 hover:bg-[var(--card-hover)]"
             }`}
           >
-            <span className="text-sm font-medium text-[var(--foreground)]">
+            <span className="text-sm font-medium leading-6 text-[var(--foreground)]">
               {style.name}
             </span>
           </button>

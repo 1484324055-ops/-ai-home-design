@@ -31,7 +31,7 @@ export default function ImageSiteLinks() {
         </p>
       </div>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {imageSites.map((site) => (
           <article
             key={site.name}
