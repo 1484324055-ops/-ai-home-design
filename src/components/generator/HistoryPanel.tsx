@@ -62,7 +62,7 @@ const buildOptions = (
 };
 
 const filterSectionStyle =
-  "rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-3";
+  "rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-2.5";
 
 export default function HistoryPanel({
   histories,
@@ -104,18 +104,18 @@ export default function HistoryPanel({
   const containerClassName =
     mode === "drawer"
       ? "flex h-full w-full max-w-[380px] flex-col border-r border-[var(--border)] bg-[var(--background)]"
-      : "flex h-[calc(100vh-7.5rem)] min-h-[720px] w-full flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--card-bg)] shadow-[0_18px_60px_rgba(15,23,42,0.08)]";
+      : "flex h-[calc(100vh-7rem)] min-h-[640px] w-full flex-col overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--card-bg)] shadow-[0_12px_40px_rgba(15,23,42,0.05)]";
 
   return (
     <section className={containerClassName}>
-      <div className="border-b border-[var(--border)] bg-[var(--background)]/92 px-4 py-4 backdrop-blur">
+      <div className="border-b border-[var(--border)] bg-[var(--background)]/92 px-3.5 py-3.5 backdrop-blur">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--foreground-secondary)]">
               Prompt Library
             </p>
-            <h2 className="mt-1 text-xl font-semibold text-[var(--foreground)]">历史方案库</h2>
-            <p className="mt-1 text-sm leading-6 text-[var(--foreground-secondary)]">
+            <h2 className="mt-1 text-lg font-semibold text-[var(--foreground)]">历史方案库</h2>
+            <p className="mt-1 text-xs leading-5 text-[var(--foreground-secondary)]">
               像会话栏一样管理你做过的方案，并按空间、柜体、风格快速筛选。
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function HistoryPanel({
 
         <div className="mt-4 grid gap-3">
           <div className={filterSectionStyle}>
-            <div className="mb-2 flex items-center justify-between gap-2">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
               <span className="text-sm font-semibold text-[var(--foreground)]">空间</span>
               <span className="text-[11px] text-[var(--foreground-secondary)]">
                 {spaceOptions.length} 个已用空间
@@ -155,7 +155,7 @@ export default function HistoryPanel({
             <select
               value={selectedSpaceId}
               onChange={(event) => setSelectedSpaceId(event.target.value)}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2.5 text-sm text-[var(--foreground)] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2 text-sm text-[var(--foreground)] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="">全部空间</option>
               {spaceOptions.map((option) => (
@@ -167,7 +167,7 @@ export default function HistoryPanel({
           </div>
 
           <div className={filterSectionStyle}>
-            <div className="mb-2 flex items-center justify-between gap-2">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
               <span className="text-sm font-semibold text-[var(--foreground)]">柜体</span>
               <span className="text-[11px] text-[var(--foreground-secondary)]">
                 {cabinetOptions.length} 个已用柜体
@@ -176,7 +176,7 @@ export default function HistoryPanel({
             <select
               value={selectedCabinetId}
               onChange={(event) => setSelectedCabinetId(event.target.value)}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2.5 text-sm text-[var(--foreground)] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2 text-sm text-[var(--foreground)] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="">全部柜体</option>
               {cabinetOptions.map((option) => (
@@ -188,7 +188,7 @@ export default function HistoryPanel({
           </div>
 
           <div className={filterSectionStyle}>
-            <div className="mb-2 flex items-center justify-between gap-2">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
               <span className="text-sm font-semibold text-[var(--foreground)]">风格</span>
               <span className="text-[11px] text-[var(--foreground-secondary)]">
                 {styleOptions.length} 个已用风格
@@ -197,7 +197,7 @@ export default function HistoryPanel({
             <select
               value={selectedStyleId}
               onChange={(event) => setSelectedStyleId(event.target.value)}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2.5 text-sm text-[var(--foreground)] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-3 py-2 text-sm text-[var(--foreground)] outline-none transition-all focus:border-transparent focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="">全部风格</option>
               {styleOptions.map((option) => (
