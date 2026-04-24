@@ -57,7 +57,7 @@ export default function AdvancedOptions({
   );
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <button
         onClick={() => setIsExpanded((current) => !current)}
         className="flex items-center gap-2 text-[var(--foreground-secondary)] hover:text-[var(--foreground)] transition-colors"
@@ -79,12 +79,12 @@ export default function AdvancedOptions({
       </button>
 
       {isExpanded && (
-        <div className="space-y-4 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+        <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-3 sm:p-4">
           <div className="rounded-lg bg-[var(--background-secondary)] px-3 py-2 text-xs text-[var(--foreground-secondary)]">
             默认推荐：商品房 + 广角全景 + 明亮自然光
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--foreground)]">住宅类型</label>
             <div className="flex flex-wrap gap-2">
               {residenceTypes.map((type) =>
@@ -98,7 +98,7 @@ export default function AdvancedOptions({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--foreground)]">镜头</label>
             <div className="flex flex-wrap gap-2">
               {cameraAngles.map((angle) =>
@@ -112,7 +112,7 @@ export default function AdvancedOptions({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="text-sm font-medium text-[var(--foreground)]">光影</label>
             <div className="flex flex-wrap gap-2">
               {lightings.map((lighting) =>
