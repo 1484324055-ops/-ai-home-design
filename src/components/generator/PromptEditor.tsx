@@ -98,141 +98,141 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
   );
 
   return (
-    <div className="space-y-4">
-      <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card-bg)] shadow-sm">
-        <div className="flex items-center gap-2 border-b border-[var(--border)] bg-[var(--background-secondary)] p-4">
-          <svg
-            className="h-5 w-5 text-[var(--accent)]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-          <h3 className="text-lg font-semibold text-[var(--foreground)]">生成结果</h3>
+    <section className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--card-bg)] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+      <div className="border-b border-[var(--border)] bg-[var(--background-secondary)] p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--foreground-secondary)]">
+              Output Workflow
+            </p>
+            <h3 className="mt-2 text-2xl font-bold text-[var(--foreground)]">生成结果</h3>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--foreground-secondary)]">
+              这里保留的是可直接用于生图的正向提示词。建议先复制中文提示词，再打开下方平台粘贴出图。
+            </p>
+          </div>
+
+          <div className="grid gap-2 sm:flex sm:flex-wrap lg:justify-end">
+            <button
+              onClick={() => copyWithFeedback("chinese", chinesePrompt)}
+              className={`min-h-[48px] rounded-xl px-5 py-3 text-sm font-semibold transition-all ${
+                copySuccess === "chinese"
+                  ? "bg-[var(--success)] text-white"
+                  : "bg-[var(--accent)] text-white shadow-lg hover:bg-[var(--accent-hover)]"
+              }`}
+            >
+              {copySuccess === "chinese" ? "已复制中文" : "复制中文提示词"}
+            </button>
+            <button
+              onClick={handleCopyBundle}
+              className={`min-h-[48px] rounded-xl px-5 py-3 text-sm font-semibold transition-all ${
+                copySuccess === "bundle"
+                  ? "bg-[var(--success)] text-white"
+                  : "border border-[var(--border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)]"
+              }`}
+            >
+              {copySuccess === "bundle" ? "已复制完整方案" : "复制完整方案"}
+            </button>
+            <a
+              href="#image-platforms"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-[var(--foreground)] px-5 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              选择生图平台
+            </a>
+          </div>
         </div>
 
-        <div className="space-y-6 p-4">
-          <div className="rounded-lg border border-[var(--border)] bg-[var(--background-secondary)] p-4">
-            <p className="text-xs uppercase tracking-wide text-[var(--foreground-secondary)]">
-              Current Plan
-            </p>
-            <h4 className="mt-1 text-lg font-semibold text-[var(--foreground)]">
-              {promptResult.title}
-            </h4>
-            <p className="mt-2 text-sm text-[var(--foreground-secondary)]">
-              这里保留的是可直接用于生图的正向提示词，你可以复制后直接去外部平台继续出图。
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {renderEditor(
-              "中文",
-              "中文正向提示词（可编辑）",
-              chinesePrompt,
-              setEditedChinese,
-              "中文提示词..."
-            )}
-            <div className="rounded-xl border border-[var(--border)] bg-[var(--background-secondary)]">
-              <button
-                onClick={() => setShowEnglish((current) => !current)}
-                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
-              >
-                <span className="text-sm font-medium text-[var(--foreground)]">
-                  英文提示词备用版本
-                </span>
-                <span className="text-xs text-[var(--foreground-secondary)]">
-                  {showEnglish ? "收起" : "展开"}
-                </span>
-              </button>
-              {showEnglish && (
-                <div className="border-t border-[var(--border)] p-4">
-                  {renderEditor(
-                    "English",
-                    "English positive prompt (editable)",
-                    englishPrompt,
-                    setEditedEnglish,
-                    "English prompt..."
-                  )}
-                </div>
-              )}
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          {[
+            ["1", "复制提示词", "优先复制中文版本"],
+            ["2", "打开平台", "国内平台中文更顺手"],
+            ["3", "出图微调", "根据画面继续补细节"],
+          ].map(([step, title, description]) => (
+            <div
+              key={step}
+              className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3"
+            >
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)]/10 text-xs font-bold text-[var(--accent)]">
+                {step}
+              </span>
+              <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{title}</p>
+              <p className="mt-1 text-xs text-[var(--foreground-secondary)]">{description}</p>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
 
-          <div className="border-t border-[var(--border)] pt-4">
-            <div className="mb-3 flex items-center gap-2">
-              <svg
-                className="h-4 w-4 text-[var(--foreground-secondary)]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-              <span className="text-sm font-medium text-[var(--foreground-secondary)]">参数摘要</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {promptResult.sections.map((section) => (
-                <span
-                  key={section.label}
-                  className="inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--background-secondary)] px-2.5 py-1 text-xs font-medium text-[var(--foreground)]"
-                  title={section.valueEn}
+      <div className="space-y-6 p-5">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-4">
+          <p className="text-xs uppercase tracking-wide text-[var(--foreground-secondary)]">
+            Current Plan
+          </p>
+          <h4 className="mt-1 text-lg font-semibold text-[var(--foreground)]">
+            {promptResult.title}
+          </h4>
+        </div>
+
+        <div className="space-y-4">
+          {renderEditor(
+            "中文",
+            "中文正向提示词（可编辑）",
+            chinesePrompt,
+            setEditedChinese,
+            "中文提示词..."
+          )}
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--background-secondary)]">
+            <button
+              onClick={() => setShowEnglish((current) => !current)}
+              className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+            >
+              <span className="text-sm font-medium text-[var(--foreground)]">
+                英文提示词备用版本
+              </span>
+              <span className="text-xs text-[var(--foreground-secondary)]">
+                {showEnglish ? "收起" : "展开"}
+              </span>
+            </button>
+            {showEnglish && (
+              <div className="space-y-3 border-t border-[var(--border)] p-4">
+                {renderEditor(
+                  "English",
+                  "English positive prompt (editable)",
+                  englishPrompt,
+                  setEditedEnglish,
+                  "English prompt..."
+                )}
+                <button
+                  onClick={() => copyWithFeedback("english", englishPrompt)}
+                  className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                    copySuccess === "english"
+                      ? "bg-[var(--success)] text-white"
+                      : "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
+                  }`}
                 >
-                  <span className="mr-1 text-[var(--foreground-secondary)]">{section.label}:</span>
-                  {section.value}
-                </span>
-              ))}
-            </div>
+                  {copySuccess === "english" ? "已复制英文" : "复制英文提示词"}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="border-t border-[var(--border)] pt-4">
+          <div className="mb-3 flex items-center gap-2">
+            <span className="text-sm font-medium text-[var(--foreground-secondary)]">参数摘要</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {promptResult.sections.map((section) => (
+              <span
+                key={section.label}
+                className="inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--background-secondary)] px-2.5 py-1 text-xs font-medium text-[var(--foreground)]"
+                title={section.valueEn}
+              >
+                <span className="mr-1 text-[var(--foreground-secondary)]">{section.label}:</span>
+                {section.value}
+              </span>
+            ))}
           </div>
         </div>
       </div>
-
-      <div className="grid gap-3 sm:flex sm:flex-wrap">
-        <button
-          onClick={() => copyWithFeedback("chinese", chinesePrompt)}
-          className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
-            copySuccess === "chinese"
-              ? "bg-[var(--success)] text-white"
-              : "border border-[var(--border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)]"
-          }`}
-        >
-          {copySuccess === "chinese" ? "已复制中文" : "复制中文提示词"}
-        </button>
-
-        {showEnglish && (
-          <button
-          onClick={() => copyWithFeedback("english", englishPrompt)}
-          className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
-            copySuccess === "english"
-              ? "bg-[var(--success)] text-white"
-              : "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
-          }`}
-        >
-          {copySuccess === "english" ? "已复制英文" : "复制英文提示词"}
-          </button>
-        )}
-
-        <button
-          onClick={handleCopyBundle}
-          className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
-            copySuccess === "bundle"
-              ? "bg-[var(--success)] text-white"
-              : "bg-[var(--foreground)] text-white hover:opacity-90"
-          }`}
-        >
-          {copySuccess === "bundle" ? "已复制完整方案" : "复制完整方案"}
-        </button>
-      </div>
-    </div>
+    </section>
   );
 }

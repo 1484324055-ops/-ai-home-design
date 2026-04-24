@@ -10,6 +10,7 @@ import {
   PromptAssetRecord,
   type AssetCategory,
 } from "@/lib/assets";
+import { generatePrompts } from "@/lib/prompt-generator";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -36,6 +37,14 @@ const blankAsset = (category: AssetCategory, sortOrder: number): PromptAssetReco
 
 const sortAssets = (assets: PromptAssetRecord[]) =>
   [...assets].sort((left, right) => left.sortOrder - right.sortOrder || left.name.localeCompare(right.name, "zh-CN"));
+
+const toPromptItem = (asset: PromptAssetRecord) => ({
+  id: asset.id,
+  name: asset.name,
+  nameEn: asset.nameEn,
+  promptZh: asset.promptZh,
+  promptEn: asset.promptEn,
+});
 
 export default function AssetsPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -65,6 +74,80 @@ export default function AssetsPage() {
     () => sortAssets(assets.filter((item) => item.category === "style")),
     [assets]
   );
+
+  const enabledAssetsCount = assets.filter((item) => item.enabled).length;
+  const disabledAssetsCount = assets.length - enabledAssetsCount;
+  const setupState = needsSetup ? "needs-table" : needsSeed ? "needs-seed" : "ready";
+
+  const promptPreview = useMemo(() => {
+    if (!draft) {
+      return null;
+    }
+
+    const findAsset = (category: AssetCategory, preferredIds: string[] = []) => {
+      const categoryItems = assets.filter((item) => item.category === category);
+
+      for (const preferredId of preferredIds) {
+        const preferred = categoryItems.find((item) => item.id === preferredId);
+        if (preferred) {
+          return preferred;
+        }
+      }
+
+      return categoryItems.find((item) => item.enabled) ?? categoryItems[0] ?? null;
+    };
+
+    const useDraftOrAsset = (category: AssetCategory, preferredIds: string[] = []) =>
+      draft.category === category ? draft : findAsset(category, preferredIds);
+
+    const cabinetPreview = useDraftOrAsset("cabinet", ["sideboard"]);
+    const spacePreview = useDraftOrAsset(
+      "space",
+      draft.category === "cabinet" && draft.applicableSpaceIds.length > 0
+        ? draft.applicableSpaceIds
+        : ["dining-room"]
+    );
+    const stylePreview = useDraftOrAsset("style", ["modern-minimalist"]);
+    const materialPreview = useDraftOrAsset(
+      "material",
+      draft.category === "style"
+        ? assets
+            .filter((item) => item.category === "material" && item.applicableStyleIds.includes(draft.id))
+            .map((item) => item.id)
+        : ["a-oak-white"]
+    );
+    const residencePreview = useDraftOrAsset("residence", ["standard"]);
+    const cameraPreview = useDraftOrAsset("camera", ["wide-angle"]);
+    const lightingPreview = useDraftOrAsset("lighting", ["natural"]);
+
+    if (
+      !spacePreview ||
+      !cabinetPreview ||
+      !stylePreview ||
+      !materialPreview ||
+      !residencePreview ||
+      !cameraPreview ||
+      !lightingPreview
+    ) {
+      return null;
+    }
+
+    return generatePrompts({
+      space: toPromptItem(spacePreview),
+      cabinet: {
+        ...toPromptItem(cabinetPreview),
+        applicableSpaces: cabinetPreview.applicableSpaceIds,
+      },
+      style: toPromptItem(stylePreview),
+      material: {
+        ...toPromptItem(materialPreview),
+        applicableStyles: materialPreview.applicableStyleIds,
+      },
+      residenceType: toPromptItem(residencePreview),
+      cameraAngle: toPromptItem(cameraPreview),
+      lighting: toPromptItem(lightingPreview),
+    });
+  }, [assets, draft]);
 
   useEffect(() => {
     if (!authLoading && user?.isAdmin) {
@@ -304,6 +387,65 @@ export default function AssetsPage() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={loadAssets}
+                    className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition-colors hover:bg-[var(--card-hover)]"
+                  >
+                    刷新
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+                  <p className="text-xs font-medium text-[var(--foreground-secondary)]">当前数据源</p>
+                  <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
+                    {source === "database" ? "数据库资产" : "内置默认资产"}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-[var(--foreground-secondary)]">
+                    {source === "database"
+                      ? "前台正在读取你在这里维护的资产。"
+                      : "还没导入数据库，当前只是在看默认模板。"}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+                  <p className="text-xs font-medium text-[var(--foreground-secondary)]">资产数量</p>
+                  <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
+                    {enabledAssetsCount} 启用 / {assets.length} 总数
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-[var(--foreground-secondary)]">
+                    {disabledAssetsCount > 0 ? `${disabledAssetsCount} 条已停用，不会出现在前台。` : "全部资产都处于启用状态。"}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+                  <p className="text-xs font-medium text-[var(--foreground-secondary)]">初始化状态</p>
+                  <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
+                    {setupState === "needs-table"
+                      ? "需要先建表"
+                      : setupState === "needs-seed"
+                        ? "等待导入资产"
+                        : "可以直接编辑"}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-[var(--foreground-secondary)]">
+                    {setupState === "needs-table"
+                      ? "先去 Neon 执行建表 SQL，再回到这里刷新。"
+                      : setupState === "needs-seed"
+                        ? "点击导入默认资产后，就能长期维护。"
+                        : "保存后前台会读取最新资产内容。"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h2 className="text-sm font-semibold text-[var(--foreground)]">资产库使用流程</h2>
+                    <p className="mt-1 text-xs leading-5 text-[var(--foreground-secondary)]">
+                      这三个状态能帮你判断：现在是还没建表、还没导入，还是已经正式使用数据库资产。
+                    </p>
+                  </div>
                   {needsSeed && !needsSetup && (
                     <button
                       onClick={seedDefaults}
@@ -312,12 +454,27 @@ export default function AssetsPage() {
                       导入默认资产
                     </button>
                   )}
-                  <button
-                    onClick={loadAssets}
-                    className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition-colors hover:bg-[var(--card-hover)]"
-                  >
-                    刷新
-                  </button>
+                </div>
+
+                <div className="mt-4 grid gap-3 md:grid-cols-3">
+                  {[
+                    ["1", "创建数据表", needsSetup ? "未完成" : "已完成"],
+                    ["2", "导入默认资产", needsSeed ? "未完成" : "已完成"],
+                    ["3", "编辑并保存", source === "database" && !needsSeed ? "已启用" : "等待前两步"],
+                  ].map(([step, title, state]) => (
+                    <div
+                      key={step}
+                      className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)]/10 text-xs font-bold text-[var(--accent)]">
+                          {step}
+                        </span>
+                        <span className="text-xs font-medium text-[var(--foreground-secondary)]">{state}</span>
+                      </div>
+                      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{title}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -483,6 +640,41 @@ export default function AssetsPage() {
                       </label>
 
                       {renderRelationshipEditor()}
+
+                      {promptPreview && (
+                        <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-4">
+                          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                            <div>
+                              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--foreground-secondary)]">
+                                Live Preview
+                              </p>
+                              <h3 className="mt-1 text-lg font-bold text-[var(--foreground)]">提示词质量预览</h3>
+                            </div>
+                            <span className="rounded-full bg-[var(--accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--accent)]">
+                              示例：{promptPreview.title}
+                            </span>
+                          </div>
+
+                          <p className="mt-2 text-sm leading-6 text-[var(--foreground-secondary)]">
+                            你正在编辑的片段会被临时放进一套示例方案里，方便马上判断这段中文和英文读起来是否自然。
+                          </p>
+
+                          <div className="mt-4 grid gap-3 xl:grid-cols-2">
+                            <div className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+                              <p className="text-xs font-semibold text-[var(--accent)]">中文完整示例</p>
+                              <p className="mt-2 text-sm leading-7 text-[var(--foreground-secondary)]">
+                                {promptPreview.chinese}
+                              </p>
+                            </div>
+                            <div className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4">
+                              <p className="text-xs font-semibold text-[var(--accent)]">English Preview</p>
+                              <p className="mt-2 text-sm leading-7 text-[var(--foreground-secondary)]">
+                                {promptPreview.english}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="flex flex-wrap gap-3 border-t border-[var(--border)] pt-4">
                         <button

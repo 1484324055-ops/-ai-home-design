@@ -525,7 +525,7 @@ export default function HomePage() {
 
               <PromptEditor promptResult={promptResult} />
 
-              <ImageSiteLinks />
+              {promptResult && <ImageSiteLinks />}
             </section>
           </div>
         </main>

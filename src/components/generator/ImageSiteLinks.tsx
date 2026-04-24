@@ -71,11 +71,14 @@ const imageSiteGroups = [
 
 export default function ImageSiteLinks() {
   return (
-    <section className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-5 shadow-sm">
+    <section
+      id="image-platforms"
+      className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-5 shadow-sm"
+    >
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold text-[var(--foreground)]">下一步：去生图网站直接出图</h2>
+        <h2 className="text-lg font-semibold text-[var(--foreground)]">下一步：选择生图平台</h2>
         <p className="text-sm text-[var(--foreground-secondary)]">
-          这些是我在 2026 年 4 月 25 日核对过的网页入口。你可以先在本站生成提示词，再一键跳过去继续生图。
+          复制上面的提示词后，选择一个平台打开粘贴即可。国内平台优先用中文，海外平台可以展开英文备用版本。
         </p>
       </div>
 
