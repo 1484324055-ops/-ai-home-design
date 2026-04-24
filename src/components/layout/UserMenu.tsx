@@ -34,12 +34,20 @@ export default function UserMenu() {
   return (
     <div className="flex items-center gap-3">
       {user.isAdmin && (
-        <button
-          onClick={() => router.push("/insights")}
-          className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--foreground-secondary)] transition-colors hover:text-[var(--foreground)] hover:bg-[var(--card-hover)]"
-        >
-          数据面板
-        </button>
+        <>
+          <button
+            onClick={() => router.push("/assets")}
+            className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--foreground-secondary)] transition-colors hover:text-[var(--foreground)] hover:bg-[var(--card-hover)]"
+          >
+            资产库
+          </button>
+          <button
+            onClick={() => router.push("/insights")}
+            className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-sm text-[var(--foreground-secondary)] transition-colors hover:text-[var(--foreground)] hover:bg-[var(--card-hover)]"
+          >
+            数据面板
+          </button>
+        </>
       )}
       <span className="text-sm text-[var(--foreground-secondary)]">
         {user.username}

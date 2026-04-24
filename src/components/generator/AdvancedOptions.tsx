@@ -3,15 +3,15 @@
 import { useState } from "react";
 import {
   ResidenceType,
-  residenceTypes,
   CameraAngle,
-  cameraAngles,
   Lighting,
-  lightings,
   recommendedAdvancedOptions,
 } from "@/lib/data";
 
 interface AdvancedOptionsProps {
+  residenceTypes: ResidenceType[];
+  cameraAngles: CameraAngle[];
+  lightings: Lighting[];
   selectedResidenceType: ResidenceType;
   selectedCameraAngle: CameraAngle;
   selectedLighting: Lighting;
@@ -21,6 +21,9 @@ interface AdvancedOptionsProps {
 }
 
 export default function AdvancedOptions({
+  residenceTypes,
+  cameraAngles,
+  lightings,
   selectedResidenceType,
   selectedCameraAngle,
   selectedLighting,

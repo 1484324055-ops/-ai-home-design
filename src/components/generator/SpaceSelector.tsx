@@ -1,13 +1,14 @@
 "use client";
 
-import { Space, spaces } from "@/lib/data";
+import { Space } from "@/lib/data";
 
 interface SpaceSelectorProps {
+  spaces: Space[];
   selectedSpace: Space | null;
   onSelect: (space: Space) => void;
 }
 
-export default function SpaceSelector({ selectedSpace, onSelect }: SpaceSelectorProps) {
+export default function SpaceSelector({ spaces, selectedSpace, onSelect }: SpaceSelectorProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">

@@ -20,12 +20,11 @@ import {
   ResidenceType,
   CameraAngle,
   Lighting,
-  getAvailableCabinets,
-  getAvailableMaterials,
-  defaultResidenceType,
-  defaultCameraAngle,
-  defaultLighting,
+  DEFAULT_RESIDENCE_TYPE_ID,
+  DEFAULT_CAMERA_ANGLE_ID,
+  DEFAULT_LIGHTING_ID,
 } from "@/lib/data";
+import { AssetLibrary, defaultAssetLibrary } from "@/lib/assets";
 import { generatePrompts, PromptResult } from "@/lib/prompt-generator";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import {
@@ -41,15 +40,26 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 export default function HomePage() {
   const { user, isLoading: authLoading } = useAuth();
   const [isHistoryDrawerOpen, setIsHistoryDrawerOpen] = useState(false);
+  const [assetLibrary, setAssetLibrary] = useState<AssetLibrary>(defaultAssetLibrary);
+  const [assetMessage, setAssetMessage] = useState("");
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [selectedCabinet, setSelectedCabinet] = useState<Cabinet | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<Style | null>(null);
   const [selectedMaterial, setSelectedMaterial] = useState<Material | null>(null);
   const [selectedResidenceType, setSelectedResidenceType] =
-    useState<ResidenceType>(defaultResidenceType);
+    useState<ResidenceType>(
+      defaultAssetLibrary.residenceTypes.find((item) => item.id === DEFAULT_RESIDENCE_TYPE_ID) ??
+        defaultAssetLibrary.residenceTypes[0]
+    );
   const [selectedCameraAngle, setSelectedCameraAngle] =
-    useState<CameraAngle>(defaultCameraAngle);
-  const [selectedLighting, setSelectedLighting] = useState<Lighting>(defaultLighting);
+    useState<CameraAngle>(
+      defaultAssetLibrary.cameraAngles.find((item) => item.id === DEFAULT_CAMERA_ANGLE_ID) ??
+        defaultAssetLibrary.cameraAngles[0]
+    );
+  const [selectedLighting, setSelectedLighting] = useState<Lighting>(
+    defaultAssetLibrary.lightings.find((item) => item.id === DEFAULT_LIGHTING_ID) ??
+      defaultAssetLibrary.lightings[0]
+  );
   const [promptResult, setPromptResult] = useState<PromptResult | null>(null);
   const [histories, setHistories] = useState<HistoryRecord[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
@@ -57,14 +67,38 @@ export default function HomePage() {
   const [activeHistoryId, setActiveHistoryId] = useState<number | null>(null);
   const [historyMessage, setHistoryMessage] = useState("");
 
-  const availableCabinets = selectedSpace ? getAvailableCabinets(selectedSpace.id) : [];
-  const availableMaterials = selectedStyle ? getAvailableMaterials(selectedStyle.id) : [];
+  const availableCabinets = selectedSpace
+    ? assetLibrary.cabinets.filter((cabinet) => cabinet.applicableSpaces.includes(selectedSpace.id))
+    : [];
+  const availableMaterials = selectedStyle
+    ? assetLibrary.materials.filter((material) => material.applicableStyles.includes(selectedStyle.id))
+    : [];
 
   useEffect(() => {
     if (!authLoading && user) {
+      void loadAssets();
       void loadHistories();
     }
   }, [authLoading, user]);
+
+  useEffect(() => {
+    const nextResidenceType =
+      assetLibrary.residenceTypes.find((item) => item.id === selectedResidenceType.id) ??
+      assetLibrary.residenceTypes.find((item) => item.id === DEFAULT_RESIDENCE_TYPE_ID) ??
+      assetLibrary.residenceTypes[0];
+    const nextCameraAngle =
+      assetLibrary.cameraAngles.find((item) => item.id === selectedCameraAngle.id) ??
+      assetLibrary.cameraAngles.find((item) => item.id === DEFAULT_CAMERA_ANGLE_ID) ??
+      assetLibrary.cameraAngles[0];
+    const nextLighting =
+      assetLibrary.lightings.find((item) => item.id === selectedLighting.id) ??
+      assetLibrary.lightings.find((item) => item.id === DEFAULT_LIGHTING_ID) ??
+      assetLibrary.lightings[0];
+
+    setSelectedResidenceType(nextResidenceType);
+    setSelectedCameraAngle(nextCameraAngle);
+    setSelectedLighting(nextLighting);
+  }, [assetLibrary]);
 
   useEffect(() => {
     if (availableCabinets.length !== 1) {
@@ -130,6 +164,21 @@ export default function HomePage() {
       console.error("Load histories error:", error);
     } finally {
       setIsHistoryLoading(false);
+    }
+  };
+
+  const loadAssets = async () => {
+    try {
+      const response = await fetch("/api/assets");
+      const data = await response.json();
+
+      if (response.ok && data.library) {
+        setAssetLibrary(data.library);
+        setAssetMessage(data.message || "");
+      }
+    } catch (error) {
+      console.error("Load assets error:", error);
+      setAssetMessage("资产库读取失败，当前先使用内置资产。");
     }
   };
 
@@ -231,16 +280,25 @@ export default function HomePage() {
     setSelectedCabinet(null);
     setSelectedStyle(null);
     setSelectedMaterial(null);
-    setSelectedResidenceType(defaultResidenceType);
-    setSelectedCameraAngle(defaultCameraAngle);
-    setSelectedLighting(defaultLighting);
+    setSelectedResidenceType(
+      assetLibrary.residenceTypes.find((item) => item.id === DEFAULT_RESIDENCE_TYPE_ID) ??
+        assetLibrary.residenceTypes[0]
+    );
+    setSelectedCameraAngle(
+      assetLibrary.cameraAngles.find((item) => item.id === DEFAULT_CAMERA_ANGLE_ID) ??
+        assetLibrary.cameraAngles[0]
+    );
+    setSelectedLighting(
+      assetLibrary.lightings.find((item) => item.id === DEFAULT_LIGHTING_ID) ??
+        assetLibrary.lightings[0]
+    );
     setPromptResult(null);
     setActiveHistoryId(null);
     resetStatusMessages();
   };
 
   const handleLoadHistory = (record: HistoryRecord) => {
-    const selection = selectionFromHistory(record);
+    const selection = selectionFromHistory(record, assetLibrary);
 
     if (!selection) {
       setHistoryMessage("这条历史记录对应的选项已经不存在了，暂时无法直接载入。");
@@ -392,7 +450,17 @@ export default function HomePage() {
                 </div>
 
                 <div className="mt-6 space-y-6">
-                  <SpaceSelector selectedSpace={selectedSpace} onSelect={handleSpaceSelect} />
+                  {assetMessage && (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                      {assetMessage}
+                    </div>
+                  )}
+
+                  <SpaceSelector
+                    spaces={assetLibrary.spaces}
+                    selectedSpace={selectedSpace}
+                    onSelect={handleSpaceSelect}
+                  />
 
                   <CabinetSelector
                     cabinets={availableCabinets}
@@ -400,7 +468,11 @@ export default function HomePage() {
                     onSelect={handleCabinetSelect}
                   />
 
-                  <StyleSelector selectedStyle={selectedStyle} onSelect={handleStyleSelect} />
+                  <StyleSelector
+                    styles={assetLibrary.styles}
+                    selectedStyle={selectedStyle}
+                    onSelect={handleStyleSelect}
+                  />
 
                   <MaterialSelector
                     materials={availableMaterials}
@@ -409,6 +481,9 @@ export default function HomePage() {
                   />
 
                   <AdvancedOptions
+                    residenceTypes={assetLibrary.residenceTypes}
+                    cameraAngles={assetLibrary.cameraAngles}
+                    lightings={assetLibrary.lightings}
                     selectedResidenceType={selectedResidenceType}
                     selectedCameraAngle={selectedCameraAngle}
                     selectedLighting={selectedLighting}

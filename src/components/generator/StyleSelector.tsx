@@ -1,13 +1,14 @@
 "use client";
 
-import { Style, styles } from "@/lib/data";
+import { Style } from "@/lib/data";
 
 interface StyleSelectorProps {
+  styles: Style[];
   selectedStyle: Style | null;
   onSelect: (style: Style) => void;
 }
 
-export default function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
+export default function StyleSelector({ styles, selectedStyle, onSelect }: StyleSelectorProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">

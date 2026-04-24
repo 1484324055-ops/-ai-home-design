@@ -12,12 +12,14 @@ type CopyTarget = "" | "chinese" | "english" | "bundle";
 export default function PromptEditor({ promptResult }: PromptEditorProps) {
   const [editedChinese, setEditedChinese] = useState("");
   const [editedEnglish, setEditedEnglish] = useState("");
+  const [showEnglish, setShowEnglish] = useState(false);
   const [copySuccess, setCopySuccess] = useState<CopyTarget>("");
 
   useEffect(() => {
     if (promptResult) {
       setEditedChinese("");
       setEditedEnglish("");
+      setShowEnglish(false);
       setCopySuccess("");
     }
   }, [promptResult]);
@@ -128,7 +130,7 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
             </p>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="space-y-4">
             {renderEditor(
               "中文",
               "中文正向提示词（可编辑）",
@@ -136,13 +138,30 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
               setEditedChinese,
               "中文提示词..."
             )}
-            {renderEditor(
-              "English",
-              "English positive prompt (editable)",
-              englishPrompt,
-              setEditedEnglish,
-              "English prompt..."
-            )}
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--background-secondary)]">
+              <button
+                onClick={() => setShowEnglish((current) => !current)}
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+              >
+                <span className="text-sm font-medium text-[var(--foreground)]">
+                  英文提示词备用版本
+                </span>
+                <span className="text-xs text-[var(--foreground-secondary)]">
+                  {showEnglish ? "收起" : "展开"}
+                </span>
+              </button>
+              {showEnglish && (
+                <div className="border-t border-[var(--border)] p-4">
+                  {renderEditor(
+                    "English",
+                    "English positive prompt (editable)",
+                    englishPrompt,
+                    setEditedEnglish,
+                    "English prompt..."
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="border-t border-[var(--border)] pt-4">
@@ -190,7 +209,8 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
           {copySuccess === "chinese" ? "已复制中文" : "复制中文提示词"}
         </button>
 
-        <button
+        {showEnglish && (
+          <button
           onClick={() => copyWithFeedback("english", englishPrompt)}
           className={`min-h-[48px] rounded-lg px-5 py-3 font-medium transition-all ${
             copySuccess === "english"
@@ -199,7 +219,8 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
           }`}
         >
           {copySuccess === "english" ? "已复制英文" : "复制英文提示词"}
-        </button>
+          </button>
+        )}
 
         <button
           onClick={handleCopyBundle}

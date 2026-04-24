@@ -73,3 +73,21 @@ model LoginEvent {
   @@index([createdAt])
   @@index([userId, createdAt])
 }
+
+model PromptAsset {
+  id                 String   @id
+  category           String
+  name               String
+  nameEn             String
+  promptZh           String   @db.Text
+  promptEn           String   @db.Text
+  applicableSpaceIds String[] @default([])
+  applicableStyleIds String[] @default([])
+  enabled            Boolean  @default(true)
+  sortOrder          Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([category, sortOrder])
+  @@index([enabled, category])
+}

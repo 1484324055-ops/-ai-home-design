@@ -9,6 +9,7 @@ import {
   getSpaceById,
   getStyleById,
 } from "./data";
+import type { AssetLibrary } from "./assets";
 
 export interface HistoryRecord {
   id: number;
@@ -128,14 +129,24 @@ export const promptResultFromHistory = (record: HistoryRecord): PromptResult => 
   sections: buildSectionsFromRecord(record),
 });
 
-export const selectionFromHistory = (record: HistoryRecord): Selection | null => {
-  const space = getSpaceById(record.spaceId);
-  const cabinet = getCabinetById(record.cabinetId);
-  const style = getStyleById(record.styleId);
-  const material = getMaterialById(record.materialId);
-  const residenceType = getResidenceTypeById(record.residenceTypeId);
-  const cameraAngle = getCameraAngleById(record.cameraAngleId);
-  const lighting = getLightingById(record.lightingId);
+export const selectionFromHistory = (
+  record: HistoryRecord,
+  library?: AssetLibrary
+): Selection | null => {
+  const space = library?.spaces.find((item) => item.id === record.spaceId) ?? getSpaceById(record.spaceId);
+  const cabinet =
+    library?.cabinets.find((item) => item.id === record.cabinetId) ?? getCabinetById(record.cabinetId);
+  const style = library?.styles.find((item) => item.id === record.styleId) ?? getStyleById(record.styleId);
+  const material =
+    library?.materials.find((item) => item.id === record.materialId) ?? getMaterialById(record.materialId);
+  const residenceType =
+    library?.residenceTypes.find((item) => item.id === record.residenceTypeId) ??
+    getResidenceTypeById(record.residenceTypeId);
+  const cameraAngle =
+    library?.cameraAngles.find((item) => item.id === record.cameraAngleId) ??
+    getCameraAngleById(record.cameraAngleId);
+  const lighting =
+    library?.lightings.find((item) => item.id === record.lightingId) ?? getLightingById(record.lightingId);
 
   if (!space || !cabinet || !style || !material || !residenceType || !cameraAngle || !lighting) {
     return null;

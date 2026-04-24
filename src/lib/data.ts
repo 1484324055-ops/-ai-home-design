@@ -2,6 +2,8 @@ export interface Space {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
 }
 
 export const spaces: Space[] = [
@@ -36,6 +38,8 @@ export interface Cabinet {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
   applicableSpaces: string[];
 }
 
@@ -130,6 +134,8 @@ export interface Style {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
 }
 
 export const styles: Style[] = [
@@ -174,6 +180,8 @@ export interface Material {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
   applicableStyles: string[];
 }
 
@@ -234,6 +242,8 @@ export interface ResidenceType {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
 }
 
 export const residenceTypes: ResidenceType[] = [
@@ -261,6 +271,8 @@ export interface CameraAngle {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
 }
 
 export const cameraAngles: CameraAngle[] = [
@@ -285,6 +297,8 @@ export interface Lighting {
   id: string;
   name: string;
   nameEn: string;
+  promptZh?: string;
+  promptEn?: string;
 }
 
 export const lightings: Lighting[] = [
@@ -348,14 +362,13 @@ export interface Selection {
   lighting: Lighting;
 }
 
+const getPromptEn = (item: { nameEn: string; promptEn?: string }) => item.promptEn || item.nameEn;
+
 export const buildEnglishPrompt = (selection: Selection): string =>
   [
-    selection.residenceType.nameEn,
-    selection.space.nameEn,
-    selection.style.nameEn,
-    selection.cabinet.nameEn,
-    selection.material.nameEn,
-    selection.lighting.nameEn,
-    selection.cameraAngle.nameEn,
+    `Generate a photorealistic full-house custom cabinetry rendering for ${getPromptEn(selection.space)} in ${getPromptEn(selection.residenceType)}.`,
+    `Use ${getPromptEn(selection.style)} as the design direction, with a clear focus on ${getPromptEn(selection.cabinet)}.`,
+    `Materials and details should emphasize ${getPromptEn(selection.material)}.`,
+    `Compose the image with ${getPromptEn(selection.cameraAngle)} and ${getPromptEn(selection.lighting)}.`,
     "custom built-in cabinetry, refined storage composition, tactile material layers, realistic residential scale, 8k, photorealistic interior render, editorial quality",
-  ].join(", ");
+  ].join(" ");
