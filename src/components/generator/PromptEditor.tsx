@@ -98,15 +98,15 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
   );
 
   return (
-    <section className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-[var(--card-bg)] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-      <div className="border-b border-[var(--border)] bg-[var(--background-secondary)] p-5">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+    <section className="overflow-hidden rounded-[22px] border border-[var(--border)] bg-[var(--card-bg)] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+      <div className="border-b border-[var(--border)] bg-[var(--background-secondary)] p-4">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--foreground-secondary)]">
-              Output Workflow
+              Generated Prompt
             </p>
-            <h3 className="mt-2 text-2xl font-bold text-[var(--foreground)]">生成结果</h3>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--foreground-secondary)]">
+            <h3 className="mt-1 text-xl font-bold text-[var(--foreground)]">生成结果</h3>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-[var(--foreground-secondary)]">
               这里保留的是可直接用于生图的正向提示词。建议先复制中文提示词，再打开下方平台粘贴出图。
             </p>
           </div>
@@ -140,29 +140,10 @@ export default function PromptEditor({ promptResult }: PromptEditorProps) {
             </a>
           </div>
         </div>
-
-        <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          {[
-            ["1", "复制提示词", "优先复制中文版本"],
-            ["2", "打开平台", "国内平台中文更顺手"],
-            ["3", "出图微调", "根据画面继续补细节"],
-          ].map(([step, title, description]) => (
-            <div
-              key={step}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3"
-            >
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[var(--accent)]/10 text-xs font-bold text-[var(--accent)]">
-                {step}
-              </span>
-              <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{title}</p>
-              <p className="mt-1 text-xs text-[var(--foreground-secondary)]">{description}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
-      <div className="space-y-6 p-5">
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-4">
+      <div className="space-y-4 p-4 sm:p-5">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-3 sm:p-4">
           <p className="text-xs uppercase tracking-wide text-[var(--foreground-secondary)]">
             Current Plan
           </p>

@@ -381,23 +381,8 @@ export default function HomePage() {
       <div className="min-h-screen bg-[var(--background)]">
         <Header />
 
-        <main className="mx-auto max-w-[1600px] px-3 py-3 pb-24 sm:px-6 sm:py-5 sm:pb-28 lg:px-8 lg:pb-6">
-          <div className="lg:grid lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-6">
-            <aside className="hidden lg:block">
-              <div className="sticky top-24">
-                <HistoryPanel
-                  histories={histories}
-                  isLoading={isHistoryLoading}
-                  saveState={saveState}
-                  activeHistoryId={activeHistoryId}
-                  onLoad={handleLoadHistory}
-                  onToggleFavorite={handleToggleFavorite}
-                  onDelete={handleDeleteHistory}
-                  mode="sidebar"
-                />
-              </div>
-            </aside>
-
+        <main className="mx-auto max-w-[1500px] px-3 py-3 pb-24 sm:px-6 sm:py-5 sm:pb-28 lg:pb-6 lg:pl-20 lg:pr-10 xl:px-10">
+          <div>
             <section className="min-w-0 space-y-4 sm:space-y-6">
               <div className="rounded-[20px] border border-[var(--border)] bg-[var(--card-bg)] p-3 shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[24px] sm:p-5">
                 <div className="flex flex-col gap-3 border-b border-[var(--border)] pb-3 sm:pb-4">
@@ -530,14 +515,26 @@ export default function HomePage() {
           </div>
         </main>
 
+        <button
+          onClick={() => setIsHistoryDrawerOpen(true)}
+          className="fixed left-4 top-28 z-40 hidden w-12 flex-col items-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] px-2 py-3 text-xs font-semibold text-[var(--foreground)] shadow-[0_14px_40px_rgba(15,23,42,0.16)] transition-all hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent)] lg:flex"
+          aria-label="打开历史方案栏"
+        >
+          <span className="text-base leading-none">☰</span>
+          <span className="leading-4 [writing-mode:vertical-rl]">方案栏</span>
+          <span className="rounded-full bg-[var(--accent)]/10 px-1.5 py-1 text-[10px] text-[var(--accent)]">
+            {histories.length}
+          </span>
+        </button>
+
         {isHistoryDrawerOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 z-50">
             <button
               aria-label="关闭历史方案栏"
               className="absolute inset-0 bg-black/35"
               onClick={() => setIsHistoryDrawerOpen(false)}
             />
-            <div className="absolute inset-y-0 left-0 w-full max-w-[380px]">
+            <div className="absolute inset-y-0 left-0 w-full max-w-[400px]">
               <HistoryPanel
                 histories={histories}
                 isLoading={isHistoryLoading}
