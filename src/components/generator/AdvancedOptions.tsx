@@ -41,7 +41,7 @@ export default function AdvancedOptions({
   ) => (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 text-sm transition-all ${
+      className={`inline-flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-xs transition-all sm:px-4 sm:text-sm ${
         isSelected
           ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
           : "border-[var(--border)] text-[var(--foreground-secondary)] hover:border-[var(--accent)]/50"

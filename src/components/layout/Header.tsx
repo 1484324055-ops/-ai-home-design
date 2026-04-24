@@ -5,13 +5,13 @@ import UserMenu from "./UserMenu";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-[var(--background)]/80 backdrop-blur-md border-b border-[var(--border)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[var(--accent)] rounded-lg flex items-center justify-center">
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/90 backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-3 py-2 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center justify-between gap-2 sm:h-16 sm:flex-nowrap sm:py-0">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--accent)]">
               <svg
-                className="w-5 h-5 text-white"
+                className="h-5 w-5 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -24,12 +24,12 @@ export default function Header() {
                 />
               </svg>
             </div>
-            <h1 className="text-lg font-bold text-[var(--foreground)]">
+            <h1 className="truncate text-base font-bold text-[var(--foreground)] sm:text-lg">
               AI Home Design
             </h1>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2 sm:w-auto sm:justify-end sm:gap-4">
             <ThemeSwitcher />
             <UserMenu />
           </div>

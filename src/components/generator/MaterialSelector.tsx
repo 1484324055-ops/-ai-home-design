@@ -46,18 +46,18 @@ export default function MaterialSelector({
           </span>
         )}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4">
         {materials.map((material) => (
           <button
             key={material.id}
             onClick={() => onSelect(material)}
-            className={`min-h-[72px] rounded-xl border-2 p-3 text-left transition-all duration-200 sm:p-4 ${
+            className={`min-h-[58px] rounded-xl border-2 p-2 text-left transition-all duration-200 sm:min-h-[72px] sm:p-4 ${
               selectedMaterial?.id === material.id
                 ? "border-[var(--accent)] bg-[var(--accent)]/10 shadow-md"
                 : "border-[var(--border)] bg-[var(--card-bg)] hover:border-[var(--accent)]/50 hover:bg-[var(--card-hover)]"
             }`}
           >
-            <span className="text-sm font-medium leading-6 text-[var(--foreground)]">
+            <span className="text-xs font-medium leading-5 text-[var(--foreground)] sm:text-sm sm:leading-6">
               {material.name}
             </span>
           </button>

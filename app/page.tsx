@@ -381,7 +381,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-[var(--background)]">
         <Header />
 
-        <main className="mx-auto max-w-[1600px] px-4 py-6 pb-28 sm:px-6 sm:pb-32 lg:px-8 lg:pb-6">
+        <main className="mx-auto max-w-[1600px] px-3 py-4 pb-28 sm:px-6 sm:py-6 sm:pb-32 lg:px-8 lg:pb-6">
           <div className="lg:grid lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-6">
             <aside className="hidden lg:block">
               <div className="sticky top-24">
@@ -398,18 +398,18 @@ export default function HomePage() {
               </div>
             </aside>
 
-            <section className="min-w-0 space-y-8">
-              <div className="rounded-[28px] border border-[var(--border)] bg-[var(--card-bg)] p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:p-7">
-                <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-6">
+            <section className="min-w-0 space-y-5 sm:space-y-8">
+              <div className="rounded-[22px] border border-[var(--border)] bg-[var(--card-bg)] p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[28px] sm:p-7">
+                <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-5 sm:pb-6">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="max-w-3xl">
                       <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--foreground-secondary)]">
                         Prompt Studio
                       </p>
-                      <h1 className="mt-2 text-3xl font-bold text-[var(--foreground)]">
+                      <h1 className="mt-2 text-2xl font-bold leading-tight text-[var(--foreground)] sm:text-3xl">
                         AI 全屋定制效果图生成器
                       </h1>
-                      <p className="mt-2 text-[var(--foreground-secondary)]">
+                      <p className="mt-2 text-sm leading-6 text-[var(--foreground-secondary)] sm:text-base">
                         选择空间、柜体、风格和材质，生成更自然的中英文提示词，并把常用方案沉淀在左侧方案库里。
                       </p>
                     </div>
@@ -423,19 +423,19 @@ export default function HomePage() {
                     </button>
                   </div>
 
-                  <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3">
-                      <p className="text-xs text-[var(--foreground-secondary)]">历史方案总数</p>
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-3 py-3 sm:px-4">
+                      <p className="truncate text-[11px] text-[var(--foreground-secondary)] sm:text-xs">历史方案</p>
                       <p className="mt-1 text-xl font-semibold text-[var(--foreground)]">{histories.length}</p>
                     </div>
-                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3">
-                      <p className="text-xs text-[var(--foreground-secondary)]">当前激活方案</p>
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-3 py-3 sm:px-4">
+                      <p className="truncate text-[11px] text-[var(--foreground-secondary)] sm:text-xs">当前方案</p>
                       <p className="mt-1 truncate text-sm font-medium text-[var(--foreground)]">
-                        {promptResult?.title || "还未载入方案"}
+                        {promptResult?.title || "未生成"}
                       </p>
                     </div>
-                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3">
-                      <p className="text-xs text-[var(--foreground-secondary)]">自动保存状态</p>
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-3 py-3 sm:px-4">
+                      <p className="truncate text-[11px] text-[var(--foreground-secondary)] sm:text-xs">保存状态</p>
                       <p className="mt-1 text-sm font-medium text-[var(--foreground)]">
                         {saveState === "saving"
                           ? "正在保存"
