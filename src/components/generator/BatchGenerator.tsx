@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type {
+  Cabinet,
   CameraAngle,
   Lighting,
   Material,
@@ -31,9 +32,16 @@ interface BatchGeneratorProps {
   onSaveItems: (items: BatchPromptItem[]) => Promise<void>;
 }
 
+interface SpaceCabinetGroup {
+  space: Space;
+  cabinets: Cabinet[];
+}
+
 type BatchStatus = "idle" | "copied" | "saving" | "saved" | "error";
 
 const MAX_BATCH_ITEMS = 60;
+
+const getComboId = (spaceId: string, cabinetId: string) => `${spaceId}::${cabinetId}`;
 
 export default function BatchGenerator({
   assetLibrary,
@@ -45,21 +53,35 @@ export default function BatchGenerator({
   onLoadItem,
   onSaveItems,
 }: BatchGeneratorProps) {
-  const [selectedSpaceIds, setSelectedSpaceIds] = useState<string[]>([]);
+  const [selectedComboIds, setSelectedComboIds] = useState<string[]>([]);
   const [items, setItems] = useState<BatchPromptItem[]>([]);
   const [status, setStatus] = useState<BatchStatus>("idle");
 
   const isReady = Boolean(selectedStyle && selectedMaterial);
-  const spacesWithCabinets = assetLibrary.spaces.filter((space) =>
-    assetLibrary.cabinets.some((cabinet) => cabinet.applicableSpaces.includes(space.id))
+
+  const groups = useMemo<SpaceCabinetGroup[]>(
+    () =>
+      assetLibrary.spaces
+        .map((space) => ({
+          space,
+          cabinets: assetLibrary.cabinets.filter((cabinet) =>
+            cabinet.applicableSpaces.includes(space.id)
+          ),
+        }))
+        .filter((group) => group.cabinets.length > 0),
+    [assetLibrary]
   );
-  const selectedSpaces = spacesWithCabinets.filter((space) => selectedSpaceIds.includes(space.id));
-  const estimatedCount = selectedSpaces.reduce(
-    (total, space) =>
-      total +
-      assetLibrary.cabinets.filter((cabinet) => cabinet.applicableSpaces.includes(space.id)).length,
-    0
+
+  const allComboIds = useMemo(
+    () =>
+      groups.flatMap((group) =>
+        group.cabinets.map((cabinet) => getComboId(group.space.id, cabinet.id))
+      ),
+    [groups]
   );
+
+  const selectedComboSet = useMemo(() => new Set(selectedComboIds), [selectedComboIds]);
+  const selectedCount = selectedComboIds.length;
 
   useEffect(() => {
     setItems([]);
@@ -70,56 +92,79 @@ export default function BatchGenerator({
     selectedResidenceType.id,
     selectedCameraAngle.id,
     selectedLighting.id,
+    selectedComboIds,
   ]);
 
-  const toggleSpace = (space: Space) => {
-    setSelectedSpaceIds((current) =>
-      current.includes(space.id)
-        ? current.filter((id) => id !== space.id)
-        : [...current, space.id]
+  useEffect(() => {
+    setSelectedComboIds((current) => current.filter((id) => allComboIds.includes(id)));
+  }, [allComboIds]);
+
+  const updateSelection = (nextComboIds: string[]) => {
+    setSelectedComboIds(Array.from(new Set(nextComboIds)));
+    setStatus("idle");
+  };
+
+  const toggleCombo = (comboId: string) => {
+    updateSelection(
+      selectedComboSet.has(comboId)
+        ? selectedComboIds.filter((id) => id !== comboId)
+        : [...selectedComboIds, comboId]
     );
-    setStatus("idle");
   };
 
-  const selectAllSpaces = () => {
-    setSelectedSpaceIds(spacesWithCabinets.map((space) => space.id));
-    setStatus("idle");
+  const selectAllCombos = () => {
+    updateSelection(allComboIds);
   };
 
-  const clearSpaces = () => {
-    setSelectedSpaceIds([]);
+  const clearAllCombos = () => {
+    updateSelection([]);
     setItems([]);
-    setStatus("idle");
+  };
+
+  const selectSpaceCombos = (group: SpaceCabinetGroup) => {
+    const groupComboIds = group.cabinets.map((cabinet) => getComboId(group.space.id, cabinet.id));
+    const isSpaceFullySelected = groupComboIds.every((id) => selectedComboSet.has(id));
+
+    updateSelection(
+      isSpaceFullySelected
+        ? selectedComboIds.filter((id) => !groupComboIds.includes(id))
+        : [...selectedComboIds, ...groupComboIds]
+    );
+  };
+
+  const buildSelectedItems = () => {
+    if (!selectedStyle || !selectedMaterial || selectedCount === 0) {
+      return [];
+    }
+
+    return groups
+      .flatMap((group) =>
+        group.cabinets
+          .filter((cabinet) => selectedComboSet.has(getComboId(group.space.id, cabinet.id)))
+          .map((cabinet) => {
+            const selection: Selection = {
+              space: group.space,
+              cabinet,
+              style: selectedStyle,
+              material: selectedMaterial,
+              residenceType: selectedResidenceType,
+              cameraAngle: selectedCameraAngle,
+              lighting: selectedLighting,
+            };
+
+            return {
+              id: `${group.space.id}-${cabinet.id}-${selectedStyle.id}-${selectedMaterial.id}`,
+              selection,
+              result: generatePrompts(selection),
+            };
+          })
+      )
+      .slice(0, MAX_BATCH_ITEMS);
   };
 
   const handleGenerateBatch = () => {
-    if (!selectedStyle || !selectedMaterial || selectedSpaces.length === 0) {
-      return;
-    }
-
-    const nextItems = selectedSpaces.flatMap((space) =>
-      assetLibrary.cabinets
-        .filter((cabinet) => cabinet.applicableSpaces.includes(space.id))
-        .map((cabinet) => {
-          const selection: Selection = {
-            space,
-            cabinet,
-            style: selectedStyle,
-            material: selectedMaterial,
-            residenceType: selectedResidenceType,
-            cameraAngle: selectedCameraAngle,
-            lighting: selectedLighting,
-          };
-
-          return {
-            id: `${space.id}-${cabinet.id}-${selectedStyle.id}-${selectedMaterial.id}`,
-            selection,
-            result: generatePrompts(selection),
-          };
-        })
-    );
-
-    setItems(nextItems.slice(0, MAX_BATCH_ITEMS));
+    const nextItems = buildSelectedItems();
+    setItems(nextItems);
     setStatus("idle");
   };
 
@@ -161,7 +206,7 @@ export default function BatchGenerator({
             </p>
             <h3 className="mt-1 text-lg font-bold text-[var(--foreground)]">批量生成</h3>
             <p className="mt-1 text-sm leading-6 text-[var(--foreground-secondary)]">
-              以当前风格和材质套餐为中心，批量生成不同空间、不同柜体的提示词组合。
+              先选风格和材质，再自由勾选空间里的单个柜体组合；也可以全选全部空间或只全选某一个空间。
             </p>
           </div>
 
@@ -176,28 +221,28 @@ export default function BatchGenerator({
         </div>
       </div>
 
-      <div className="grid gap-4 p-3 sm:p-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(360px,1.08fr)]">
+      <div className="grid gap-4 p-3 sm:p-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(340px,1.05fr)]">
         <div className={`${isReady ? "" : "opacity-55"}`}>
-          <div className="mb-2 flex items-center justify-between gap-2">
+          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h4 className="text-sm font-semibold text-[var(--foreground)]">选择要批量生成的空间</h4>
+              <h4 className="text-sm font-semibold text-[var(--foreground)]">选择要批量生成的组合</h4>
               <p className="text-xs text-[var(--foreground-secondary)]">
-                当前预计生成 {estimatedCount} 条组合，单次最多 {MAX_BATCH_ITEMS} 条
+                当前已选 {selectedCount} 条组合，单次最多生成 {MAX_BATCH_ITEMS} 条
               </p>
             </div>
             <div className="flex shrink-0 gap-2">
               <button
                 type="button"
                 disabled={!isReady}
-                onClick={selectAllSpaces}
+                onClick={selectAllCombos}
                 className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-medium text-[var(--foreground-secondary)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                全选
+                全选全部空间
               </button>
               <button
                 type="button"
-                disabled={!isReady}
-                onClick={clearSpaces}
+                disabled={!isReady || selectedCount === 0}
+                onClick={clearAllCombos}
                 className="rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-medium text-[var(--foreground-secondary)] transition-colors hover:border-[var(--error)] hover:text-[var(--error)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 清空
@@ -205,58 +250,118 @@ export default function BatchGenerator({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-3 2xl:grid-cols-4">
-            {spacesWithCabinets.map((space) => {
-              const visual = getSpaceVisual(space.id, space.name);
-              const isSelected = selectedSpaceIds.includes(space.id);
-              const cabinetCount = assetLibrary.cabinets.filter((cabinet) =>
-                cabinet.applicableSpaces.includes(space.id)
-              ).length;
+          <div className="max-h-[520px] space-y-2.5 overflow-y-auto pr-1">
+            {groups.map((group) => {
+              const spaceVisual = getSpaceVisual(group.space.id, group.space.name);
+              const groupComboIds = group.cabinets.map((cabinet) =>
+                getComboId(group.space.id, cabinet.id)
+              );
+              const selectedInSpace = groupComboIds.filter((id) => selectedComboSet.has(id)).length;
+              const isSpaceFullySelected = selectedInSpace === groupComboIds.length;
 
               return (
-                <button
-                  type="button"
-                  key={space.id}
-                  disabled={!isReady}
-                  onClick={() => toggleSpace(space)}
-                  className={`rounded-2xl border p-2.5 text-left transition-all ${
-                    isSelected
-                      ? "border-[var(--accent)] bg-[var(--accent)]/10"
-                      : "border-[var(--border)] bg-[var(--card-bg)] hover:border-[var(--accent)]/45"
-                  } disabled:cursor-not-allowed`}
+                <div
+                  key={group.space.id}
+                  className={`rounded-2xl border p-2.5 transition-all ${
+                    selectedInSpace > 0
+                      ? "border-[var(--accent)]/60 bg-[var(--accent)]/6"
+                      : "border-[var(--border)] bg-[var(--card-bg)]"
+                  }`}
                 >
-                  <div className="flex items-center gap-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <span
                       className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xs font-black"
-                      style={{ backgroundColor: `${visual.accent}16`, color: visual.accent }}
+                      style={{ backgroundColor: `${spaceVisual.accent}16`, color: spaceVisual.accent }}
                     >
-                      {visual.icon}
+                      {spaceVisual.icon}
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold text-[var(--foreground)]">
-                        {space.name}
-                      </span>
-                      <span className="text-xs text-[var(--foreground-secondary)]">
-                        {cabinetCount} 个柜体
-                      </span>
-                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-sm font-semibold text-[var(--foreground)]">
+                          {group.space.name}
+                        </span>
+                        {selectedInSpace > 0 && (
+                          <span className="rounded-full bg-[var(--accent)] px-2 py-0.5 text-[10px] font-bold text-white">
+                            {selectedInSpace}/{groupComboIds.length}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-[var(--foreground-secondary)]">
+                        {group.cabinets.length} 个可选柜体
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!isReady}
+                      onClick={() => selectSpaceCombos(group)}
+                      className="shrink-0 rounded-full border border-[var(--border)] bg-[var(--background-secondary)] px-3 py-1.5 text-xs font-semibold text-[var(--foreground-secondary)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:cursor-not-allowed"
+                    >
+                      {isSpaceFullySelected ? "清空本空间" : "全选本空间"}
+                    </button>
                   </div>
-                </button>
+
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 2xl:grid-cols-3">
+                    {group.cabinets.map((cabinet) => {
+                      const cabinetVisual = getCabinetVisual(cabinet.id, cabinet.name);
+                      const comboId = getComboId(group.space.id, cabinet.id);
+                      const isSelected = selectedComboSet.has(comboId);
+
+                      return (
+                        <button
+                          type="button"
+                          key={comboId}
+                          disabled={!isReady}
+                          onClick={() => toggleCombo(comboId)}
+                          className={`flex min-h-[52px] items-center gap-2 rounded-xl border px-2.5 py-2 text-left transition-all ${
+                            isSelected
+                              ? "border-[var(--accent)] bg-[var(--accent)]/12 shadow-sm"
+                              : "border-[var(--border)] bg-[var(--background-secondary)] hover:border-[var(--accent)]/45"
+                          } disabled:cursor-not-allowed`}
+                        >
+                          <span
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-black"
+                            style={{
+                              backgroundColor: `${cabinetVisual.accent}16`,
+                              color: cabinetVisual.accent,
+                            }}
+                          >
+                            {cabinetVisual.icon}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="line-clamp-1 text-xs font-semibold text-[var(--foreground)]">
+                              {cabinet.name}
+                            </span>
+                            <span className="line-clamp-1 text-[11px] text-[var(--foreground-secondary)]">
+                              {cabinetVisual.caption}
+                            </span>
+                          </span>
+                          <span
+                            className={`h-4 w-4 shrink-0 rounded-full border transition-all ${
+                              isSelected
+                                ? "border-[var(--accent)] bg-[var(--accent)] shadow-[inset_0_0_0_3px_white]"
+                                : "border-[var(--border)] bg-[var(--card-bg)]"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>
 
           <button
             type="button"
-            disabled={!isReady || selectedSpaces.length === 0}
+            disabled={!isReady || selectedCount === 0}
             onClick={handleGenerateBatch}
             className={`mt-3 min-h-[46px] w-full rounded-2xl px-4 text-sm font-semibold transition-all ${
-              isReady && selectedSpaces.length > 0
+              isReady && selectedCount > 0
                 ? "bg-[var(--foreground)] text-[var(--background)] hover:opacity-90"
                 : "cursor-not-allowed bg-[var(--border)] text-[var(--foreground-secondary)]"
             }`}
           >
-            生成 {Math.min(estimatedCount, MAX_BATCH_ITEMS)} 条批量提示词
+            生成 {Math.min(selectedCount, MAX_BATCH_ITEMS)} 条批量提示词
           </button>
 
           {!isReady && (
@@ -294,10 +399,10 @@ export default function BatchGenerator({
             </div>
           </div>
 
-          <div className="max-h-[360px] space-y-2 overflow-y-auto p-3">
+          <div className="max-h-[520px] space-y-2 overflow-y-auto p-3">
             {items.length === 0 ? (
-              <div className="flex min-h-[180px] items-center justify-center rounded-2xl border border-dashed border-[var(--border)] text-center text-sm text-[var(--foreground-secondary)]">
-                这里会像清单一样列出每个空间和柜体的组合。
+              <div className="flex min-h-[220px] items-center justify-center rounded-2xl border border-dashed border-[var(--border)] px-6 text-center text-sm text-[var(--foreground-secondary)]">
+                先在左侧选择一个或多个组合，再点击生成。
               </div>
             ) : (
               items.map((item, index) => {
