@@ -35,12 +35,18 @@ export default function VisualOptionCard({
           : "border-[var(--border)] bg-[var(--card-bg)] hover:-translate-y-0.5 hover:border-[var(--accent)]/45 hover:bg-[var(--card-hover)]"
       } ${disabled ? "cursor-not-allowed opacity-55" : ""}`}
     >
+      {isSelected && (
+        <span className="pointer-events-none absolute right-2.5 top-2.5 z-10 rounded-full bg-[var(--accent)] px-2 py-1 text-[10px] font-bold leading-none text-white shadow-sm">
+          已选
+        </span>
+      )}
+
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-0.5 opacity-0 transition-opacity group-hover:opacity-100"
         style={{ background: `linear-gradient(90deg, transparent, ${meta.accent}, transparent)` }}
       />
 
-      <div className="flex items-start gap-2.5">
+      <div className="flex h-full items-start gap-2.5 pr-9">
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl text-[13px] font-black tracking-tight sm:h-10 sm:w-10"
           style={previewStyle}
@@ -55,16 +61,9 @@ export default function VisualOptionCard({
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-start gap-2">
-            <span className="line-clamp-2 text-[13px] font-semibold leading-5 text-[var(--foreground)] sm:text-sm">
-              {name}
-            </span>
-            {isSelected && (
-              <span className="ml-auto rounded-full bg-[var(--accent)] px-1.5 py-0.5 text-[10px] font-bold text-white">
-                已选
-              </span>
-            )}
-          </div>
+          <span className="line-clamp-2 min-h-[40px] text-[13px] font-semibold leading-5 text-[var(--foreground)] sm:text-sm">
+            {name}
+          </span>
 
           <p className="mt-1 line-clamp-1 text-[11px] text-[var(--foreground-secondary)]">
             {subtitle || meta.caption}
