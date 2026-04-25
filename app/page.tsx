@@ -11,6 +11,7 @@ import AdvancedOptions from "@/components/generator/AdvancedOptions";
 import PromptEditor from "@/components/generator/PromptEditor";
 import HistoryPanel from "@/components/generator/HistoryPanel";
 import ImageSiteLinks from "@/components/generator/ImageSiteLinks";
+import BatchGenerator, { BatchPromptItem } from "@/components/generator/BatchGenerator";
 import FeedbackWidget from "@/components/feedback/FeedbackWidget";
 import {
   Space,
@@ -20,6 +21,7 @@ import {
   ResidenceType,
   CameraAngle,
   Lighting,
+  Selection,
   DEFAULT_RESIDENCE_TYPE_ID,
   DEFAULT_CAMERA_ANGLE_ID,
   DEFAULT_LIGHTING_ID,
@@ -216,32 +218,30 @@ export default function HomePage() {
     setActiveHistoryId(null);
   };
 
-  const persistHistory = async (selection: {
-    space: Space;
-    cabinet: Cabinet;
-    style: Style;
-    material: Material;
-    residenceType: ResidenceType;
-    cameraAngle: CameraAngle;
-    lighting: Lighting;
-  }, result: PromptResult) => {
+  const createHistoryRecord = async (selection: Selection, result: PromptResult): Promise<HistoryRecord> => {
+    const response = await fetch("/api/history", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildHistoryPayload(selection, result)),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "保存失败");
+    }
+
+    return data.history as HistoryRecord;
+  };
+
+  const persistHistory = async (selection: Selection, result: PromptResult) => {
     try {
       setSaveState("saving");
 
-      const response = await fetch("/api/history", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildHistoryPayload(selection, result)),
-      });
+      const history = await createHistoryRecord(selection, result);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "保存失败");
-      }
-
-      setHistories((current) => sortHistories([data.history, ...current]));
-      setActiveHistoryId(data.history.id);
+      setHistories((current) => sortHistories([history, ...current]));
+      setActiveHistoryId(history.id);
       setSaveState("saved");
     } catch (error) {
       console.error("Persist history error:", error);
@@ -273,6 +273,48 @@ export default function HomePage() {
     setPromptResult(result);
     setActiveHistoryId(null);
     void persistHistory(selection, result);
+  };
+
+  const handleLoadBatchItem = (item: BatchPromptItem) => {
+    resetStatusMessages();
+    setSelectedSpace(item.selection.space);
+    setSelectedCabinet(item.selection.cabinet);
+    setSelectedStyle(item.selection.style);
+    setSelectedMaterial(item.selection.material);
+    setSelectedResidenceType(item.selection.residenceType);
+    setSelectedCameraAngle(item.selection.cameraAngle);
+    setSelectedLighting(item.selection.lighting);
+    setPromptResult(item.result);
+    setActiveHistoryId(null);
+    setHistoryMessage("已载入批量方案，可继续编辑或复制提示词。");
+  };
+
+  const handleSaveBatchItems = async (items: BatchPromptItem[]) => {
+    try {
+      resetStatusMessages();
+      setSaveState("saving");
+
+      const createdHistories: HistoryRecord[] = [];
+
+      for (const item of items) {
+        const history = await createHistoryRecord(item.selection, item.result);
+        createdHistories.push(history);
+      }
+
+      setHistories((current) => sortHistories([...createdHistories, ...current]));
+      setActiveHistoryId(createdHistories[0]?.id ?? null);
+      setSaveState("saved");
+      setHistoryMessage(`已保存 ${createdHistories.length} 条批量方案到左侧方案库。`);
+    } catch (error) {
+      console.error("Persist batch history error:", error);
+      if (error instanceof Error) {
+        setHistoryMessage(error.message);
+      } else {
+        setHistoryMessage("批量保存失败，请稍后再试。");
+      }
+      setSaveState("error");
+      throw error;
+    }
   };
 
   const handleReset = () => {
@@ -478,6 +520,17 @@ export default function HomePage() {
                     materials={availableMaterials}
                     selectedMaterial={selectedMaterial}
                     onSelect={handleMaterialSelect}
+                  />
+
+                  <BatchGenerator
+                    assetLibrary={assetLibrary}
+                    selectedStyle={selectedStyle}
+                    selectedMaterial={selectedMaterial}
+                    selectedResidenceType={selectedResidenceType}
+                    selectedCameraAngle={selectedCameraAngle}
+                    selectedLighting={selectedLighting}
+                    onLoadItem={handleLoadBatchItem}
+                    onSaveItems={handleSaveBatchItems}
                   />
 
                   <AdvancedOptions
