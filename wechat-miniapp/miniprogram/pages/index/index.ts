@@ -50,6 +50,7 @@ type LastSelectionState = {
 
 type SpaceOption = Space & {
   icon: string;
+  isCompact: boolean;
 };
 
 type CabinetOption = Cabinet & {
@@ -91,10 +92,63 @@ const CABINET_ICONS: Record<string, string> = {
   "accessories-island": "💍"
 };
 
-const withSpaceIcon = (space: Space): SpaceOption => ({
-  ...space,
-  icon: SPACE_ICONS[space.id] || "🏠"
-});
+const COMPACT_SPACE_IDS = [
+  "horizontal-living",
+  "vertical-living",
+  "entrance",
+  "dining-room",
+  "kitchen",
+  "master-bedroom",
+  "secondary-bedroom",
+  "study",
+  "balcony"
+];
+
+const REGULAR_SPACE_IDS = [
+  "enclosed-kitchen",
+  "semi-enclosed-kitchen",
+  "walk-in-closet",
+  "ldk",
+  "kids-room",
+  "multi-functional"
+];
+
+const SPACE_ORDER = [...COMPACT_SPACE_IDS, ...REGULAR_SPACE_IDS];
+const SPACE_ORDER_INDEX = SPACE_ORDER.reduce<Record<string, number>>((indexMap, id, index) => {
+  indexMap[id] = index;
+  return indexMap;
+}, {});
+const COMPACT_SPACE_SET = new Set(COMPACT_SPACE_IDS);
+
+const buildSpaceOptions = (spaces: Space[]) =>
+  spaces
+    .map((space): SpaceOption => ({
+      ...space,
+      icon: SPACE_ICONS[space.id] || "🏠",
+      isCompact: COMPACT_SPACE_SET.has(space.id)
+    }))
+    .sort((a, b) => {
+      const aIndex = SPACE_ORDER_INDEX[a.id] ?? 999;
+      const bIndex = SPACE_ORDER_INDEX[b.id] ?? 999;
+
+      if (aIndex !== bIndex) {
+        return aIndex - bIndex;
+      }
+
+      return a.name.localeCompare(b.name, "zh-Hans-CN");
+    });
+
+const splitSpaceOptions = (spaces: Space[]) => {
+  const options = buildSpaceOptions(spaces);
+
+  return {
+    spaces: options,
+    compactSpaces: options.filter((space) => space.isCompact),
+    regularSpaces: options.filter((space) => !space.isCompact)
+  };
+};
+
+const initialSpaceOptions = splitSpaceOptions(fallbackLibrary.spaces);
 
 const withCabinetIcon = (cabinet: Cabinet): CabinetOption => ({
   ...cabinet,
@@ -111,7 +165,9 @@ const emptyChips: SelectionChip[] = [
 Page({
   data: {
     library: fallbackLibrary as AssetLibrary,
-    spaces: fallbackLibrary.spaces.map(withSpaceIcon),
+    spaces: initialSpaceOptions.spaces,
+    compactSpaces: initialSpaceOptions.compactSpaces,
+    regularSpaces: initialSpaceOptions.regularSpaces,
     cabinets: fallbackLibrary.cabinets,
     availableCabinets: [] as CabinetOption[],
     styles: fallbackLibrary.styles,
@@ -153,9 +209,12 @@ Page({
 
   async onLoad() {
     const { library, message } = await loadAssetLibrary();
+    const spaceOptions = splitSpaceOptions(library.spaces);
     this.setData({
       library,
-      spaces: library.spaces.map(withSpaceIcon),
+      spaces: spaceOptions.spaces,
+      compactSpaces: spaceOptions.compactSpaces,
+      regularSpaces: spaceOptions.regularSpaces,
       cabinets: library.cabinets,
       styles: library.styles,
       materials: library.materials,

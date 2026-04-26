@@ -50,13 +50,27 @@
         <view class="section-desc">先确定场景，系统会筛选对应柜体</view>
       </view>
     </view>
-    <view class="option-grid">
+    <view class="space-grid compact-space-grid">
       <button
-        wx:for="{{spaces}}"
+        wx:for="{{compactSpaces}}"
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectSpace"
-        class="option-card visual-card space-option space-{{item.id}} {{selectedSpaceId === item.id ? 'selected' : ''}}"
+        class="option-card visual-card space-option compact-space-card space-{{item.id}} {{selectedSpaceId === item.id ? 'selected' : ''}}"
+      >
+        <view class="option-mark option-emoji">{{item.icon}}</view>
+        <view class="option-copy">
+          <text class="option-name">{{item.name}}</text>
+        </view>
+      </button>
+    </view>
+    <view wx:if="{{regularSpaces.length}}" class="space-grid regular-space-grid">
+      <button
+        wx:for="{{regularSpaces}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectSpace"
+        class="option-card visual-card space-option regular-space-card space-{{item.id}} {{selectedSpaceId === item.id ? 'selected' : ''}}"
       >
         <view class="option-mark option-emoji">{{item.icon}}</view>
         <view class="option-copy">
