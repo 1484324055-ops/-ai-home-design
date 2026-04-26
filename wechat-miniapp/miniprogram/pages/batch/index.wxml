@@ -27,10 +27,17 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectStyle"
-        class="chip-card {{selectedStyleId === item.id ? 'selected' : ''}}"
+        class="chip-card style-chip style-{{item.id}} {{selectedStyleId === item.id ? 'selected' : ''}}"
       >
-        <text class="chip-name">{{item.name}}</text>
-        <text class="chip-sub">{{item.nameEn}}</text>
+        <view class="chip-copy">
+          <text class="chip-name">{{item.name}}</text>
+          <text class="chip-sub">{{item.nameEn}}</text>
+        </view>
+        <view class="palette-row">
+          <view class="palette-swatch one"></view>
+          <view class="palette-swatch two"></view>
+          <view class="palette-swatch three"></view>
+        </view>
       </button>
     </view>
   </view>
@@ -49,10 +56,13 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectMaterial"
-        class="chip-card material-chip {{selectedMaterialId === item.id ? 'selected' : ''}}"
+        class="chip-card material-chip material-{{item.id}} {{selectedMaterialId === item.id ? 'selected' : ''}}"
       >
-        <text class="chip-name">{{item.name}}</text>
-        <text class="chip-sub">{{item.nameEn}}</text>
+        <view class="chip-copy">
+          <text class="chip-name">{{item.name}}</text>
+          <text class="chip-sub">{{item.nameEn}}</text>
+        </view>
+        <view class="texture-strip"></view>
       </button>
     </view>
   </view>
@@ -76,7 +86,7 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="toggleSpace"
-        class="space-card {{item.isSelected ? 'selected' : ''}}"
+        class="space-card space-{{item.id}} {{item.isSelected ? 'selected' : ''}}"
       >
         <view class="space-symbol">{{item.initial}}</view>
         <view class="space-meta">

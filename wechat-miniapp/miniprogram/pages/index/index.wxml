@@ -33,9 +33,13 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectSpace"
-        class="option-card {{selectedSpaceId === item.id ? 'selected' : ''}}"
+        class="option-card visual-card space-option space-{{item.id}} {{selectedSpaceId === item.id ? 'selected' : ''}}"
       >
-        <text class="option-name">{{item.name}}</text>
+        <view class="option-mark"><view class="room-glyph"></view></view>
+        <view class="option-copy">
+          <text class="option-name">{{item.name}}</text>
+          <text class="option-hint">空间场景</text>
+        </view>
       </button>
     </view>
   </view>
@@ -54,9 +58,16 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectCabinet"
-        class="option-card {{selectedCabinetId === item.id ? 'selected' : ''}}"
+        class="option-card visual-card cabinet-option cabinet-{{item.id}} {{selectedCabinetId === item.id ? 'selected' : ''}}"
       >
-        <text class="option-name">{{item.name}}</text>
+        <view class="option-mark cabinet-mark">
+          <view class="cabinet-line wide"></view>
+          <view class="cabinet-line"></view>
+        </view>
+        <view class="option-copy">
+          <text class="option-name">{{item.name}}</text>
+          <text class="option-hint">柜体方案</text>
+        </view>
       </button>
     </view>
   </view>
@@ -75,9 +86,17 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectStyle"
-        class="option-card style-card {{selectedStyleId === item.id ? 'selected' : ''}}"
+        class="option-card visual-card style-card style-{{item.id}} {{selectedStyleId === item.id ? 'selected' : ''}}"
       >
-        <text class="option-name">{{item.name}}</text>
+        <view class="option-copy">
+          <text class="option-name">{{item.name}}</text>
+          <text class="option-hint">{{item.nameEn}}</text>
+        </view>
+        <view class="palette-row">
+          <view class="palette-swatch one"></view>
+          <view class="palette-swatch two"></view>
+          <view class="palette-swatch three"></view>
+        </view>
       </button>
     </view>
   </view>
@@ -96,9 +115,13 @@
         wx:key="id"
         data-id="{{item.id}}"
         bindtap="selectMaterial"
-        class="option-card material-card {{selectedMaterialId === item.id ? 'selected' : ''}}"
+        class="option-card visual-card material-card material-{{item.id}} {{selectedMaterialId === item.id ? 'selected' : ''}}"
       >
-        <text class="option-name">{{item.name}}</text>
+        <view class="option-copy">
+          <text class="option-name">{{item.name}}</text>
+          <text class="option-hint">{{item.nameEn}}</text>
+        </view>
+        <view class="texture-strip"></view>
       </button>
     </view>
   </view>
