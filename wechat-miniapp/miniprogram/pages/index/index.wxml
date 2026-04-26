@@ -17,7 +17,6 @@
     <button class="quick-button" bindtap="goBatch">批量生成</button>
     <button class="quick-button" bindtap="goHistory">历史方案</button>
     <button class="quick-button accent" bindtap="openFeedback">建议反馈</button>
-    <button class="quick-button" bindtap="goProfile">我的</button>
   </view>
 
   <view class="planner-card compact-planner {{isPlannerPinned ? 'is-pinned' : ''}}">
@@ -147,8 +146,8 @@
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
         <view class="advanced-inline-title">
-          <text class="advanced-title-main">更多选项：</text>
-          <text class="advanced-title-sub">住宅类型、镜头、光影</text>
+          <view class="advanced-title-main">更多选项：</view>
+          <view class="advanced-title-sub">住宅类型、镜头、光影</view>
         </view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>

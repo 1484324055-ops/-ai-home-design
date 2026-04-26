@@ -1,10 +1,29 @@
 .batch-page {
+  box-sizing: border-box;
   min-height: 100vh;
   padding: 24rpx;
   overflow-x: hidden;
   background:
     radial-gradient(circle at 12% 4%, rgba(14, 165, 233, 0.1), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #f7f8fb 45%, #eef2f7 100%);
+}
+
+view,
+button,
+scroll-view,
+textarea,
+input {
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+}
+
+button::after {
+  border: 0;
 }
 
 .hero {
@@ -84,6 +103,7 @@
 .panel,
 .result-panel {
   width: 100%;
+  box-sizing: border-box;
   margin-bottom: 18rpx;
   padding: 22rpx;
   overflow: hidden;
@@ -94,6 +114,7 @@
 }
 
 .advanced-panel {
+  box-sizing: border-box;
   margin-bottom: 18rpx;
   overflow: hidden;
   border: 1rpx solid #e4e7ec;
@@ -108,11 +129,11 @@
   display: flex;
   width: 100%;
   box-sizing: border-box;
-  min-height: 82rpx;
+  min-height: 88rpx;
   align-items: center;
   justify-content: space-between;
-  gap: 14rpx;
-  padding: 0 22rpx;
+  gap: 18rpx;
+  padding: 0 24rpx;
   background: transparent;
   text-align: left;
 }
@@ -129,25 +150,30 @@
   min-width: 0;
   max-width: 100%;
   flex: 1;
-  align-items: center;
+  align-items: baseline;
+  gap: 0;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .advanced-title-main {
+  flex: 0 0 auto;
   color: #101828;
-  font-size: 30rpx;
+  font-size: 31rpx;
   font-weight: 900;
-  line-height: 1;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .advanced-title-sub {
+  flex: 1 1 auto;
   min-width: 0;
+  margin-left: 2rpx;
   overflow: hidden;
   color: #667085;
-  font-size: 22rpx;
+  font-size: 21rpx;
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -181,7 +207,8 @@
 
 .advanced-state {
   display: flex;
-  min-width: 76rpx;
+  flex: 0 0 auto;
+  min-width: 78rpx;
   margin: 0;
   height: 46rpx;
   align-items: center;
@@ -374,7 +401,8 @@
 .space-grid,
 .cabinet-grid {
   display: grid;
-  gap: 16rpx;
+  column-gap: 18rpx;
+  row-gap: 18rpx;
   width: 100%;
   min-width: 0;
 }
@@ -387,19 +415,21 @@
   position: relative;
   display: flex;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  min-height: 138rpx;
+  min-height: 150rpx;
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  padding: 18rpx 16rpx 50rpx;
+  padding: 18rpx 18rpx 54rpx;
   border: 2rpx solid #e4e7ec;
   border-radius: 24rpx;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   overflow: hidden;
   text-align: left;
+  line-height: normal;
 }
 
 .chip-card::after {
@@ -417,7 +447,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  min-height: 62rpx;
+  min-height: 66rpx;
   text-align: left;
 }
 
@@ -425,7 +455,7 @@
   width: 100%;
   overflow: hidden;
   color: #101828;
-  font-size: 24rpx;
+  font-size: 25rpx;
   font-weight: 800;
   line-height: 1.35;
   text-overflow: ellipsis;
@@ -456,9 +486,9 @@
 .palette-row,
 .texture-strip {
   position: absolute;
-  right: 16rpx;
-  bottom: 18rpx;
-  left: 16rpx;
+  right: 18rpx;
+  bottom: 20rpx;
+  left: 18rpx;
   z-index: 1;
   display: flex;
   width: auto;
@@ -509,16 +539,16 @@
 .space-matrix {
   display: flex;
   flex-direction: column;
-  gap: 14rpx;
+  gap: 16rpx;
 }
 
 .space-row {
   display: grid;
-  grid-template-columns: 184rpx minmax(0, 1fr);
-  gap: 10rpx;
+  grid-template-columns: 174rpx minmax(0, 1fr);
+  gap: 14rpx;
   box-sizing: border-box;
   min-height: 152rpx;
-  padding: 10rpx;
+  padding: 12rpx;
   overflow: hidden;
   border: 1rpx solid #e4e7ec;
   border-radius: 30rpx;
@@ -562,7 +592,7 @@
   max-width: 100%;
   min-width: 0;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10rpx;
+  gap: 12rpx;
   align-content: center;
 }
 
@@ -571,11 +601,11 @@
   max-width: 100%;
   margin: 0;
   min-width: 0;
-  min-height: 58rpx;
+  min-height: 62rpx;
   box-sizing: border-box;
-  padding: 0 10rpx;
+  padding: 0 12rpx;
   border-radius: 18rpx;
-  font-size: 21rpx;
+  font-size: 22rpx;
   line-height: 1.2;
 }
 
@@ -832,12 +862,12 @@
   width: 100%;
   max-width: 100%;
   margin: 0;
-  min-height: 58rpx;
+  min-height: 62rpx;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
   gap: 6rpx;
-  padding: 0 8rpx;
+  padding: 0 10rpx;
   border-radius: 18rpx;
   font-size: 22rpx;
   line-height: 1.2;
