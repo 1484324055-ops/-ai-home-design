@@ -1,6 +1,7 @@
 .batch-page {
   min-height: 100vh;
   padding: 24rpx;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 12% 4%, rgba(14, 165, 233, 0.1), transparent 34%),
     linear-gradient(180deg, #f8fafc 0%, #f7f8fb 45%, #eef2f7 100%);
@@ -12,6 +13,11 @@
   justify-content: space-between;
   gap: 18rpx;
   padding: 22rpx 0 18rpx;
+}
+
+.hero > view:first-child {
+  min-width: 0;
+  flex: 1;
 }
 
 .eyebrow {
@@ -146,7 +152,7 @@
 }
 
 .chip-grid {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .chip-card {
@@ -154,11 +160,11 @@
   display: flex;
   width: 100%;
   min-width: 0;
-  min-height: 118rpx;
+  min-height: 112rpx;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 18rpx 20rpx;
+  align-items: center;
+  justify-content: center;
+  padding: 18rpx 16rpx 34rpx;
   border: 2rpx solid #e4e7ec;
   border-radius: 24rpx;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -181,6 +187,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
+  text-align: left;
 }
 
 .chip-name {
@@ -207,10 +214,13 @@
 
 .palette-row,
 .texture-strip {
-  position: relative;
+  position: absolute;
+  right: 16rpx;
+  bottom: 16rpx;
+  left: 16rpx;
   z-index: 1;
   display: flex;
-  width: 100%;
+  width: auto;
   height: 14rpx;
   overflow: hidden;
   border-radius: 999rpx;
@@ -234,7 +244,10 @@
 
 .mini-button,
 .small-toggle {
+  display: flex;
   min-height: 62rpx;
+  align-items: center;
+  justify-content: center;
   padding: 0 20rpx;
   border: 1rpx solid #d0d5dd;
   border-radius: 999rpx;
@@ -249,7 +262,7 @@
 }
 
 .space-grid {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .space-card {
@@ -421,12 +434,15 @@
 }
 
 .cabinet-grid {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-top: 18rpx;
 }
 
 .cabinet-card {
+  display: flex;
   min-height: 76rpx;
+  align-items: center;
+  justify-content: center;
   padding: 0 16rpx;
   border: 1rpx solid #dbe2ea;
   border-radius: 20rpx;
@@ -457,7 +473,10 @@
 
 .primary-button,
 .secondary-button {
+  display: flex;
   min-height: 92rpx;
+  align-items: center;
+  justify-content: center;
   border-radius: 28rpx;
   font-size: 30rpx;
   font-weight: 900;
@@ -490,7 +509,10 @@
 
 .copy-all-button,
 .copy-one-button {
+  display: flex;
   min-height: 68rpx;
+  align-items: center;
+  justify-content: center;
   border-radius: 22rpx;
   background: #111827;
   color: #ffffff;
