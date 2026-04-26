@@ -1,0 +1,7 @@
+<view class="placeholder-page">
+  <view class="placeholder-card">
+    <text class="eyebrow">HISTORY</text>
+    <view class="title">历史方案</view>
+    <view class="desc">这里后续会接入你现在网页端的历史记录接口，用户可以查看、载入、复制和收藏自己的方案。</view>
+  </view>
+</view>

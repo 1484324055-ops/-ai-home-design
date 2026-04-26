@@ -1,0 +1,20 @@
+{
+  "description": "AI Home Design WeChat Mini Program",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "nodeModules": false,
+    "useCompilerPlugins": ["typescript"]
+  },
+  "compileType": "miniprogram",
+  "libVersion": "latest",
+  "appid": "wxe23eccd9dd673ca5",
+  "projectname": "ai-home-design-miniapp",
+  "condition": {}
+}

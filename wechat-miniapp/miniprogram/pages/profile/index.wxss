@@ -1,0 +1,34 @@
+.placeholder-page {
+  min-height: 100vh;
+  padding: 32rpx;
+  background: #f7f8fb;
+}
+
+.placeholder-card {
+  padding: 36rpx;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 32rpx;
+  background: #ffffff;
+  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.05);
+}
+
+.eyebrow {
+  color: #667085;
+  font-size: 20rpx;
+  font-weight: 800;
+  letter-spacing: 5rpx;
+}
+
+.title {
+  margin-top: 12rpx;
+  color: #101828;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+
+.desc {
+  margin-top: 18rpx;
+  color: #667085;
+  font-size: 27rpx;
+  line-height: 1.65;
+}

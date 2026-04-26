@@ -1,0 +1,265 @@
+.page {
+  padding: 28rpx;
+}
+
+.hero {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 30rpx 0 22rpx;
+}
+
+.eyebrow {
+  color: #667085;
+  font-size: 20rpx;
+  font-weight: 800;
+  letter-spacing: 5rpx;
+}
+
+.title {
+  margin-top: 10rpx;
+  color: #101828;
+  font-size: 44rpx;
+  font-weight: 800;
+  line-height: 1.14;
+}
+
+.subtitle {
+  margin-top: 14rpx;
+  max-width: 520rpx;
+  color: #667085;
+  font-size: 26rpx;
+  line-height: 1.55;
+}
+
+.hero-card {
+  display: flex;
+  min-width: 150rpx;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 28rpx;
+  background: #ffffff;
+  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.06);
+}
+
+.hero-number {
+  color: #2563eb;
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.hero-label {
+  margin-top: 4rpx;
+  color: #667085;
+  font-size: 22rpx;
+}
+
+.notice {
+  margin-bottom: 20rpx;
+  padding: 20rpx 24rpx;
+  border-radius: 22rpx;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.quick-nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.quick-button {
+  min-height: 84rpx;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 22rpx;
+  background: #ffffff;
+  color: #344054;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.panel,
+.result-panel {
+  margin-bottom: 20rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 32rpx;
+  background: #ffffff;
+  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.05);
+}
+
+.disabled-panel {
+  opacity: 0.55;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.step {
+  display: flex;
+  width: 54rpx;
+  height: 54rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18rpx;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.section-title {
+  color: #101828;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.section-desc {
+  margin-top: 4rpx;
+  color: #667085;
+  font-size: 23rpx;
+}
+
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16rpx;
+}
+
+.option-card {
+  display: flex;
+  min-height: 94rpx;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 24rpx;
+  border: 2rpx solid #e4e7ec;
+  border-radius: 24rpx;
+  background: #ffffff;
+  text-align: left;
+}
+
+.style-card {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+}
+
+.material-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 52%, #eef2ff 100%);
+}
+
+.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 14rpx 32rpx rgba(37, 99, 235, 0.12);
+}
+
+.option-name {
+  overflow: hidden;
+  color: #101828;
+  font-size: 27rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  gap: 18rpx;
+  padding: 18rpx 0 calc(18rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(247, 248, 251, 0), #f7f8fb 28%);
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 92rpx;
+  border-radius: 28rpx;
+  font-size: 30rpx;
+  font-weight: 800;
+}
+
+.primary-button {
+  flex: 1;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 20rpx 42rpx rgba(37, 99, 235, 0.24);
+}
+
+.secondary-button {
+  width: 150rpx;
+  border: 1rpx solid #e4e7ec;
+  background: #ffffff;
+  color: #475467;
+}
+
+.button-disabled {
+  opacity: 0.45;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.result-title {
+  margin-top: 8rpx;
+  color: #101828;
+  font-size: 32rpx;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.copy-button {
+  min-width: 112rpx;
+  min-height: 68rpx;
+  border-radius: 22rpx;
+  background: #111827;
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 800;
+}
+
+.tab-row {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.tab {
+  min-height: 62rpx;
+  padding: 0 26rpx;
+  border-radius: 999rpx;
+  background: #f2f4f7;
+  color: #667085;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.active-tab {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.prompt-box {
+  margin-top: 18rpx;
+  padding: 22rpx;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 24rpx;
+  background: #f8fafc;
+  color: #182230;
+  font-size: 26rpx;
+  line-height: 1.75;
+}

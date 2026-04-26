@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/batch/index",
+    "pages/history/index",
+    "pages/profile/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "AI Home Design",
+    "navigationBarBackgroundColor": "#F7F8FB",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F8FB",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

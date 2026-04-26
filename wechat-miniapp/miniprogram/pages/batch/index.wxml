@@ -1,0 +1,7 @@
+<view class="placeholder-page">
+  <view class="placeholder-card">
+    <text class="eyebrow">BATCH</text>
+    <view class="title">批量生成</view>
+    <view class="desc">下一步会把网页端的批量组合能力迁移到这里，支持单选、多选、全选空间和批量复制。</view>
+  </view>
+</view>

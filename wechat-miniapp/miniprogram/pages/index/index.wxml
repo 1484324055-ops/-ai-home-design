@@ -1,0 +1,144 @@
+<view class="page safe-bottom">
+  <view class="hero">
+    <view>
+      <text class="eyebrow">PROMPT STUDIO</text>
+      <view class="title">AI 全屋定制效果图生成器</view>
+      <view class="subtitle">选择空间、柜体、风格和材质，快速生成可复制的生图提示词。</view>
+    </view>
+    <view class="hero-card">
+      <text class="hero-number">{{isLoadingAssets ? "..." : spaces.length}}</text>
+      <text class="hero-label">空间资产</text>
+    </view>
+  </view>
+
+  <view wx:if="{{assetMessage}}" class="notice">{{assetMessage}}</view>
+
+  <view class="quick-nav">
+    <button class="quick-button" bindtap="goBatch">批量生成</button>
+    <button class="quick-button" bindtap="goHistory">历史方案</button>
+    <button class="quick-button" bindtap="goProfile">我的</button>
+  </view>
+
+  <view class="panel">
+    <view class="section-head">
+      <view class="step">1</view>
+      <view>
+        <view class="section-title">选择空间</view>
+        <view class="section-desc">先确定场景，系统会筛选对应柜体</view>
+      </view>
+    </view>
+    <view class="option-grid">
+      <button
+        wx:for="{{spaces}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectSpace"
+        class="option-card {{selectedSpaceId === item.id ? 'selected' : ''}}"
+      >
+        <text class="option-name">{{item.name}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="panel {{selectedSpaceId ? '' : 'disabled-panel'}}">
+    <view class="section-head">
+      <view class="step">2</view>
+      <view>
+        <view class="section-title">选择柜体</view>
+        <view class="section-desc">{{selectedSpaceId ? '选择当前空间要呈现的柜体' : '请先选择空间'}}</view>
+      </view>
+    </view>
+    <view class="option-grid">
+      <button
+        wx:for="{{availableCabinets}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectCabinet"
+        class="option-card {{selectedCabinetId === item.id ? 'selected' : ''}}"
+      >
+        <text class="option-name">{{item.name}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="section-head">
+      <view class="step">3</view>
+      <view>
+        <view class="section-title">选择风格</view>
+        <view class="section-desc">决定整体画面调性</view>
+      </view>
+    </view>
+    <view class="option-grid">
+      <button
+        wx:for="{{styles}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectStyle"
+        class="option-card style-card {{selectedStyleId === item.id ? 'selected' : ''}}"
+      >
+        <text class="option-name">{{item.name}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="panel {{selectedStyleId ? '' : 'disabled-panel'}}">
+    <view class="section-head">
+      <view class="step">4</view>
+      <view>
+        <view class="section-title">选择材质</view>
+        <view class="section-desc">{{selectedStyleId ? '选择适配当前风格的材质套餐' : '请先选择风格'}}</view>
+      </view>
+    </view>
+    <view class="option-grid">
+      <button
+        wx:for="{{availableMaterials}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectMaterial"
+        class="option-card material-card {{selectedMaterialId === item.id ? 'selected' : ''}}"
+      >
+        <text class="option-name">{{item.name}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="action-bar">
+    <button class="secondary-button" bindtap="resetAll">重置</button>
+    <button class="primary-button {{isReady ? '' : 'button-disabled'}}" bindtap="generatePrompt">
+      生成提示词
+    </button>
+  </view>
+
+  <view id="result" wx:if="{{promptResult}}" class="result-panel">
+    <view class="result-header">
+      <view>
+        <text class="eyebrow">GENERATED</text>
+        <view class="result-title">{{promptResult.title}}</view>
+      </view>
+      <button class="copy-button" bindtap="copyPrompt">复制</button>
+    </view>
+
+    <view class="tab-row">
+      <button
+        data-tab="chinese"
+        bindtap="setPromptTab"
+        class="tab {{activePromptTab === 'chinese' ? 'active-tab' : ''}}"
+      >
+        中文
+      </button>
+      <button
+        data-tab="english"
+        bindtap="setPromptTab"
+        class="tab {{activePromptTab === 'english' ? 'active-tab' : ''}}"
+      >
+        English
+      </button>
+    </view>
+
+    <view class="prompt-box">
+      <text wx:if="{{activePromptTab === 'chinese'}}">{{promptResult.chinese}}</text>
+      <text wx:else>{{promptResult.english}}</text>
+    </view>
+  </view>
+</view>

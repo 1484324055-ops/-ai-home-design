@@ -1,0 +1,7 @@
+<view class="placeholder-page">
+  <view class="placeholder-card">
+    <text class="eyebrow">PROFILE</text>
+    <view class="title">我的</view>
+    <view class="desc">这里后续会放微信登录、反馈入口、使用说明和隐私说明。第一版先保证首页生成器跑通。</view>
+  </view>
+</view>
