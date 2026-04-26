@@ -182,6 +182,7 @@
 .advanced-state {
   display: flex;
   min-width: 88rpx;
+  margin: 0;
   min-height: 48rpx;
   align-items: center;
   justify-content: center;
@@ -223,6 +224,9 @@
 .advanced-option {
   position: relative;
   display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   min-width: 0;
   min-height: 78rpx;
   align-items: center;
@@ -256,8 +260,45 @@
 
 .advanced-option.selected {
   border-color: #2563eb;
-  background: #eff6ff;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
   color: #1d4ed8;
+  box-shadow: inset 0 0 0 1rpx rgba(37, 99, 235, 0.18), 0 10rpx 26rpx rgba(37, 99, 235, 0.12);
+}
+
+.advanced-residence-standard {
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+}
+
+.advanced-residence-upscale {
+  background: linear-gradient(135deg, #fef3c7, #ffffff);
+}
+
+.advanced-residence-luxury {
+  background: linear-gradient(135deg, #f5f3ff, #ffffff);
+}
+
+.advanced-camera-wide-angle {
+  background: linear-gradient(135deg, #ecfeff, #ffffff);
+}
+
+.advanced-camera-straight {
+  background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.advanced-camera-45-degree {
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+}
+
+.advanced-lighting-natural {
+  background: linear-gradient(135deg, #fefce8, #ffffff);
+}
+
+.advanced-lighting-warm {
+  background: linear-gradient(135deg, #fff1f2, #ffffff);
+}
+
+.advanced-lighting-cool {
+  background: linear-gradient(135deg, #eef2ff, #ffffff);
 }
 
 .recommend-badge {

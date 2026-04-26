@@ -137,6 +137,7 @@
 .advanced-state {
   display: flex;
   min-width: 88rpx;
+  margin: 0;
   min-height: 48rpx;
   align-items: center;
   justify-content: center;
@@ -178,6 +179,9 @@
 .advanced-option {
   position: relative;
   display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   min-width: 0;
   min-height: 78rpx;
   align-items: center;
@@ -211,8 +215,45 @@
 
 .advanced-option.selected {
   border-color: #2563eb;
-  background: #eff6ff;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
   color: #1d4ed8;
+  box-shadow: inset 0 0 0 1rpx rgba(37, 99, 235, 0.18), 0 10rpx 26rpx rgba(37, 99, 235, 0.12);
+}
+
+.advanced-residence-standard {
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+}
+
+.advanced-residence-upscale {
+  background: linear-gradient(135deg, #fef3c7, #ffffff);
+}
+
+.advanced-residence-luxury {
+  background: linear-gradient(135deg, #f5f3ff, #ffffff);
+}
+
+.advanced-camera-wide-angle {
+  background: linear-gradient(135deg, #ecfeff, #ffffff);
+}
+
+.advanced-camera-straight {
+  background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.advanced-camera-45-degree {
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+}
+
+.advanced-lighting-natural {
+  background: linear-gradient(135deg, #fefce8, #ffffff);
+}
+
+.advanced-lighting-warm {
+  background: linear-gradient(135deg, #fff1f2, #ffffff);
+}
+
+.advanced-lighting-cool {
+  background: linear-gradient(135deg, #eef2ff, #ffffff);
 }
 
 .recommend-badge {
@@ -420,6 +461,7 @@
   box-sizing: border-box;
   min-height: 152rpx;
   padding: 12rpx;
+  overflow: hidden;
   border: 1rpx solid #e4e7ec;
   border-radius: 30rpx;
   background: rgba(255, 255, 255, 0.94);
@@ -435,6 +477,9 @@
 
 .space-row-head {
   display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   min-width: 0;
   min-height: 128rpx;
   align-items: center;
@@ -455,6 +500,8 @@
 
 .space-cabinet-area {
   display: grid;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10rpx;
@@ -462,6 +509,9 @@
 }
 
 .matrix-cabinet {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   min-width: 0;
   min-height: 58rpx;
   box-sizing: border-box;
@@ -708,6 +758,9 @@
 }
 
 .cabinet-card.matrix-cabinet {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   min-height: 58rpx;
   box-sizing: border-box;
   padding: 0 10rpx;
@@ -716,10 +769,38 @@
   line-height: 1.2;
 }
 
+.space-cabinet-area .matrix-cabinet:nth-child(1) {
+  border-color: #dbeafe;
+  background: linear-gradient(135deg, #eff6ff, #ffffff);
+}
+
+.space-cabinet-area .matrix-cabinet:nth-child(2) {
+  border-color: #dcfce7;
+  background: linear-gradient(135deg, #f0fdf4, #ffffff);
+}
+
+.space-cabinet-area .matrix-cabinet:nth-child(3) {
+  border-color: #fed7aa;
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+}
+
+.space-cabinet-area .matrix-cabinet:nth-child(4) {
+  border-color: #e9d5ff;
+  background: linear-gradient(135deg, #faf5ff, #ffffff);
+}
+
+.space-cabinet-area .matrix-cabinet.selected-soft {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  color: #1d4ed8;
+  box-shadow: inset 0 0 0 1rpx rgba(37, 99, 235, 0.2);
+}
+
 .selected-soft {
   border-color: #2563eb;
-  background: #eff6ff;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
   color: #1d4ed8;
+  box-shadow: inset 0 0 0 1rpx rgba(37, 99, 235, 0.2);
 }
 
 .action-bar {
