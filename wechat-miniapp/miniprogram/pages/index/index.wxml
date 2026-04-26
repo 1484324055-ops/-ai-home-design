@@ -19,7 +19,7 @@
     <view class="quick-button accent" bindtap="openFeedback">建议反馈</view>
   </view>
 
-  <view class="planner-card compact-planner {{isPlannerPinned ? 'is-pinned' : ''}}">
+  <view wx:if="{{!isPromptEditorOpen}}" class="planner-card compact-planner {{isPlannerPinned ? 'is-pinned' : ''}}">
     <view class="planner-head">
       <view>
         <text class="eyebrow">当前方案</text>
@@ -40,7 +40,7 @@
       </view>
     </view>
   </view>
-  <view wx:if="{{isPlannerPinned}}" class="planner-placeholder"></view>
+  <view wx:if="{{isPlannerPinned && !isPromptEditorOpen}}" class="planner-placeholder"></view>
 
   <view class="panel">
     <view class="section-head">
@@ -213,12 +213,12 @@
 
   <view id="result" wx:if="{{promptResult}}" class="result-panel">
     <view class="result-header">
-      <view>
+      <view class="result-copy">
         <text class="eyebrow">生成结果</text>
         <view class="result-title">{{promptResult.title}}</view>
-        <view class="result-subtitle">优先复制中文版本，可直接粘贴到生图平台继续出图。</view>
+        <view class="result-subtitle">复制中文提示词，粘贴到生图平台继续出图。</view>
       </view>
-      <button class="copy-button" bindtap="copyPrompt">复制</button>
+      <view class="copy-button" bindtap="copyPrompt">复制</view>
     </view>
 
     <view class="tab-row">
@@ -245,40 +245,42 @@
 
     <view class="result-footer">
       <view class="copy-tip">长按文本也可以选择复制</view>
-      <button class="favorite-button {{isFavoriteCurrent ? 'favorited' : ''}}" bindtap="favoriteCurrent">
-        {{isFavoriteCurrent ? '已收藏' : '收藏常用'}}
-      </button>
-      <button class="edit-prompt-button" bindtap="openPromptEditor">编辑提示词</button>
-      <button class="copy-wide-button" bindtap="copyPrompt">复制当前提示词</button>
+      <view class="result-actions">
+        <view class="favorite-button {{isFavoriteCurrent ? 'favorited' : ''}}" bindtap="favoriteCurrent">
+          {{isFavoriteCurrent ? '已收藏' : '收藏常用'}}
+        </view>
+        <view class="edit-prompt-button" bindtap="openPromptEditor">编辑提示词</view>
+        <view class="copy-wide-button" bindtap="copyPrompt">复制当前提示词</view>
+      </view>
     </view>
 
     <view class="platform-panel">
       <view class="platform-title">复制后可以粘贴到这些平台</view>
       <view class="platform-grid">
         <view class="platform-card domestic">
-          <view class="platform-logo doubao-logo">豆</view>
-          <view>
+          <view class="platform-logo doubao-logo">豆包</view>
+          <view class="platform-copy">
             <view class="platform-name">豆包</view>
             <view class="platform-desc">中文理解顺手</view>
           </view>
         </view>
         <view class="platform-card domestic">
-          <view class="platform-logo jimeng-logo">即</view>
-          <view>
+          <view class="platform-logo jimeng-logo">即梦</view>
+          <view class="platform-copy">
             <view class="platform-name">即梦</view>
             <view class="platform-desc">适合快速试图</view>
           </view>
         </view>
         <view class="platform-card global">
-          <view class="platform-logo chatgpt-logo">◎</view>
-          <view>
+          <view class="platform-logo chatgpt-logo">GPT</view>
+          <view class="platform-copy">
             <view class="platform-name">ChatGPT</view>
             <view class="platform-desc">适合英文版本</view>
           </view>
         </view>
         <view class="platform-card global">
           <view class="platform-logo midjourney-logo">MJ</view>
-          <view>
+          <view class="platform-copy">
             <view class="platform-name">Midjourney</view>
             <view class="platform-desc">建议用英文版</view>
           </view>
@@ -338,7 +340,7 @@
           <view class="editor-title">编辑提示词</view>
           <view class="editor-desc">可以按实际画面需求微调，保存后会同步用于复制和历史记录。</view>
         </view>
-        <button class="editor-close" bindtap="closePromptEditor">×</button>
+        <view class="editor-close" bindtap="closePromptEditor">×</view>
       </view>
 
       <scroll-view class="editor-body" scroll-y="true">
@@ -363,8 +365,8 @@
       </scroll-view>
 
       <view class="editor-actions">
-        <button class="editor-secondary" bindtap="closePromptEditor">取消</button>
-        <button class="editor-primary" bindtap="savePromptEdits">保存修改</button>
+        <view class="editor-secondary" bindtap="closePromptEditor">取消</view>
+        <view class="editor-primary" bindtap="savePromptEdits">保存修改</view>
       </view>
     </view>
   </view>
