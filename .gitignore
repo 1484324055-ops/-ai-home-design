@@ -46,3 +46,6 @@ next-env.d.ts
 # database
 dev.db
 *.db
+
+# WeChat Mini Program local settings
+wechat-miniapp/project.private.config.json

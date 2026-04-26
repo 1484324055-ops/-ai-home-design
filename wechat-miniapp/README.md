@@ -13,7 +13,7 @@ wechat-miniapp
 ```
 
 4. AppID 使用你的小程序 AppID。
-5. 如果开发阶段接口请求失败，可以在微信开发者工具里临时勾选“不校验合法域名、web-view、TLS 版本以及 HTTPS 证书”。
+5. 当前项目已把开发配置设为不校验合法域名，方便本地预览。
 
 正式上线前，需要在微信小程序后台配置 request 合法域名。
 
@@ -32,6 +32,38 @@ https://ai-home-design-wine.vercel.app
 ```
 
 如果后续换成国内备案域名，只需要改这里。
+
+开发阶段默认先用小程序内置资产，不请求线上接口，避免合法域名未配置时控制台反复报错：
+
+```text
+miniprogram/services/config.ts
+```
+
+```ts
+export const ENABLE_REMOTE_ASSETS = false;
+```
+
+等你在微信后台配置好 request 合法域名后，再把它改成：
+
+```ts
+export const ENABLE_REMOTE_ASSETS = true;
+```
+
+## 微信后台需要配置的域名
+
+进入小程序后台：
+
+```text
+开发管理 -> 开发设置 -> 服务器域名 -> request 合法域名
+```
+
+开发测试阶段可以先添加：
+
+```text
+https://ai-home-design-wine.vercel.app
+```
+
+正式上线更推荐换成国内备案域名，再把国内域名添加到这里。
 
 ## 第一版功能
 

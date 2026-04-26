@@ -1,4 +1,5 @@
 import { request } from "./api";
+import { ENABLE_REMOTE_ASSETS } from "./config";
 import { AssetLibrary, fallbackLibrary } from "../utils/data";
 
 interface AssetsResponse {
@@ -7,6 +8,14 @@ interface AssetsResponse {
 }
 
 export const loadAssetLibrary = async () => {
+  if (!ENABLE_REMOTE_ASSETS) {
+    return {
+      library: fallbackLibrary,
+      message: "",
+      source: "local"
+    };
+  }
+
   try {
     const response = await request<AssetsResponse>({ path: "/api/assets" });
     return {
