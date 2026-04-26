@@ -10,6 +10,7 @@ import {
   updateLocalHistoryPrompts
 } from "../../utils/history";
 import type { LocalHistoryRecord } from "../../utils/history";
+import { saveMiniappFeedback } from "../../utils/feedback";
 
 const LAST_SELECTION_KEY = "ai_home_design_last_selection";
 
@@ -30,6 +31,11 @@ type TextareaInputEvent = WechatMiniprogram.BaseEvent & {
   detail: {
     value: string;
   };
+};
+
+type WechatProfile = {
+  nickName: string;
+  avatarUrl: string;
 };
 
 type LastSelectionState = {
@@ -138,7 +144,11 @@ Page({
     isPlannerPinned: false,
     isPromptEditorOpen: false,
     editChinese: "",
-    editEnglish: ""
+    editEnglish: "",
+    isFeedbackOpen: false,
+    feedbackText: "",
+    feedbackContact: "",
+    wechatProfile: null as WechatProfile | null
   },
 
   async onLoad() {
@@ -180,10 +190,22 @@ Page({
     const availableMaterials = this.data.selectedStyleId
       ? library.materials.filter((material) => material.applicableStyles.includes(this.data.selectedStyleId))
       : [];
+    const currentCabinetIsAvailable = availableCabinets.some((item) => item.id === this.data.selectedCabinetId);
+    const currentMaterialIsAvailable = availableMaterials.some((item) => item.id === this.data.selectedMaterialId);
+    const nextSelectedCabinetId = currentCabinetIsAvailable
+      ? this.data.selectedCabinetId
+      : availableCabinets.length === 1
+        ? availableCabinets[0].id
+        : "";
+    const nextSelectedMaterialId = currentMaterialIsAvailable
+      ? this.data.selectedMaterialId
+      : availableMaterials.length === 1
+        ? availableMaterials[0].id
+        : "";
     const selectedSpace = library.spaces.find((item) => item.id === this.data.selectedSpaceId);
-    const selectedCabinet = library.cabinets.find((item) => item.id === this.data.selectedCabinetId);
+    const selectedCabinet = library.cabinets.find((item) => item.id === nextSelectedCabinetId);
     const selectedStyle = library.styles.find((item) => item.id === this.data.selectedStyleId);
-    const selectedMaterial = library.materials.find((item) => item.id === this.data.selectedMaterialId);
+    const selectedMaterial = library.materials.find((item) => item.id === nextSelectedMaterialId);
     const isReady = Boolean(selectedSpace && selectedCabinet && selectedStyle && selectedMaterial);
 
     const selectedValues = [selectedSpace, selectedCabinet, selectedStyle, selectedMaterial];
@@ -220,6 +242,8 @@ Page({
       : nextStepText;
 
     this.setData({
+      selectedCabinetId: nextSelectedCabinetId,
+      selectedMaterialId: nextSelectedMaterialId,
       availableCabinets: availableCabinets.map(withCabinetIcon),
       availableMaterials,
       isReady,
@@ -400,6 +424,92 @@ Page({
   closePromptEditor() {
     this.setData({
       isPromptEditorOpen: false
+    });
+  },
+
+  openFeedback() {
+    this.setData({
+      isFeedbackOpen: true
+    });
+  },
+
+  closeFeedback() {
+    this.setData({
+      isFeedbackOpen: false
+    });
+  },
+
+  onFeedbackTextInput(event: TextareaInputEvent) {
+    this.setData({
+      feedbackText: event.detail.value
+    });
+  },
+
+  onFeedbackContactInput(event: TextareaInputEvent) {
+    this.setData({
+      feedbackContact: event.detail.value
+    });
+  },
+
+  requestWechatProfile() {
+    if (!wx.getUserProfile) {
+      wx.showToast({
+        title: "当前微信版本暂不支持",
+        icon: "none"
+      });
+      return;
+    }
+
+    wx.getUserProfile({
+      desc: "用于标记反馈来源",
+      success: (res) => {
+        this.setData({
+          wechatProfile: {
+            nickName: res.userInfo.nickName,
+            avatarUrl: res.userInfo.avatarUrl
+          }
+        });
+        wx.showToast({
+          title: "已绑定微信身份",
+          icon: "success"
+        });
+      },
+      fail: () => {
+        wx.showToast({
+          title: "未授权也可以提交",
+          icon: "none"
+        });
+      }
+    });
+  },
+
+  submitFeedback() {
+    const content = this.data.feedbackText.trim();
+
+    if (!content) {
+      wx.showToast({
+        title: "先写一点建议吧",
+        icon: "none"
+      });
+      return;
+    }
+
+    saveMiniappFeedback({
+      content,
+      contact: this.data.feedbackContact.trim(),
+      page: "home",
+      user: this.data.wechatProfile || undefined
+    });
+
+    this.setData({
+      isFeedbackOpen: false,
+      feedbackText: "",
+      feedbackContact: ""
+    });
+
+    wx.showToast({
+      title: "感谢反馈",
+      icon: "success"
     });
   },
 

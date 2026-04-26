@@ -1,8 +1,8 @@
 <view class="page safe-bottom">
   <view class="hero">
     <view>
-      <text class="eyebrow">PROMPT STUDIO</text>
-      <view class="title">AI 全屋定制效果图生成器</view>
+      <text class="eyebrow">提示词工作台</text>
+      <view class="title">全屋定制AI效果图prompt生成器</view>
       <view class="subtitle">选择空间、柜体、风格和材质，快速生成可复制的生图提示词。</view>
     </view>
     <view class="hero-card">
@@ -22,7 +22,7 @@
   <view class="planner-card compact-planner {{isPlannerPinned ? 'is-pinned' : ''}}">
     <view class="planner-head">
       <view>
-        <text class="eyebrow">CURRENT PLAN</text>
+        <text class="eyebrow">当前方案</text>
         <view class="planner-subtitle compact-subtitle">{{nextStepText}}</view>
       </view>
       <view class="planner-percent">{{progressPercent}}%</view>
@@ -145,9 +145,7 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title">更多选项</view>
-        <view class="advanced-summary">住宅类型 · 镜头 · 光影</view>
-        <view class="advanced-default">默认：商品房 · 广角全景 · 明亮自然光</view>
+        <view class="advanced-title">更多选项：住宅类型、镜头、光影</view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
     </button>
@@ -213,7 +211,7 @@
   <view id="result" wx:if="{{promptResult}}" class="result-panel">
     <view class="result-header">
       <view>
-        <text class="eyebrow">GENERATED</text>
+        <text class="eyebrow">生成结果</text>
         <view class="result-title">{{promptResult.title}}</view>
         <view class="result-subtitle">优先复制中文版本，可直接粘贴到生图平台继续出图。</view>
       </view>
@@ -233,7 +231,7 @@
         bindtap="setPromptTab"
         class="tab {{activePromptTab === 'english' ? 'active-tab' : ''}}"
       >
-        English
+        英文
       </button>
     </view>
 
@@ -255,28 +253,28 @@
       <view class="platform-title">复制后可以粘贴到这些平台</view>
       <view class="platform-grid">
         <view class="platform-card domestic">
-          <view class="platform-logo">豆</view>
+          <view class="platform-logo doubao-logo">豆</view>
           <view>
             <view class="platform-name">豆包</view>
             <view class="platform-desc">中文理解顺手</view>
           </view>
         </view>
         <view class="platform-card domestic">
-          <view class="platform-logo">即</view>
+          <view class="platform-logo jimeng-logo">即</view>
           <view>
             <view class="platform-name">即梦</view>
             <view class="platform-desc">适合快速试图</view>
           </view>
         </view>
         <view class="platform-card global">
-          <view class="platform-logo">C</view>
+          <view class="platform-logo chatgpt-logo">◎</view>
           <view>
             <view class="platform-name">ChatGPT</view>
             <view class="platform-desc">适合英文版本</view>
           </view>
         </view>
         <view class="platform-card global">
-          <view class="platform-logo">MJ</view>
+          <view class="platform-logo midjourney-logo">MJ</view>
           <view>
             <view class="platform-name">Midjourney</view>
             <view class="platform-desc">建议用英文版</view>
@@ -286,11 +284,56 @@
     </view>
   </view>
 
+  <button class="feedback-float" bindtap="openFeedback">反馈建议</button>
+
+  <view wx:if="{{isFeedbackOpen}}" class="feedback-mask">
+    <view class="feedback-sheet">
+      <view class="feedback-head">
+        <view>
+          <view class="feedback-title">反馈建议</view>
+          <view class="feedback-desc">告诉我哪里不好用，或者你希望新增什么空间、柜体、风格。</view>
+        </view>
+        <button class="feedback-close" bindtap="closeFeedback">×</button>
+      </view>
+
+      <textarea
+        class="feedback-textarea"
+        value="{{feedbackText}}"
+        maxlength="600"
+        placeholder="例如：希望增加新中式茶室、希望批量生成能导出表格……"
+        bindinput="onFeedbackTextInput"
+      />
+
+      <input
+        class="feedback-input"
+        value="{{feedbackContact}}"
+        placeholder="联系方式（选填）"
+        bindinput="onFeedbackContactInput"
+      />
+
+      <view class="wechat-profile-card">
+        <view class="wechat-profile-copy">
+          <view class="wechat-profile-title">微信身份</view>
+          <view class="wechat-profile-desc">
+            {{wechatProfile ? wechatProfile.nickName : '授权后，反馈会带上你的微信昵称，方便我知道是谁提的建议。'}}
+          </view>
+        </view>
+        <button class="wechat-profile-button" bindtap="requestWechatProfile">
+          {{wechatProfile ? '已授权' : '微信授权'}}
+        </button>
+      </view>
+
+      <view class="feedback-actions">
+        <button class="feedback-secondary" bindtap="closeFeedback">取消</button>
+        <button class="feedback-primary" bindtap="submitFeedback">提交反馈</button>
+      </view>
+    </view>
+  </view>
+
   <view wx:if="{{isPromptEditorOpen}}" class="editor-mask">
     <view class="editor-sheet">
       <view class="editor-head">
         <view>
-          <text class="eyebrow">PROMPT EDITOR</text>
           <view class="editor-title">编辑提示词</view>
           <view class="editor-desc">可以按实际画面需求微调，保存后会同步用于复制和历史记录。</view>
         </view>
@@ -298,7 +341,7 @@
       </view>
 
       <scroll-view class="editor-body" scroll-y="true">
-        <view class="editor-field">
+        <view class="editor-field editor-field-cn">
           <view class="editor-label">中文提示词</view>
           <textarea
             class="prompt-editor-textarea"
@@ -307,8 +350,8 @@
             bindinput="onEditChineseInput"
           />
         </view>
-        <view class="editor-field">
-          <view class="editor-label">English Prompt</view>
+        <view class="editor-field editor-field-en">
+          <view class="editor-label">英文提示词</view>
           <textarea
             class="prompt-editor-textarea english"
             value="{{editEnglish}}"

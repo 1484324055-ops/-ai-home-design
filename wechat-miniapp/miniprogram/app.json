@@ -6,7 +6,7 @@
     "pages/profile/index"
   ],
   "window": {
-    "navigationBarTitleText": "AI Home Design",
+    "navigationBarTitleText": "全屋定制AI效果图prompt生成器",
     "navigationBarBackgroundColor": "#F7F8FB",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#F7F8FB",

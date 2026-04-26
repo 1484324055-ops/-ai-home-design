@@ -25,7 +25,7 @@
   color: #667085;
   font-size: 20rpx;
   font-weight: 800;
-  letter-spacing: 5rpx;
+  letter-spacing: 3rpx;
 }
 
 .title {
@@ -150,7 +150,7 @@
 .advanced-toggle {
   display: flex;
   width: 100%;
-  min-height: 108rpx;
+  min-height: 88rpx;
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
@@ -166,8 +166,9 @@
 
 .advanced-title {
   color: #101828;
-  font-size: 28rpx;
+  font-size: 29rpx;
   font-weight: 850;
+  line-height: 1.35;
 }
 
 .advanced-summary {
@@ -994,6 +995,28 @@
   margin-top: 18rpx;
 }
 
+.feedback-float {
+  position: fixed;
+  right: 24rpx;
+  bottom: calc(136rpx + env(safe-area-inset-bottom));
+  z-index: 20;
+  display: flex;
+  min-width: 148rpx;
+  min-height: 66rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: #111827;
+  color: #ffffff;
+  font-size: 23rpx;
+  font-weight: 850;
+  box-shadow: 0 18rpx 40rpx rgba(15, 23, 42, 0.18);
+}
+
+.feedback-float::after {
+  border: 0;
+}
+
 .copy-tip {
   grid-column: 1 / -1;
   min-width: 0;
@@ -1043,20 +1066,24 @@
   inset: 0;
   z-index: 30;
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(15, 23, 42, 0.34);
 }
 
 .editor-sheet {
+  display: flex;
+  min-height: 100vh;
   width: 100%;
-  max-height: 88vh;
-  padding: 28rpx 28rpx calc(24rpx + env(safe-area-inset-bottom));
-  border-radius: 34rpx 34rpx 0 0;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: calc(28rpx + env(safe-area-inset-top)) 28rpx calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 0;
   background:
-    radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
+    radial-gradient(circle at 12% 0%, rgba(37, 99, 235, 0.13), transparent 38%),
+    radial-gradient(circle at 100% 18%, rgba(14, 165, 233, 0.1), transparent 32%),
     #ffffff;
-  box-shadow: 0 -24rpx 70rpx rgba(15, 23, 42, 0.24);
+  box-shadow: none;
 }
 
 .editor-head {
@@ -1101,7 +1128,9 @@
 }
 
 .editor-body {
-  max-height: 58vh;
+  flex: 1;
+  min-height: 0;
+  max-height: none;
   margin-top: 22rpx;
 }
 
@@ -1118,7 +1147,7 @@
 
 .prompt-editor-textarea {
   width: 100%;
-  min-height: 280rpx;
+  min-height: 52vh;
   box-sizing: border-box;
   padding: 20rpx;
   border: 1rpx solid #dbe2ea;
@@ -1130,7 +1159,7 @@
 }
 
 .prompt-editor-textarea.english {
-  min-height: 320rpx;
+  min-height: 24vh;
 }
 
 .editor-actions {
@@ -1161,6 +1190,170 @@
   background: #2563eb;
   color: #ffffff;
   box-shadow: 0 18rpx 36rpx rgba(37, 99, 235, 0.22);
+}
+
+.feedback-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 32;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.feedback-sheet {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 28rpx 28rpx calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 34rpx 34rpx 0 0;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
+    #ffffff;
+  box-shadow: 0 -24rpx 70rpx rgba(15, 23, 42, 0.22);
+}
+
+.feedback-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.feedback-title {
+  color: #101828;
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.feedback-desc {
+  margin-top: 8rpx;
+  color: #667085;
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.feedback-close {
+  display: flex;
+  width: 58rpx;
+  height: 58rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: #f2f4f7;
+  color: #344054;
+  font-size: 38rpx;
+  line-height: 1;
+}
+
+.feedback-textarea,
+.feedback-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1rpx solid #dbe2ea;
+  border-radius: 24rpx;
+  background: #f8fafc;
+  color: #182230;
+  font-size: 25rpx;
+}
+
+.feedback-textarea {
+  min-height: 220rpx;
+  margin-top: 24rpx;
+  padding: 20rpx;
+  line-height: 1.6;
+}
+
+.feedback-input {
+  height: 82rpx;
+  margin-top: 16rpx;
+  padding: 0 20rpx;
+}
+
+.wechat-profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  margin-top: 16rpx;
+  padding: 18rpx;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 24rpx;
+  background: #ffffff;
+}
+
+.wechat-profile-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.wechat-profile-title {
+  color: #101828;
+  font-size: 25rpx;
+  font-weight: 850;
+}
+
+.wechat-profile-desc {
+  display: -webkit-box;
+  margin-top: 6rpx;
+  overflow: hidden;
+  color: #667085;
+  font-size: 22rpx;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.wechat-profile-button {
+  display: flex;
+  min-width: 136rpx;
+  min-height: 64rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 22rpx;
+  font-weight: 850;
+}
+
+.feedback-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.feedback-secondary,
+.feedback-primary {
+  display: flex;
+  min-height: 82rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  font-size: 27rpx;
+  font-weight: 850;
+}
+
+.feedback-secondary {
+  border: 1rpx solid #e4e7ec;
+  background: #ffffff;
+  color: #475467;
+}
+
+.feedback-primary {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 18rpx 36rpx rgba(37, 99, 235, 0.22);
+}
+
+.feedback-close::after,
+.wechat-profile-button::after,
+.feedback-secondary::after,
+.feedback-primary::after {
+  border: 0;
 }
 
 .platform-panel {
@@ -1214,6 +1407,29 @@
   color: #ffffff;
   font-size: 20rpx;
   font-weight: 900;
+}
+
+.doubao-logo {
+  background: linear-gradient(135deg, #d1fae5, #22c55e);
+  color: #064e3b;
+}
+
+.jimeng-logo {
+  background: linear-gradient(135deg, #e0f2fe, #14b8a6);
+  color: #0f172a;
+}
+
+.chatgpt-logo {
+  background: radial-gradient(circle at 35% 30%, #475569, #0f172a 72%);
+  color: #ffffff;
+  font-size: 28rpx;
+}
+
+.midjourney-logo {
+  background: linear-gradient(135deg, #111827, #334155);
+  color: #f8fafc;
+  font-size: 17rpx;
+  letter-spacing: -1rpx;
 }
 
 .platform-name {

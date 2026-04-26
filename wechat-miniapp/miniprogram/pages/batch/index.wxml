@@ -1,7 +1,7 @@
 <view class="batch-page safe-bottom">
   <view class="hero">
     <view>
-      <text class="eyebrow">BATCH STUDIO</text>
+      <text class="eyebrow">批量工作台</text>
       <view class="title">批量生成</view>
       <view class="desc">以同一套风格和材质为中心，一次生成多个空间和柜体组合。</view>
     </view>
@@ -68,9 +68,7 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title">更多选项</view>
-        <view class="advanced-summary">住宅类型 · 镜头 · 光影</view>
-        <view class="advanced-default">默认：商品房 · 广角全景 · 明亮自然光</view>
+        <view class="advanced-title">更多选项：住宅类型、镜头、光影</view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
     </button>
@@ -186,7 +184,7 @@
   <view wx:if="{{results.length}}" class="result-panel">
     <view class="result-top">
       <view>
-        <text class="eyebrow">BATCH OUTPUT</text>
+        <text class="eyebrow">批量结果</text>
         <view class="result-title">已生成 {{results.length}} 条提示词</view>
       </view>
       <button class="copy-all-button" bindtap="copyAll">复制全部</button>
