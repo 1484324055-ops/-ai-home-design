@@ -234,6 +234,7 @@ Page({
   toggleCabinet(event: WechatMiniprogram.TouchEvent) {
     const spaceId = event.currentTarget.dataset.spaceId as string;
     const cabinetId = event.currentTarget.dataset.cabinetId as string;
+    let selectedSpaceIds = [...(this.data.selectedSpaceIds as string[])];
     const selectedCabinetIdsBySpace = {
       ...(this.data.selectedCabinetIdsBySpace as Record<string, string[]>)
     };
@@ -243,7 +244,16 @@ Page({
       ? currentIds.filter((id) => id !== cabinetId)
       : [...currentIds, cabinetId];
 
+    if (selectedCabinetIdsBySpace[spaceId].length > 0 && !selectedSpaceIds.includes(spaceId)) {
+      selectedSpaceIds = [...selectedSpaceIds, spaceId];
+    }
+
+    if (selectedCabinetIdsBySpace[spaceId].length === 0) {
+      selectedSpaceIds = selectedSpaceIds.filter((id) => id !== spaceId);
+    }
+
     this.setData({
+      selectedSpaceIds,
       selectedCabinetIdsBySpace,
       results: []
     });
@@ -257,11 +267,21 @@ Page({
       ...(this.data.selectedCabinetIdsBySpace as Record<string, string[]>)
     };
     const currentIds = selectedCabinetIdsBySpace[spaceId] || [];
+    let selectedSpaceIds = [...(this.data.selectedSpaceIds as string[])];
 
     selectedCabinetIdsBySpace[spaceId] =
       currentIds.length === cabinets.length ? [] : cabinets.map((cabinet) => cabinet.id);
 
+    if (selectedCabinetIdsBySpace[spaceId].length > 0 && !selectedSpaceIds.includes(spaceId)) {
+      selectedSpaceIds = [...selectedSpaceIds, spaceId];
+    }
+
+    if (selectedCabinetIdsBySpace[spaceId].length === 0) {
+      selectedSpaceIds = selectedSpaceIds.filter((id) => id !== spaceId);
+    }
+
     this.setData({
+      selectedSpaceIds,
       selectedCabinetIdsBySpace,
       results: []
     });

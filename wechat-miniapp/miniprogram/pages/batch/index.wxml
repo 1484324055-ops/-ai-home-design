@@ -87,7 +87,7 @@
             bindtap="selectResidenceType"
             class="advanced-option {{selectedResidenceTypeId === item.id ? 'selected' : ''}}"
           >
-            <text>{{item.name}}</text>
+            <text class="advanced-option-name">{{item.name}}</text>
             <text wx:if="{{item.id === 'standard'}}" class="recommend-badge">默认</text>
           </button>
         </view>
@@ -103,7 +103,7 @@
             bindtap="selectCameraAngle"
             class="advanced-option {{selectedCameraAngleId === item.id ? 'selected' : ''}}"
           >
-            <text>{{item.name}}</text>
+            <text class="advanced-option-name">{{item.name}}</text>
             <text wx:if="{{item.id === 'wide-angle'}}" class="recommend-badge">推荐</text>
           </button>
         </view>
@@ -119,7 +119,7 @@
             bindtap="selectLighting"
             class="advanced-option {{selectedLightingId === item.id ? 'selected' : ''}}"
           >
-            <text>{{item.name}}</text>
+            <text class="advanced-option-name">{{item.name}}</text>
             <text wx:if="{{item.id === 'natural'}}" class="recommend-badge">推荐</text>
           </button>
         </view>
@@ -140,49 +140,37 @@
       <button class="mini-button" bindtap="clearSpaces">清空选择</button>
     </view>
 
-    <view class="space-grid embedded-space-grid">
+    <view class="space-matrix">
       <view
         wx:for="{{spaceCards}}"
         wx:for-item="space"
         wx:key="id"
-        class="space-choice {{space.isSelected ? 'expanded' : ''}}"
+        class="space-row {{space.selectedCount > 0 ? 'active' : ''}}"
       >
         <button
-          data-id="{{space.id}}"
-          bindtap="toggleSpace"
-          class="space-card space-{{space.id}} {{space.isSelected ? 'selected' : ''}}"
+          data-space-id="{{space.id}}"
+          bindtap="toggleAllCabinetsForSpace"
+          class="space-row-head space-{{space.id}} {{space.selectedCount > 0 ? 'selected' : ''}}"
         >
           <view class="space-symbol">{{space.initial}}</view>
           <view class="space-meta">
             <text class="space-name">{{space.name}}</text>
-            <text class="space-sub">{{space.caption}}</text>
+            <text class="space-sub">{{space.selectedCount}} / {{space.cabinetCount}} 已选</text>
           </view>
         </button>
 
-        <view wx:if="{{space.isSelected}}" class="inline-cabinet-box">
-          <view class="inline-cabinet-head">
-            <view>
-              <view class="inline-step-title"><text class="inline-step">4</text>{{space.name}} · 柜体组合</view>
-              <view class="group-sub">{{space.selectedCount}} / {{space.cabinetCount}} 个柜体已选</view>
-            </view>
-            <button class="small-toggle" data-space-id="{{space.id}}" bindtap="toggleAllCabinetsForSpace">
-              {{space.selectedCount === space.cabinetCount ? '清空柜体' : '全选柜体'}}
-            </button>
-          </view>
-
-          <view class="cabinet-grid inline-cabinet-grid">
-            <button
-              wx:for="{{space.cabinets}}"
-              wx:for-item="cabinet"
-              wx:key="id"
-              data-space-id="{{space.id}}"
-              data-cabinet-id="{{cabinet.id}}"
-              bindtap="toggleCabinet"
-              class="cabinet-card {{cabinet.isSelected ? 'selected-soft' : ''}}"
-            >
-              {{cabinet.name}}
-            </button>
-          </view>
+        <view class="space-cabinet-area">
+          <button
+            wx:for="{{space.cabinets}}"
+            wx:for-item="cabinet"
+            wx:key="id"
+            data-space-id="{{space.id}}"
+            data-cabinet-id="{{cabinet.id}}"
+            bindtap="toggleCabinet"
+            class="cabinet-card matrix-cabinet {{cabinet.isSelected ? 'selected-soft' : ''}}"
+          >
+            {{cabinet.name}}
+          </button>
         </view>
       </view>
     </view>

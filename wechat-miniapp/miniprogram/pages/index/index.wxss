@@ -140,9 +140,11 @@
   margin-bottom: 18rpx;
   overflow: hidden;
   border: 1rpx solid #e4e7ec;
-  border-radius: 30rpx;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.045);
+  border-radius: 32rpx;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.08), transparent 38%),
+    rgba(255, 255, 255, 0.97);
+  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.055);
 }
 
 .advanced-toggle {
@@ -191,15 +193,22 @@
 }
 
 .advanced-body {
-  padding: 0 22rpx 22rpx;
+  padding: 0 18rpx 18rpx;
+}
+
+.advanced-group {
+  padding: 16rpx;
+  border: 1rpx solid #edf2f7;
+  border-radius: 24rpx;
+  background: rgba(248, 250, 252, 0.92);
 }
 
 .advanced-group + .advanced-group {
-  margin-top: 20rpx;
+  margin-top: 14rpx;
 }
 
 .advanced-label {
-  margin-bottom: 12rpx;
+  margin-bottom: 10rpx;
   color: #344054;
   font-size: 24rpx;
   font-weight: 850;
@@ -208,23 +217,41 @@
 .advanced-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12rpx;
+  gap: 10rpx;
 }
 
 .advanced-option {
+  position: relative;
   display: flex;
   min-width: 0;
-  min-height: 72rpx;
+  min-height: 78rpx;
   align-items: center;
   justify-content: center;
-  gap: 8rpx;
-  padding: 0 12rpx;
+  box-sizing: border-box;
+  padding: 12rpx 8rpx;
+  overflow: hidden;
   border: 2rpx solid #e4e7ec;
   border-radius: 20rpx;
   background: #ffffff;
   color: #344054;
   font-size: 23rpx;
   font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.advanced-toggle::after,
+.advanced-option::after {
+  border: 0;
+}
+
+.advanced-option-name {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .advanced-option.selected {
@@ -235,15 +262,20 @@
 
 .recommend-badge {
   display: inline-flex;
-  min-width: 54rpx;
-  height: 34rpx;
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  min-width: auto;
+  height: 26rpx;
   align-items: center;
   justify-content: center;
+  padding: 0 8rpx;
   border-radius: 999rpx;
   background: rgba(37, 99, 235, 0.12);
   color: #2563eb;
-  font-size: 18rpx;
+  font-size: 16rpx;
   font-weight: 900;
+  line-height: 26rpx;
 }
 
 .planner-head {
