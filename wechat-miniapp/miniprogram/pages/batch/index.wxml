@@ -1,7 +1,159 @@
-<view class="placeholder-page">
-  <view class="placeholder-card">
-    <text class="eyebrow">BATCH</text>
-    <view class="title">批量生成</view>
-    <view class="desc">下一步会把网页端的批量组合能力迁移到这里，支持单选、多选、全选空间和批量复制。</view>
+<view class="batch-page safe-bottom">
+  <view class="hero">
+    <view>
+      <text class="eyebrow">BATCH STUDIO</text>
+      <view class="title">批量生成</view>
+      <view class="desc">以同一套风格和材质为中心，一次生成多个空间和柜体组合。</view>
+    </view>
+    <view class="count-card">
+      <text class="count-number">{{comboCount}}</text>
+      <text class="count-label">待生成</text>
+    </view>
+  </view>
+
+  <view wx:if="{{assetMessage}}" class="notice">{{assetMessage}}</view>
+
+  <view class="panel">
+    <view class="section-head">
+      <view class="step">1</view>
+      <view>
+        <view class="section-title">选择风格</view>
+        <view class="section-desc">先统一整批方案的画面调性</view>
+      </view>
+    </view>
+    <view class="chip-grid">
+      <button
+        wx:for="{{styles}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectStyle"
+        class="chip-card {{selectedStyleId === item.id ? 'selected' : ''}}"
+      >
+        <text class="chip-name">{{item.name}}</text>
+        <text class="chip-sub">{{item.nameEn}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="panel {{selectedStyleId ? '' : 'disabled-panel'}}">
+    <view class="section-head">
+      <view class="step">2</view>
+      <view>
+        <view class="section-title">选择材质套餐</view>
+        <view class="section-desc">{{selectedStyleId ? '只显示适配当前风格的材质' : '请先选择风格'}}</view>
+      </view>
+    </view>
+    <view class="chip-grid">
+      <button
+        wx:for="{{materials}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectMaterial"
+        class="chip-card material-chip {{selectedMaterialId === item.id ? 'selected' : ''}}"
+      >
+        <text class="chip-name">{{item.name}}</text>
+        <text class="chip-sub">{{item.nameEn}}</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="section-head split-head">
+      <view class="head-left">
+        <view class="step">3</view>
+        <view>
+          <view class="section-title">选择空间</view>
+          <view class="section-desc">可单选、多选，也可一键选择全部组合</view>
+        </view>
+      </view>
+      <view class="mini-actions">
+        <button class="mini-button" bindtap="selectAllSpaces">全选</button>
+        <button class="mini-button" bindtap="clearSpaces">清空</button>
+      </view>
+    </view>
+
+    <view class="space-grid">
+      <button
+        wx:for="{{spaceCards}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="toggleSpace"
+        class="space-card {{item.isSelected ? 'selected' : ''}}"
+      >
+        <view class="space-symbol">{{item.initial}}</view>
+        <view class="space-meta">
+          <text class="space-name">{{item.name}}</text>
+          <text class="space-sub">{{item.selectedCount || item.cabinetCount}} 个柜体</text>
+        </view>
+      </button>
+    </view>
+  </view>
+
+  <view class="panel {{selectedSpaceGroups.length ? '' : 'disabled-panel'}}">
+    <view class="section-head">
+      <view class="step">4</view>
+      <view>
+        <view class="section-title">选择柜体组合</view>
+        <view class="section-desc">{{selectedSpaceGroups.length ? '每个空间都可以单独全选或微调' : '请先选择空间'}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{selectedSpaceGroups.length === 0}}" class="empty-inline">还没有选择空间。</view>
+
+    <view wx:for="{{selectedSpaceGroups}}" wx:key="id" class="space-group">
+      <view class="group-head">
+        <view>
+          <view class="group-title">{{item.name}}</view>
+          <view class="group-sub">{{item.selectedCount}} / {{item.cabinetCount}} 个柜体已选</view>
+        </view>
+        <button class="small-toggle" data-space-id="{{item.id}}" bindtap="toggleAllCabinetsForSpace">
+          {{item.selectedCount === item.cabinetCount ? '清空柜体' : '全选柜体'}}
+        </button>
+      </view>
+
+      <view class="cabinet-grid">
+        <button
+          wx:for="{{item.cabinets}}"
+          wx:for-item="cabinet"
+          wx:key="id"
+          data-space-id="{{item.id}}"
+          data-cabinet-id="{{cabinet.id}}"
+          bindtap="toggleCabinet"
+          class="cabinet-card {{cabinet.isSelected ? 'selected-soft' : ''}}"
+        >
+          {{cabinet.name}}
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <view class="action-bar">
+    <button class="secondary-button" bindtap="resetBatch">重置</button>
+    <button class="primary-button {{isReady ? '' : 'button-disabled'}}" bindtap="generateBatch">
+      生成 {{comboCount}} 条
+    </button>
+  </view>
+
+  <view wx:if="{{results.length}}" class="result-panel">
+    <view class="result-top">
+      <view>
+        <text class="eyebrow">BATCH OUTPUT</text>
+        <view class="result-title">已生成 {{results.length}} 条提示词</view>
+      </view>
+      <button class="copy-all-button" bindtap="copyAll">复制全部</button>
+    </view>
+
+    <view class="result-list">
+      <view wx:for="{{results}}" wx:key="id" class="result-card">
+        <view class="record-head">
+          <view>
+            <view class="record-title">{{index + 1}}. {{item.title}}</view>
+            <view class="record-sub">{{item.spaceName}} · {{item.cabinetName}}</view>
+          </view>
+          <button class="copy-one-button" data-id="{{item.id}}" bindtap="copyOne">复制</button>
+        </view>
+        <view class="prompt-preview">{{item.chinese}}</view>
+      </view>
+    </view>
   </view>
 </view>
