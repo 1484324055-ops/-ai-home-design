@@ -9,6 +9,7 @@ const MAX_BATCH_RESULTS = 60;
 
 type SpaceCard = Space & {
   initial: string;
+  caption: string;
   cabinetCount: number;
   selectedCount: number;
   isSelected: boolean;
@@ -80,6 +81,9 @@ Page({
       return {
         ...space,
         initial: space.name.slice(0, 1),
+        caption: selectedSpaceIds.includes(space.id)
+          ? `${selectedCount}/${cabinets.length} 已选`
+          : `${cabinets.length} 个柜体`,
         cabinetCount: cabinets.length,
         selectedCount,
         isSelected: selectedSpaceIds.includes(space.id)

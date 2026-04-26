@@ -88,7 +88,6 @@
 }
 
 .section-head,
-.head-left,
 .result-top,
 .record-head,
 .group-head {
@@ -101,18 +100,11 @@
   margin-bottom: 20rpx;
 }
 
-.split-head,
 .result-top,
 .record-head,
 .group-head {
   justify-content: space-between;
   gap: 18rpx;
-}
-
-.head-left {
-  min-width: 0;
-  flex: 1;
-  gap: 16rpx;
 }
 
 .step {
@@ -193,8 +185,10 @@
 }
 
 .mini-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10rpx;
+  margin: -4rpx 0 18rpx;
 }
 
 .mini-button,
@@ -209,13 +203,17 @@
   font-weight: 800;
 }
 
+.mini-button {
+  width: 100%;
+}
+
 .space-grid {
   grid-template-columns: repeat(2, 1fr);
 }
 
 .space-card {
   display: flex;
-  min-height: 100rpx;
+  min-height: 94rpx;
   align-items: center;
   gap: 16rpx;
   padding: 16rpx;
@@ -227,8 +225,8 @@
 
 .space-symbol {
   display: flex;
-  width: 56rpx;
-  height: 56rpx;
+  width: 52rpx;
+  height: 52rpx;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -248,7 +246,7 @@
   display: block;
   overflow: hidden;
   color: #101828;
-  font-size: 26rpx;
+  font-size: 25rpx;
   font-weight: 850;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -258,7 +256,7 @@
   display: block;
   margin-top: 6rpx;
   color: #667085;
-  font-size: 22rpx;
+  font-size: 21rpx;
 }
 
 .selected {

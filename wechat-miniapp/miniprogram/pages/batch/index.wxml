@@ -58,18 +58,16 @@
   </view>
 
   <view class="panel">
-    <view class="section-head split-head">
-      <view class="head-left">
-        <view class="step">3</view>
-        <view>
-          <view class="section-title">选择空间</view>
-          <view class="section-desc">可单选、多选，也可一键选择全部组合</view>
-        </view>
+    <view class="section-head">
+      <view class="step">3</view>
+      <view>
+        <view class="section-title">选择空间</view>
+        <view class="section-desc">可单选、多选，也可一键选择全部组合</view>
       </view>
-      <view class="mini-actions">
-        <button class="mini-button" bindtap="selectAllSpaces">全选</button>
-        <button class="mini-button" bindtap="clearSpaces">清空</button>
-      </view>
+    </view>
+    <view class="mini-actions">
+      <button class="mini-button" bindtap="selectAllSpaces">全选空间</button>
+      <button class="mini-button" bindtap="clearSpaces">清空选择</button>
     </view>
 
     <view class="space-grid">
@@ -83,7 +81,7 @@
         <view class="space-symbol">{{item.initial}}</view>
         <view class="space-meta">
           <text class="space-name">{{item.name}}</text>
-          <text class="space-sub">{{item.selectedCount || item.cabinetCount}} 个柜体</text>
+          <text class="space-sub">{{item.caption}}</text>
         </view>
       </button>
     </view>
