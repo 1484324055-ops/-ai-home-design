@@ -67,6 +67,66 @@
     </view>
   </view>
 
+  <view class="advanced-panel">
+    <button class="advanced-toggle" bindtap="toggleAdvanced">
+      <view class="advanced-toggle-copy">
+        <view class="advanced-title">更多选项</view>
+        <view class="advanced-summary">默认：商品房 · 广角全景 · 明亮自然光</view>
+      </view>
+      <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
+    </button>
+
+    <view wx:if="{{isAdvancedOpen}}" class="advanced-body">
+      <view class="advanced-group">
+        <view class="advanced-label">住宅类型</view>
+        <view class="advanced-grid">
+          <button
+            wx:for="{{residenceTypes}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="selectResidenceType"
+            class="advanced-option {{selectedResidenceTypeId === item.id ? 'selected' : ''}}"
+          >
+            <text>{{item.name}}</text>
+            <text wx:if="{{item.id === 'standard'}}" class="recommend-badge">默认</text>
+          </button>
+        </view>
+      </view>
+
+      <view class="advanced-group">
+        <view class="advanced-label">镜头</view>
+        <view class="advanced-grid">
+          <button
+            wx:for="{{cameraAngles}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="selectCameraAngle"
+            class="advanced-option {{selectedCameraAngleId === item.id ? 'selected' : ''}}"
+          >
+            <text>{{item.name}}</text>
+            <text wx:if="{{item.id === 'wide-angle'}}" class="recommend-badge">推荐</text>
+          </button>
+        </view>
+      </view>
+
+      <view class="advanced-group">
+        <view class="advanced-label">光影</view>
+        <view class="advanced-grid">
+          <button
+            wx:for="{{lightings}}"
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="selectLighting"
+            class="advanced-option {{selectedLightingId === item.id ? 'selected' : ''}}"
+          >
+            <text>{{item.name}}</text>
+            <text wx:if="{{item.id === 'natural'}}" class="recommend-badge">推荐</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <view class="panel">
     <view class="section-head">
       <view class="step">3</view>

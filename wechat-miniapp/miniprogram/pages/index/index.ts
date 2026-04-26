@@ -1,5 +1,5 @@
 import { loadAssetLibrary } from "../../services/assets";
-import type { AssetLibrary, Cabinet, Material, Selection } from "../../utils/data";
+import type { AssetLibrary, Cabinet, Material, Selection, ResidenceType, CameraAngle, Lighting } from "../../utils/data";
 import { fallbackLibrary } from "../../utils/data";
 import { generatePrompts } from "../../utils/prompt-generator";
 import type { PromptResult } from "../../utils/prompt-generator";
@@ -51,6 +51,9 @@ Page({
     styles: fallbackLibrary.styles,
     materials: fallbackLibrary.materials,
     availableMaterials: [] as Material[],
+    residenceTypes: fallbackLibrary.residenceTypes as ResidenceType[],
+    cameraAngles: fallbackLibrary.cameraAngles as CameraAngle[],
+    lightings: fallbackLibrary.lightings as Lighting[],
     selectedSpaceId: "",
     selectedCabinetId: "",
     selectedStyleId: "",
@@ -70,7 +73,9 @@ Page({
     progressPercent: 0,
     nextStepText: "下一步：选择空间",
     lastGeneratedRecord: null as LocalHistoryRecord | null,
-    isFavoriteCurrent: false
+    isFavoriteCurrent: false,
+    isAdvancedOpen: false,
+    isPlannerPinned: false
   },
 
   async onLoad() {
@@ -81,6 +86,9 @@ Page({
       cabinets: library.cabinets,
       styles: library.styles,
       materials: library.materials,
+      residenceTypes: library.residenceTypes,
+      cameraAngles: library.cameraAngles,
+      lightings: library.lightings,
       assetMessage: message,
       isLoadingAssets: false
     });
@@ -91,6 +99,14 @@ Page({
 
   onShow() {
     this.applyPendingHistory();
+  },
+
+  onPageScroll(event: { scrollTop: number }) {
+    const shouldPin = event.scrollTop > 260;
+
+    if (shouldPin !== this.data.isPlannerPinned) {
+      this.setData({ isPlannerPinned: shouldPin });
+    }
   },
 
   refreshDerivedOptions() {
@@ -262,6 +278,42 @@ Page({
     this.persistCurrentSelection();
   },
 
+  toggleAdvanced() {
+    this.setData({
+      isAdvancedOpen: !this.data.isAdvancedOpen
+    });
+  },
+
+  selectResidenceType(event: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      selectedResidenceTypeId: event.currentTarget.dataset.id as string,
+      promptResult: null,
+      lastGeneratedRecord: null,
+      isFavoriteCurrent: false
+    });
+    this.persistCurrentSelection();
+  },
+
+  selectCameraAngle(event: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      selectedCameraAngleId: event.currentTarget.dataset.id as string,
+      promptResult: null,
+      lastGeneratedRecord: null,
+      isFavoriteCurrent: false
+    });
+    this.persistCurrentSelection();
+  },
+
+  selectLighting(event: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      selectedLightingId: event.currentTarget.dataset.id as string,
+      promptResult: null,
+      lastGeneratedRecord: null,
+      isFavoriteCurrent: false
+    });
+    this.persistCurrentSelection();
+  },
+
   setPromptTab(event: WechatMiniprogram.TouchEvent) {
     this.setData({
       activePromptTab: event.currentTarget.dataset.tab as string
@@ -399,10 +451,14 @@ Page({
       selectedCabinetId: "",
       selectedStyleId: "",
       selectedMaterialId: "",
+      selectedResidenceTypeId: "standard",
+      selectedCameraAngleId: "wide-angle",
+      selectedLightingId: "natural",
       promptResult: null,
       activePromptTab: "chinese",
       lastGeneratedRecord: null,
-      isFavoriteCurrent: false
+      isFavoriteCurrent: false,
+      isAdvancedOpen: false
     });
     wx.removeStorageSync(LAST_SELECTION_KEY);
     this.refreshDerivedOptions();

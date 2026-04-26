@@ -1,5 +1,15 @@
 import { loadAssetLibrary } from "../../services/assets";
-import type { AssetLibrary, Cabinet, Material, Selection, Space, Style } from "../../utils/data";
+import type {
+  AssetLibrary,
+  Cabinet,
+  Material,
+  Selection,
+  Space,
+  Style,
+  ResidenceType,
+  CameraAngle,
+  Lighting
+} from "../../utils/data";
 import { fallbackLibrary } from "../../utils/data";
 import { generatePrompts } from "../../utils/prompt-generator";
 import type { PromptResult } from "../../utils/prompt-generator";
@@ -37,17 +47,24 @@ Page({
     library: fallbackLibrary as AssetLibrary,
     styles: fallbackLibrary.styles,
     materials: [] as Material[],
+    residenceTypes: fallbackLibrary.residenceTypes as ResidenceType[],
+    cameraAngles: fallbackLibrary.cameraAngles as CameraAngle[],
+    lightings: fallbackLibrary.lightings as Lighting[],
     spaceCards: [] as SpaceCard[],
     selectedSpaceGroups: [] as SelectedSpaceGroup[],
     selectedStyleId: "",
     selectedMaterialId: "",
+    selectedResidenceTypeId: "standard",
+    selectedCameraAngleId: "wide-angle",
+    selectedLightingId: "natural",
     selectedSpaceIds: [] as string[],
     selectedCabinetIdsBySpace: {} as Record<string, string[]>,
     comboCount: 0,
     results: [] as BatchPromptItem[],
     isReady: false,
     isLoadingAssets: true,
-    assetMessage: ""
+    assetMessage: "",
+    isAdvancedOpen: false
   },
 
   async onLoad() {
@@ -56,6 +73,9 @@ Page({
       library,
       styles: library.styles,
       materials: [],
+      residenceTypes: library.residenceTypes,
+      cameraAngles: library.cameraAngles,
+      lightings: library.lightings,
       assetMessage: message,
       isLoadingAssets: false
     });
@@ -131,6 +151,33 @@ Page({
       results: []
     });
     this.refreshViewState();
+  },
+
+  toggleAdvanced() {
+    this.setData({
+      isAdvancedOpen: !this.data.isAdvancedOpen
+    });
+  },
+
+  selectResidenceType(event: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      selectedResidenceTypeId: event.currentTarget.dataset.id as string,
+      results: []
+    });
+  },
+
+  selectCameraAngle(event: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      selectedCameraAngleId: event.currentTarget.dataset.id as string,
+      results: []
+    });
+  },
+
+  selectLighting(event: WechatMiniprogram.TouchEvent) {
+    this.setData({
+      selectedLightingId: event.currentTarget.dataset.id as string,
+      results: []
+    });
   },
 
   toggleSpace(event: WechatMiniprogram.TouchEvent) {
@@ -259,9 +306,15 @@ Page({
     const library = this.data.library as AssetLibrary;
     const selectedSpaceIds = this.data.selectedSpaceIds as string[];
     const selectedCabinetIdsBySpace = this.data.selectedCabinetIdsBySpace as Record<string, string[]>;
-    const residenceType = getDefaultResidenceType(library);
-    const cameraAngle = getDefaultCameraAngle(library);
-    const lighting = getDefaultLighting(library);
+    const residenceType =
+      library.residenceTypes.find((item) => item.id === this.data.selectedResidenceTypeId) ||
+      getDefaultResidenceType(library);
+    const cameraAngle =
+      library.cameraAngles.find((item) => item.id === this.data.selectedCameraAngleId) ||
+      getDefaultCameraAngle(library);
+    const lighting =
+      library.lightings.find((item) => item.id === this.data.selectedLightingId) ||
+      getDefaultLighting(library);
 
     return selectedSpaceIds.flatMap((spaceId) => {
       const space = library.spaces.find((item) => item.id === spaceId);
@@ -324,9 +377,13 @@ Page({
     this.setData({
       selectedStyleId: "",
       selectedMaterialId: "",
+      selectedResidenceTypeId: "standard",
+      selectedCameraAngleId: "wide-angle",
+      selectedLightingId: "natural",
       selectedSpaceIds: [],
       selectedCabinetIdsBySpace: {},
-      results: []
+      results: [],
+      isAdvancedOpen: false
     });
     this.refreshViewState();
   }

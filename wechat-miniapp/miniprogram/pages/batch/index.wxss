@@ -91,6 +91,116 @@
   box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.05);
 }
 
+.advanced-panel {
+  margin-bottom: 18rpx;
+  overflow: hidden;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.045);
+}
+
+.advanced-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 92rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 18rpx 22rpx;
+  background: transparent;
+  text-align: left;
+}
+
+.advanced-toggle-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.advanced-title {
+  color: #101828;
+  font-size: 28rpx;
+  font-weight: 850;
+}
+
+.advanced-summary {
+  margin-top: 6rpx;
+  overflow: hidden;
+  color: #667085;
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.advanced-state {
+  display: flex;
+  min-width: 88rpx;
+  min-height: 48rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 22rpx;
+  font-weight: 850;
+}
+
+.advanced-body {
+  padding: 0 22rpx 22rpx;
+}
+
+.advanced-group + .advanced-group {
+  margin-top: 20rpx;
+}
+
+.advanced-label {
+  margin-bottom: 12rpx;
+  color: #344054;
+  font-size: 24rpx;
+  font-weight: 850;
+}
+
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12rpx;
+}
+
+.advanced-option {
+  display: flex;
+  min-width: 0;
+  min-height: 72rpx;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 0 12rpx;
+  border: 2rpx solid #e4e7ec;
+  border-radius: 20rpx;
+  background: #ffffff;
+  color: #344054;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.advanced-option.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.recommend-badge {
+  display: inline-flex;
+  min-width: 54rpx;
+  height: 34rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  font-size: 18rpx;
+  font-weight: 900;
+}
+
 .disabled-panel {
   opacity: 0.58;
 }
@@ -265,12 +375,25 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.embedded-space-grid {
+  grid-template-columns: 1fr;
+  gap: 16rpx;
+}
+
 .space-choice {
   min-width: 0;
+  padding: 8rpx;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12rpx 32rpx rgba(16, 24, 40, 0.04);
 }
 
 .space-choice.expanded {
-  grid-column: 1 / -1;
+  border-color: #bfdbfe;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.1), transparent 34%),
+    #f8fbff;
 }
 
 .space-card {
@@ -279,19 +402,27 @@
   min-width: 0;
   min-height: 94rpx;
   align-items: center;
+  justify-content: flex-start;
   gap: 16rpx;
   padding: 16rpx;
-  border: 2rpx solid #e4e7ec;
-  border-radius: 26rpx;
-  background: #ffffff;
+  border: 0;
+  border-radius: 24rpx;
+  background: transparent;
   text-align: left;
 }
 
 .space-choice.expanded .space-card {
   min-height: 88rpx;
-  border-color: #2563eb;
-  border-bottom-right-radius: 18rpx;
-  border-bottom-left-radius: 18rpx;
+  border-color: transparent;
+  border-bottom-right-radius: 20rpx;
+  border-bottom-left-radius: 20rpx;
+  background: rgba(239, 246, 255, 0.86);
+}
+
+.space-card.selected {
+  border-color: transparent;
+  background: rgba(239, 246, 255, 0.9);
+  box-shadow: none;
 }
 
 .space-symbol {
@@ -419,12 +550,12 @@
 }
 
 .inline-cabinet-box {
-  margin-top: 10rpx;
+  margin: 4rpx 0 0;
   padding: 18rpx;
-  border: 1rpx solid #dbeafe;
+  border: 1rpx solid rgba(191, 219, 254, 0.82);
   border-radius: 24rpx;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.74)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.68)),
     #ffffff;
 }
 
@@ -435,6 +566,11 @@
   gap: 16rpx;
 }
 
+.inline-cabinet-head > view:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
 .inline-step-title {
   display: flex;
   align-items: center;
@@ -442,6 +578,11 @@
   color: #101828;
   font-size: 26rpx;
   font-weight: 900;
+}
+
+.small-toggle {
+  min-width: 176rpx;
+  flex-shrink: 0;
 }
 
 .inline-step {

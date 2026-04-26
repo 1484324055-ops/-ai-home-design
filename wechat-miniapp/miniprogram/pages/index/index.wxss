@@ -99,8 +99,7 @@
 }
 
 .planner-card {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 12;
   margin-bottom: 18rpx;
   padding: 24rpx;
@@ -112,6 +111,21 @@
   box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.06);
 }
 
+.planner-card.is-pinned {
+  position: fixed;
+  top: 0;
+  right: 24rpx;
+  left: 24rpx;
+  z-index: 50;
+  margin: 0;
+  border-color: rgba(37, 99, 235, 0.26);
+  box-shadow: 0 24rpx 60rpx rgba(15, 23, 42, 0.16);
+}
+
+.planner-placeholder {
+  height: 222rpx;
+}
+
 .compact-planner {
   padding: 18rpx;
   border-color: rgba(37, 99, 235, 0.18);
@@ -120,6 +134,116 @@
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96)),
     #ffffff;
   box-shadow: 0 20rpx 46rpx rgba(15, 23, 42, 0.1);
+}
+
+.advanced-panel {
+  margin-bottom: 18rpx;
+  overflow: hidden;
+  border: 1rpx solid #e4e7ec;
+  border-radius: 30rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.045);
+}
+
+.advanced-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 92rpx;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 18rpx 22rpx;
+  background: transparent;
+  text-align: left;
+}
+
+.advanced-toggle-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.advanced-title {
+  color: #101828;
+  font-size: 28rpx;
+  font-weight: 850;
+}
+
+.advanced-summary {
+  margin-top: 6rpx;
+  overflow: hidden;
+  color: #667085;
+  font-size: 22rpx;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.advanced-state {
+  display: flex;
+  min-width: 88rpx;
+  min-height: 48rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 22rpx;
+  font-weight: 850;
+}
+
+.advanced-body {
+  padding: 0 22rpx 22rpx;
+}
+
+.advanced-group + .advanced-group {
+  margin-top: 20rpx;
+}
+
+.advanced-label {
+  margin-bottom: 12rpx;
+  color: #344054;
+  font-size: 24rpx;
+  font-weight: 850;
+}
+
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12rpx;
+}
+
+.advanced-option {
+  display: flex;
+  min-width: 0;
+  min-height: 72rpx;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 0 12rpx;
+  border: 2rpx solid #e4e7ec;
+  border-radius: 20rpx;
+  background: #ffffff;
+  color: #344054;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.advanced-option.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.recommend-badge {
+  display: inline-flex;
+  min-width: 54rpx;
+  height: 34rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  font-size: 18rpx;
+  font-weight: 900;
 }
 
 .planner-head {
