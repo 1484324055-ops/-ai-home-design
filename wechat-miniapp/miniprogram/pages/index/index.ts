@@ -1,7 +1,9 @@
 import { loadAssetLibrary } from "../../services/assets";
 import type { AssetLibrary, Cabinet, Material, Selection } from "../../utils/data";
 import { fallbackLibrary } from "../../utils/data";
-import { generatePrompts, PromptResult } from "../../utils/prompt-generator";
+import { generatePrompts } from "../../utils/prompt-generator";
+import type { PromptResult } from "../../utils/prompt-generator";
+import { saveLocalHistory, takePendingHistory } from "../../utils/history";
 
 Page({
   data: {
@@ -38,6 +40,11 @@ Page({
       isLoadingAssets: false
     });
     this.refreshDerivedOptions();
+    this.applyPendingHistory();
+  },
+
+  onShow() {
+    this.applyPendingHistory();
   },
 
   refreshDerivedOptions() {
@@ -108,7 +115,7 @@ Page({
 
   generatePrompt() {
     const library = this.data.library as AssetLibrary;
-    const selection: Selection | null = {
+    const selection: Selection = {
       space: library.spaces.find((item) => item.id === this.data.selectedSpaceId)!,
       cabinet: library.cabinets.find((item) => item.id === this.data.selectedCabinetId)!,
       style: library.styles.find((item) => item.id === this.data.selectedStyleId)!,
@@ -128,13 +135,37 @@ Page({
 
     const promptResult = generatePrompts(selection);
     this.setData({ promptResult, activePromptTab: "chinese" });
+    saveLocalHistory(selection, promptResult);
 
-    wx.nextTick(() => {
-      wx.pageScrollTo({
-        selector: "#result",
-        duration: 260
-      });
+    wx.showToast({
+      title: "已保存到历史",
+      icon: "success"
     });
+  },
+
+  applyPendingHistory() {
+    const record = takePendingHistory();
+
+    if (!record) {
+      return;
+    }
+
+    this.setData({
+      selectedSpaceId: record.spaceId,
+      selectedCabinetId: record.cabinetId,
+      selectedStyleId: record.styleId,
+      selectedMaterialId: record.materialId,
+      selectedResidenceTypeId: record.residenceTypeId,
+      selectedCameraAngleId: record.cameraAngleId,
+      selectedLightingId: record.lightingId,
+      promptResult: {
+        title: record.title,
+        chinese: record.chinese,
+        english: record.english
+      },
+      activePromptTab: "chinese"
+    });
+    this.refreshDerivedOptions();
   },
 
   copyPrompt() {

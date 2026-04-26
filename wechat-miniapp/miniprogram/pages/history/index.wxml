@@ -1,7 +1,45 @@
-<view class="placeholder-page">
-  <view class="placeholder-card">
-    <text class="eyebrow">HISTORY</text>
-    <view class="title">历史方案</view>
-    <view class="desc">这里后续会接入你现在网页端的历史记录接口，用户可以查看、载入、复制和收藏自己的方案。</view>
+<view class="history-page safe-bottom">
+  <view class="hero">
+    <view>
+      <text class="eyebrow">LOCAL LIBRARY</text>
+      <view class="title">历史方案</view>
+      <view class="desc">生成后的提示词会先保存在本机，方便随时复制或载入继续调整。</view>
+    </view>
+    <view class="count-card">
+      <text class="count-number">{{histories.length}}</text>
+      <text class="count-label">条记录</text>
+    </view>
+  </view>
+
+  <view wx:if="{{histories.length === 0}}" class="empty-card">
+    <view class="empty-title">还没有历史方案</view>
+    <view class="empty-desc">回到首页生成一次提示词，这里就会自动出现记录。</view>
+    <button class="primary-button" bindtap="goHome">回到首页</button>
+  </view>
+
+  <view wx:else class="history-list">
+    <view wx:for="{{histories}}" wx:key="id" class="history-card">
+      <view class="record-top">
+        <view class="record-main">
+          <view class="record-title">{{item.title}}</view>
+          <view class="record-time">{{item.displayTime}}</view>
+        </view>
+      </view>
+
+      <view class="tag-row">
+        <text class="tag">{{item.spaceName}}</text>
+        <text class="tag">{{item.cabinetName}}</text>
+        <text class="tag">{{item.styleName}}</text>
+        <text class="tag">{{item.materialName}}</text>
+      </view>
+
+      <view class="prompt-preview">{{item.chinese}}</view>
+
+      <view class="action-row">
+        <button class="ghost-button" data-id="{{item.id}}" bindtap="copyRecord">复制中文</button>
+        <button class="load-button" data-id="{{item.id}}" bindtap="loadRecord">载入方案</button>
+        <button class="danger-button" data-id="{{item.id}}" bindtap="deleteRecord">删除</button>
+      </view>
+    </view>
   </view>
 </view>
