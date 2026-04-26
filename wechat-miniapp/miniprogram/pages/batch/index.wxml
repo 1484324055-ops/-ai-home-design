@@ -68,15 +68,9 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title-row">
-          <view class="advanced-title">更多选项</view>
-          <view class="advanced-tags">
-            <text>住宅类型</text>
-            <text>镜头</text>
-            <text>光影</text>
-          </view>
-        </view>
-        <view class="advanced-summary">默认：商品房 · 广角全景 · 明亮自然光</view>
+        <view class="advanced-title">更多选项</view>
+        <view class="advanced-summary">住宅类型 · 镜头 · 光影</view>
+        <view class="advanced-default">默认：商品房 · 广角全景 · 明亮自然光</view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
     </button>

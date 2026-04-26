@@ -150,7 +150,7 @@
 .advanced-toggle {
   display: flex;
   width: 100%;
-  min-height: 92rpx;
+  min-height: 108rpx;
   align-items: center;
   justify-content: space-between;
   gap: 16rpx;
@@ -170,39 +170,22 @@
   font-weight: 850;
 }
 
-.advanced-title-row {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 14rpx;
-}
-
-.advanced-tags {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.advanced-tags text {
-  display: inline-flex;
-  min-width: 0;
-  height: 34rpx;
-  align-items: center;
-  padding: 0 12rpx;
-  border-radius: 999rpx;
-  background: rgba(37, 99, 235, 0.08);
-  color: #2563eb;
-  font-size: 18rpx;
-  font-weight: 850;
-}
-
 .advanced-summary {
-  margin-top: 6rpx;
+  margin-top: 4rpx;
+  overflow: hidden;
+  color: #2563eb;
+  font-size: 23rpx;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.advanced-default {
+  margin-top: 4rpx;
   overflow: hidden;
   color: #667085;
-  font-size: 22rpx;
+  font-size: 20rpx;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -754,9 +737,9 @@
   width: 100%;
   overflow: hidden;
   color: #101828;
-  font-size: 26rpx;
-  font-weight: 700;
-  line-height: 1.35;
+  font-size: 28rpx;
+  font-weight: 800;
+  line-height: 1.28;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -765,6 +748,7 @@
 .material-card .option-name {
   display: -webkit-box;
   min-height: 62rpx;
+  font-size: 26rpx;
   white-space: normal;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -1005,8 +989,8 @@
 
 .result-footer {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14rpx;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10rpx;
   margin-top: 18rpx;
 }
 
@@ -1019,6 +1003,7 @@
 }
 
 .favorite-button,
+.edit-prompt-button,
 .copy-wide-button {
   display: flex;
   width: 100%;
@@ -1026,7 +1011,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 24rpx;
-  font-size: 25rpx;
+  font-size: 23rpx;
   font-weight: 800;
 }
 
@@ -1042,9 +1027,140 @@
   color: #2563eb;
 }
 
+.edit-prompt-button {
+  border: 1rpx solid #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
 .copy-wide-button {
   background: #111827;
   color: #ffffff;
+}
+
+.editor-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.editor-sheet {
+  width: 100%;
+  max-height: 88vh;
+  padding: 28rpx 28rpx calc(24rpx + env(safe-area-inset-bottom));
+  border-radius: 34rpx 34rpx 0 0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
+    #ffffff;
+  box-shadow: 0 -24rpx 70rpx rgba(15, 23, 42, 0.24);
+}
+
+.editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.editor-title {
+  margin-top: 6rpx;
+  color: #101828;
+  font-size: 34rpx;
+  font-weight: 900;
+}
+
+.editor-desc {
+  margin-top: 6rpx;
+  color: #667085;
+  font-size: 22rpx;
+  line-height: 1.45;
+}
+
+.editor-close {
+  display: flex;
+  width: 58rpx;
+  height: 58rpx;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  background: #f2f4f7;
+  color: #344054;
+  font-size: 38rpx;
+  line-height: 1;
+}
+
+.editor-close::after,
+.editor-secondary::after,
+.editor-primary::after {
+  border: 0;
+}
+
+.editor-body {
+  max-height: 58vh;
+  margin-top: 22rpx;
+}
+
+.editor-field + .editor-field {
+  margin-top: 20rpx;
+}
+
+.editor-label {
+  margin-bottom: 10rpx;
+  color: #101828;
+  font-size: 25rpx;
+  font-weight: 850;
+}
+
+.prompt-editor-textarea {
+  width: 100%;
+  min-height: 280rpx;
+  box-sizing: border-box;
+  padding: 20rpx;
+  border: 1rpx solid #dbe2ea;
+  border-radius: 24rpx;
+  background: #f8fafc;
+  color: #182230;
+  font-size: 25rpx;
+  line-height: 1.65;
+}
+
+.prompt-editor-textarea.english {
+  min-height: 320rpx;
+}
+
+.editor-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.45fr;
+  gap: 14rpx;
+  margin-top: 20rpx;
+}
+
+.editor-secondary,
+.editor-primary {
+  display: flex;
+  min-height: 82rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  font-size: 27rpx;
+  font-weight: 850;
+}
+
+.editor-secondary {
+  border: 1rpx solid #e4e7ec;
+  background: #ffffff;
+  color: #475467;
+}
+
+.editor-primary {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 18rpx 36rpx rgba(37, 99, 235, 0.22);
 }
 
 .platform-panel {

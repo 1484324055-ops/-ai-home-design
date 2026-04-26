@@ -145,15 +145,9 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title-row">
-          <view class="advanced-title">更多选项</view>
-          <view class="advanced-tags">
-            <text>住宅类型</text>
-            <text>镜头</text>
-            <text>光影</text>
-          </view>
-        </view>
-        <view class="advanced-summary">默认：商品房 · 广角全景 · 明亮自然光</view>
+        <view class="advanced-title">更多选项</view>
+        <view class="advanced-summary">住宅类型 · 镜头 · 光影</view>
+        <view class="advanced-default">默认：商品房 · 广角全景 · 明亮自然光</view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
     </button>
@@ -253,6 +247,7 @@
       <button class="favorite-button {{isFavoriteCurrent ? 'favorited' : ''}}" bindtap="favoriteCurrent">
         {{isFavoriteCurrent ? '已收藏' : '收藏常用'}}
       </button>
+      <button class="edit-prompt-button" bindtap="openPromptEditor">编辑提示词</button>
       <button class="copy-wide-button" bindtap="copyPrompt">复制当前提示词</button>
     </view>
 
@@ -287,6 +282,45 @@
             <view class="platform-desc">建议用英文版</view>
           </view>
         </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{isPromptEditorOpen}}" class="editor-mask">
+    <view class="editor-sheet">
+      <view class="editor-head">
+        <view>
+          <text class="eyebrow">PROMPT EDITOR</text>
+          <view class="editor-title">编辑提示词</view>
+          <view class="editor-desc">可以按实际画面需求微调，保存后会同步用于复制和历史记录。</view>
+        </view>
+        <button class="editor-close" bindtap="closePromptEditor">×</button>
+      </view>
+
+      <scroll-view class="editor-body" scroll-y="true">
+        <view class="editor-field">
+          <view class="editor-label">中文提示词</view>
+          <textarea
+            class="prompt-editor-textarea"
+            value="{{editChinese}}"
+            maxlength="-1"
+            bindinput="onEditChineseInput"
+          />
+        </view>
+        <view class="editor-field">
+          <view class="editor-label">English Prompt</view>
+          <textarea
+            class="prompt-editor-textarea english"
+            value="{{editEnglish}}"
+            maxlength="-1"
+            bindinput="onEditEnglishInput"
+          />
+        </view>
+      </scroll-view>
+
+      <view class="editor-actions">
+        <button class="editor-secondary" bindtap="closePromptEditor">取消</button>
+        <button class="editor-primary" bindtap="savePromptEdits">保存修改</button>
       </view>
     </view>
   </view>

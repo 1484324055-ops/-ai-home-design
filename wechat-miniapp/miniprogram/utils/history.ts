@@ -72,6 +72,21 @@ export const updateLocalHistoryFavorite = (id: string, isFavorite: boolean) => {
   return nextHistories.find((record) => record.id === id) || null;
 };
 
+export const updateLocalHistoryPrompts = (id: string, result: PromptResult) => {
+  const nextHistories = getLocalHistories().map((record) =>
+    record.id === id
+      ? {
+          ...record,
+          title: result.title,
+          chinese: result.chinese,
+          english: result.english
+        }
+      : record
+  );
+  wx.setStorageSync(HISTORY_STORAGE_KEY, nextHistories);
+  return nextHistories.find((record) => record.id === id) || null;
+};
+
 export const deleteLocalHistory = (id: string) => {
   const nextHistories = getLocalHistories().filter((record) => record.id !== id);
   wx.setStorageSync(HISTORY_STORAGE_KEY, nextHistories);

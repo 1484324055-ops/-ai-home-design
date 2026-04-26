@@ -6,7 +6,8 @@ import type { PromptResult } from "../../utils/prompt-generator";
 import {
   saveLocalHistory,
   takePendingHistory,
-  updateLocalHistoryFavorite
+  updateLocalHistoryFavorite,
+  updateLocalHistoryPrompts
 } from "../../utils/history";
 import type { LocalHistoryRecord } from "../../utils/history";
 
@@ -23,6 +24,12 @@ type ProgressStep = {
   label: string;
   value: string;
   state: "done" | "active" | "pending";
+};
+
+type TextareaInputEvent = WechatMiniprogram.BaseEvent & {
+  detail: {
+    value: string;
+  };
 };
 
 type LastSelectionState = {
@@ -128,7 +135,10 @@ Page({
     lastGeneratedRecord: null as LocalHistoryRecord | null,
     isFavoriteCurrent: false,
     isAdvancedOpen: false,
-    isPlannerPinned: false
+    isPlannerPinned: false,
+    isPromptEditorOpen: false,
+    editChinese: "",
+    editEnglish: ""
   },
 
   async onLoad() {
@@ -373,6 +383,67 @@ Page({
     });
   },
 
+  openPromptEditor() {
+    const promptResult = this.data.promptResult as PromptResult | null;
+
+    if (!promptResult) {
+      return;
+    }
+
+    this.setData({
+      isPromptEditorOpen: true,
+      editChinese: promptResult.chinese,
+      editEnglish: promptResult.english
+    });
+  },
+
+  closePromptEditor() {
+    this.setData({
+      isPromptEditorOpen: false
+    });
+  },
+
+  onEditChineseInput(event: TextareaInputEvent) {
+    this.setData({
+      editChinese: event.detail.value
+    });
+  },
+
+  onEditEnglishInput(event: TextareaInputEvent) {
+    this.setData({
+      editEnglish: event.detail.value
+    });
+  },
+
+  savePromptEdits() {
+    const promptResult = this.data.promptResult as PromptResult | null;
+
+    if (!promptResult) {
+      return;
+    }
+
+    const nextPromptResult: PromptResult = {
+      ...promptResult,
+      chinese: this.data.editChinese.trim(),
+      english: this.data.editEnglish.trim()
+    };
+    const existingRecord = this.data.lastGeneratedRecord as LocalHistoryRecord | null;
+    const updatedRecord = existingRecord
+      ? updateLocalHistoryPrompts(existingRecord.id, nextPromptResult)
+      : null;
+
+    this.setData({
+      promptResult: nextPromptResult,
+      lastGeneratedRecord: updatedRecord || existingRecord,
+      isPromptEditorOpen: false
+    });
+
+    wx.showToast({
+      title: "已保存编辑",
+      icon: "success"
+    });
+  },
+
   buildCurrentSelection(): Selection | null {
     const library = this.data.library as AssetLibrary;
     const space = library.spaces.find((item) => item.id === this.data.selectedSpaceId);
@@ -511,7 +582,10 @@ Page({
       activePromptTab: "chinese",
       lastGeneratedRecord: null,
       isFavoriteCurrent: false,
-      isAdvancedOpen: false
+      isAdvancedOpen: false,
+      isPromptEditorOpen: false,
+      editChinese: "",
+      editEnglish: ""
     });
     wx.removeStorageSync(LAST_SELECTION_KEY);
     this.refreshDerivedOptions();
