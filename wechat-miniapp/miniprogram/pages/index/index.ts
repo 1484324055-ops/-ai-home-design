@@ -1,5 +1,5 @@
 import { loadAssetLibrary } from "../../services/assets";
-import type { AssetLibrary, Cabinet, Material, Selection, ResidenceType, CameraAngle, Lighting } from "../../utils/data";
+import type { AssetLibrary, Cabinet, Material, Selection, Space, ResidenceType, CameraAngle, Lighting } from "../../utils/data";
 import { fallbackLibrary } from "../../utils/data";
 import { generatePrompts } from "../../utils/prompt-generator";
 import type { PromptResult } from "../../utils/prompt-generator";
@@ -35,6 +35,59 @@ type LastSelectionState = {
   selectedLightingId?: string;
 };
 
+type SpaceOption = Space & {
+  icon: string;
+};
+
+type CabinetOption = Cabinet & {
+  icon: string;
+};
+
+const SPACE_ICONS: Record<string, string> = {
+  "horizontal-living": "🛋",
+  "vertical-living": "📺",
+  "master-bedroom": "🛏",
+  kitchen: "🍳",
+  "enclosed-kitchen": "🚪",
+  "semi-enclosed-kitchen": "🪟",
+  study: "📚",
+  entrance: "👟",
+  "walk-in-closet": "👗",
+  "dining-room": "🍽",
+  ldk: "🏡",
+  "kids-room": "🧸",
+  balcony: "🌿",
+  "multi-functional": "🧩",
+  "secondary-bedroom": "🛌"
+};
+
+const CABINET_ICONS: Record<string, string> = {
+  "floor-wardrobe": "🚪",
+  "glass-wardrobe": "🪞",
+  "floating-tv": "📺",
+  bookshelf: "📚",
+  "u-kitchen": "🍳",
+  "l-kitchen": "🔪",
+  island: "☕",
+  "shoe-cabinet": "👟",
+  "balcony-cabinet": "🧺",
+  tatami: "🛏",
+  "bay-window": "🪟",
+  sideboard: "🍷",
+  "display-cabinet": "🏺",
+  "accessories-island": "💍"
+};
+
+const withSpaceIcon = (space: Space): SpaceOption => ({
+  ...space,
+  icon: SPACE_ICONS[space.id] || "🏠"
+});
+
+const withCabinetIcon = (cabinet: Cabinet): CabinetOption => ({
+  ...cabinet,
+  icon: CABINET_ICONS[cabinet.id] || "🗄"
+});
+
 const emptyChips: SelectionChip[] = [
   { label: "空间", value: "未选择", state: "empty" },
   { label: "柜体", value: "未选择", state: "empty" },
@@ -45,9 +98,9 @@ const emptyChips: SelectionChip[] = [
 Page({
   data: {
     library: fallbackLibrary as AssetLibrary,
-    spaces: fallbackLibrary.spaces,
+    spaces: fallbackLibrary.spaces.map(withSpaceIcon),
     cabinets: fallbackLibrary.cabinets,
-    availableCabinets: [] as Cabinet[],
+    availableCabinets: [] as CabinetOption[],
     styles: fallbackLibrary.styles,
     materials: fallbackLibrary.materials,
     availableMaterials: [] as Material[],
@@ -82,7 +135,7 @@ Page({
     const { library, message } = await loadAssetLibrary();
     this.setData({
       library,
-      spaces: library.spaces,
+      spaces: library.spaces.map(withSpaceIcon),
       cabinets: library.cabinets,
       styles: library.styles,
       materials: library.materials,
@@ -157,7 +210,7 @@ Page({
       : nextStepText;
 
     this.setData({
-      availableCabinets,
+      availableCabinets: availableCabinets.map(withCabinetIcon),
       availableMaterials,
       isReady,
       selectionSummaryTitle,

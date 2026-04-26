@@ -19,11 +19,14 @@ const MAX_BATCH_RESULTS = 60;
 
 type CabinetCard = Cabinet & {
   isSelected: boolean;
+  icon: string;
 };
 
 type SpaceCard = Space & {
   initial: string;
+  icon: string;
   caption: string;
+  statusLabel: string;
   cabinetCount: number;
   selectedCount: number;
   isSelected: boolean;
@@ -41,6 +44,44 @@ type BatchPromptItem = PromptResult & {
 const getDefaultResidenceType = (library: AssetLibrary) => library.residenceTypes[0];
 const getDefaultCameraAngle = (library: AssetLibrary) => library.cameraAngles[0];
 const getDefaultLighting = (library: AssetLibrary) => library.lightings[0];
+
+const SPACE_ICONS: Record<string, string> = {
+  "horizontal-living": "🛋",
+  "vertical-living": "📺",
+  "master-bedroom": "🛏",
+  kitchen: "🍳",
+  "enclosed-kitchen": "🚪",
+  "semi-enclosed-kitchen": "🪟",
+  study: "📚",
+  entrance: "👟",
+  "walk-in-closet": "👗",
+  "dining-room": "🍽",
+  ldk: "🏡",
+  "kids-room": "🧸",
+  balcony: "🌿",
+  "multi-functional": "🧩",
+  "secondary-bedroom": "🛌"
+};
+
+const CABINET_ICONS: Record<string, string> = {
+  "floor-wardrobe": "🚪",
+  "glass-wardrobe": "🪞",
+  "floating-tv": "📺",
+  bookshelf: "📚",
+  "u-kitchen": "🍳",
+  "l-kitchen": "🔪",
+  island: "☕",
+  "shoe-cabinet": "👟",
+  "balcony-cabinet": "🧺",
+  tatami: "🛏",
+  "bay-window": "🪟",
+  sideboard: "🍷",
+  "display-cabinet": "🏺",
+  "accessories-island": "💍"
+};
+
+const getSpaceIcon = (id: string) => SPACE_ICONS[id] || "🏠";
+const getCabinetIcon = (id: string) => CABINET_ICONS[id] || "🗄";
 
 Page({
   data: {
@@ -99,15 +140,18 @@ Page({
       const selectedCount = selectedCabinetIds.length;
       const cabinetCards = cabinets.map((cabinet) => ({
         ...cabinet,
+        icon: getCabinetIcon(cabinet.id),
         isSelected: selectedCabinetIds.includes(cabinet.id)
       }));
 
       return {
         ...space,
         initial: space.name.slice(0, 1),
+        icon: getSpaceIcon(space.id),
         caption: selectedSpaceIds.includes(space.id)
           ? `${selectedCount}/${cabinets.length} 已选`
           : `${cabinets.length} 个柜体`,
+        statusLabel: selectedCount > 0 ? `${selectedCount} 已选` : `${cabinets.length} 可选`,
         cabinetCount: cabinets.length,
         selectedCount,
         isSelected: selectedSpaceIds.includes(space.id),

@@ -58,10 +58,9 @@
         bindtap="selectSpace"
         class="option-card visual-card space-option space-{{item.id}} {{selectedSpaceId === item.id ? 'selected' : ''}}"
       >
-        <view class="option-mark"><view class="room-glyph"></view></view>
+        <view class="option-mark option-emoji">{{item.icon}}</view>
         <view class="option-copy">
           <text class="option-name">{{item.name}}</text>
-          <text class="option-hint">空间场景</text>
         </view>
       </button>
     </view>
@@ -83,13 +82,9 @@
         bindtap="selectCabinet"
         class="option-card visual-card cabinet-option cabinet-{{item.id}} {{selectedCabinetId === item.id ? 'selected' : ''}}"
       >
-        <view class="option-mark cabinet-mark">
-          <view class="cabinet-line wide"></view>
-          <view class="cabinet-line"></view>
-        </view>
+        <view class="option-mark option-emoji cabinet-emoji">{{item.icon}}</view>
         <view class="option-copy">
           <text class="option-name">{{item.name}}</text>
-          <text class="option-hint">柜体方案</text>
         </view>
       </button>
     </view>
@@ -113,7 +108,6 @@
       >
         <view class="option-copy">
           <text class="option-name">{{item.name}}</text>
-          <text class="option-hint">风格配色预览</text>
         </view>
         <view class="palette-row">
           <view class="palette-swatch one"></view>
@@ -142,7 +136,6 @@
       >
         <view class="option-copy">
           <text class="option-name">{{item.name}}</text>
-          <text class="option-hint">材质纹理预览</text>
         </view>
         <view class="texture-strip"></view>
       </button>
@@ -152,7 +145,14 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title">更多选项</view>
+        <view class="advanced-title-row">
+          <view class="advanced-title">更多选项</view>
+          <view class="advanced-tags">
+            <text>住宅类型</text>
+            <text>镜头</text>
+            <text>光影</text>
+          </view>
+        </view>
         <view class="advanced-summary">默认：商品房 · 广角全景 · 明亮自然光</view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>

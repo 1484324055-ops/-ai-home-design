@@ -31,7 +31,6 @@
       >
         <view class="chip-copy">
           <text class="chip-name">{{item.name}}</text>
-          <text class="chip-sub">风格配色预览</text>
         </view>
         <view class="palette-row">
           <view class="palette-swatch one"></view>
@@ -60,7 +59,6 @@
       >
         <view class="chip-copy">
           <text class="chip-name">{{item.name}}</text>
-          <text class="chip-sub">材质纹理预览</text>
         </view>
         <view class="texture-strip"></view>
       </button>
@@ -70,7 +68,14 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title">更多选项</view>
+        <view class="advanced-title-row">
+          <view class="advanced-title">更多选项</view>
+          <view class="advanced-tags">
+            <text>住宅类型</text>
+            <text>镜头</text>
+            <text>光影</text>
+          </view>
+        </view>
         <view class="advanced-summary">默认：商品房 · 广角全景 · 明亮自然光</view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
@@ -152,10 +157,10 @@
           bindtap="toggleAllCabinetsForSpace"
           class="space-row-head space-{{space.id}} {{space.selectedCount > 0 ? 'selected' : ''}}"
         >
-          <view class="space-symbol">{{space.initial}}</view>
+          <view class="space-symbol">{{space.icon}}</view>
           <view class="space-meta">
             <text class="space-name">{{space.name}}</text>
-            <text class="space-sub">{{space.selectedCount}} / {{space.cabinetCount}} 已选</text>
+            <text class="space-sub">{{space.statusLabel}}</text>
           </view>
         </button>
 
@@ -169,7 +174,8 @@
             bindtap="toggleCabinet"
             class="cabinet-card matrix-cabinet {{cabinet.isSelected ? 'selected-soft' : ''}}"
           >
-            {{cabinet.name}}
+            <text class="cabinet-icon">{{cabinet.icon}}</text>
+            <text class="cabinet-name">{{cabinet.name}}</text>
           </button>
         </view>
       </view>
