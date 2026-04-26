@@ -122,6 +122,16 @@
   flex: 1;
 }
 
+.favorite-badge {
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 22rpx;
+  font-weight: 850;
+}
+
 .record-title {
   color: #101828;
   font-size: 30rpx;

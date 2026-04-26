@@ -20,10 +20,12 @@ Page({
   },
 
   refreshHistories() {
-    const histories = getLocalHistories().map((record) => ({
-      ...record,
-      displayTime: formatHistoryTime(record.createdAt)
-    }));
+    const histories = getLocalHistories()
+      .sort((a, b) => Number(Boolean(b.isFavorite)) - Number(Boolean(a.isFavorite)) || b.createdAt - a.createdAt)
+      .map((record) => ({
+        ...record,
+        displayTime: formatHistoryTime(record.createdAt)
+      }));
 
     this.setData({ histories });
   },

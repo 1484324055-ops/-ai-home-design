@@ -31,7 +31,7 @@
       >
         <view class="chip-copy">
           <text class="chip-name">{{item.name}}</text>
-          <text class="chip-sub">{{item.nameEn}}</text>
+          <text class="chip-sub">风格配色预览</text>
         </view>
         <view class="palette-row">
           <view class="palette-swatch one"></view>
@@ -60,7 +60,7 @@
       >
         <view class="chip-copy">
           <text class="chip-name">{{item.name}}</text>
-          <text class="chip-sub">{{item.nameEn}}</text>
+          <text class="chip-sub">材质纹理预览</text>
         </view>
         <view class="texture-strip"></view>
       </button>

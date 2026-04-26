@@ -11,6 +11,7 @@ export interface LocalHistoryRecord {
   chinese: string;
   english: string;
   createdAt: number;
+  isFavorite?: boolean;
   spaceId: string;
   spaceName: string;
   cabinetId: string;
@@ -33,13 +34,18 @@ export const getLocalHistories = (): LocalHistoryRecord[] => {
   }
 };
 
-export const saveLocalHistory = (selection: Selection, result: PromptResult) => {
+export const saveLocalHistory = (
+  selection: Selection,
+  result: PromptResult,
+  options: { isFavorite?: boolean } = {}
+) => {
   const record: LocalHistoryRecord = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     title: result.title,
     chinese: result.chinese,
     english: result.english,
     createdAt: Date.now(),
+    isFavorite: Boolean(options.isFavorite),
     spaceId: selection.space.id,
     spaceName: selection.space.name,
     cabinetId: selection.cabinet.id,
@@ -56,6 +62,14 @@ export const saveLocalHistory = (selection: Selection, result: PromptResult) => 
   const nextHistories = [record, ...getLocalHistories()].slice(0, MAX_HISTORY_COUNT);
   wx.setStorageSync(HISTORY_STORAGE_KEY, nextHistories);
   return record;
+};
+
+export const updateLocalHistoryFavorite = (id: string, isFavorite: boolean) => {
+  const nextHistories = getLocalHistories().map((record) =>
+    record.id === id ? { ...record, isFavorite } : record
+  );
+  wx.setStorageSync(HISTORY_STORAGE_KEY, nextHistories);
+  return nextHistories.find((record) => record.id === id) || null;
 };
 
 export const deleteLocalHistory = (id: string) => {

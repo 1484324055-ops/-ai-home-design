@@ -160,11 +160,11 @@
   display: flex;
   width: 100%;
   min-width: 0;
-  min-height: 112rpx;
+  min-height: 126rpx;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 18rpx 16rpx 34rpx;
+  padding: 18rpx 16rpx 40rpx;
   border: 2rpx solid #e4e7ec;
   border-radius: 24rpx;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -221,7 +221,7 @@
   z-index: 1;
   display: flex;
   width: auto;
-  height: 14rpx;
+  height: 20rpx;
   overflow: hidden;
   border-radius: 999rpx;
   background: #e4e7ec;
@@ -232,7 +232,7 @@
 }
 
 .texture-strip {
-  height: 16rpx;
+  height: 22rpx;
 }
 
 .mini-actions {

@@ -19,6 +19,36 @@
     <button class="quick-button" bindtap="goProfile">我的</button>
   </view>
 
+  <view class="planner-card">
+    <view class="planner-head">
+      <view>
+        <text class="eyebrow">CURRENT PLAN</text>
+        <view class="planner-title">{{selectionSummaryTitle}}</view>
+        <view class="planner-subtitle">{{selectionSummarySubtitle}}</view>
+      </view>
+      <view class="planner-percent">{{progressPercent}}%</view>
+    </view>
+
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progressPercent}}%;"></view>
+    </view>
+
+    <view class="progress-row">
+      <view wx:for="{{progressSteps}}" wx:key="label" class="progress-step {{item.state}}">
+        <view class="progress-dot">{{item.index}}</view>
+        <view class="progress-label">{{item.label}}</view>
+        <view class="progress-value">{{item.value}}</view>
+      </view>
+    </view>
+
+    <view class="summary-chips">
+      <view wx:for="{{selectionChips}}" wx:key="label" class="summary-chip {{item.state}}">
+        <text class="chip-label">{{item.label}}</text>
+        <text class="chip-value">{{item.value}}</text>
+      </view>
+    </view>
+  </view>
+
   <view class="panel">
     <view class="section-head">
       <view class="step">1</view>
@@ -90,7 +120,7 @@
       >
         <view class="option-copy">
           <text class="option-name">{{item.name}}</text>
-          <text class="option-hint">{{item.nameEn}}</text>
+          <text class="option-hint">风格配色预览</text>
         </view>
         <view class="palette-row">
           <view class="palette-swatch one"></view>
@@ -119,7 +149,7 @@
       >
         <view class="option-copy">
           <text class="option-name">{{item.name}}</text>
-          <text class="option-hint">{{item.nameEn}}</text>
+          <text class="option-hint">材质纹理预览</text>
         </view>
         <view class="texture-strip"></view>
       </button>
@@ -167,7 +197,44 @@
 
     <view class="result-footer">
       <view class="copy-tip">长按文本也可以选择复制</view>
+      <button class="favorite-button {{isFavoriteCurrent ? 'favorited' : ''}}" bindtap="favoriteCurrent">
+        {{isFavoriteCurrent ? '已收藏' : '收藏常用'}}
+      </button>
       <button class="copy-wide-button" bindtap="copyPrompt">复制当前提示词</button>
+    </view>
+
+    <view class="platform-panel">
+      <view class="platform-title">复制后可以粘贴到这些平台</view>
+      <view class="platform-grid">
+        <view class="platform-card domestic">
+          <view class="platform-logo">豆</view>
+          <view>
+            <view class="platform-name">豆包</view>
+            <view class="platform-desc">中文理解顺手</view>
+          </view>
+        </view>
+        <view class="platform-card domestic">
+          <view class="platform-logo">即</view>
+          <view>
+            <view class="platform-name">即梦</view>
+            <view class="platform-desc">适合快速试图</view>
+          </view>
+        </view>
+        <view class="platform-card global">
+          <view class="platform-logo">C</view>
+          <view>
+            <view class="platform-name">ChatGPT</view>
+            <view class="platform-desc">适合英文版本</view>
+          </view>
+        </view>
+        <view class="platform-card global">
+          <view class="platform-logo">MJ</view>
+          <view>
+            <view class="platform-name">Midjourney</view>
+            <view class="platform-desc">建议用英文版</view>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 </view>
