@@ -2,7 +2,7 @@
   <view class="hero">
     <view>
       <text class="eyebrow">提示词工作台</text>
-      <view class="title">全屋定制AI效果图prompt生成器</view>
+      <view class="title">全屋定制 AI 效果图 Prompt 生成器</view>
       <view class="subtitle">选择空间、柜体、风格和材质，快速生成可复制的生图提示词。</view>
     </view>
     <view class="hero-card">
@@ -16,6 +16,7 @@
   <view class="quick-nav">
     <button class="quick-button" bindtap="goBatch">批量生成</button>
     <button class="quick-button" bindtap="goHistory">历史方案</button>
+    <button class="quick-button accent" bindtap="openFeedback">建议反馈</button>
     <button class="quick-button" bindtap="goProfile">我的</button>
   </view>
 
@@ -145,7 +146,10 @@
   <view class="advanced-panel">
     <button class="advanced-toggle" bindtap="toggleAdvanced">
       <view class="advanced-toggle-copy">
-        <view class="advanced-title">更多选项：住宅类型、镜头、光影</view>
+        <view class="advanced-inline-title">
+          <text class="advanced-title-main">更多选项：</text>
+          <text class="advanced-title-sub">住宅类型、镜头、光影</text>
+        </view>
       </view>
       <view class="advanced-state">{{isAdvancedOpen ? '收起' : '展开'}}</view>
     </button>
@@ -283,8 +287,6 @@
       </view>
     </view>
   </view>
-
-  <button class="feedback-float" bindtap="openFeedback">反馈建议</button>
 
   <view wx:if="{{isFeedbackOpen}}" class="feedback-mask">
     <view class="feedback-sheet">
