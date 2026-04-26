@@ -7,21 +7,20 @@ import { saveLocalHistory } from "../../utils/history";
 
 const MAX_BATCH_RESULTS = 60;
 
+type CabinetCard = Cabinet & {
+  isSelected: boolean;
+};
+
 type SpaceCard = Space & {
   initial: string;
   caption: string;
   cabinetCount: number;
   selectedCount: number;
   isSelected: boolean;
-};
-
-type CabinetCard = Cabinet & {
-  isSelected: boolean;
-};
-
-type SelectedSpaceGroup = SpaceCard & {
   cabinets: CabinetCard[];
 };
+
+type SelectedSpaceGroup = SpaceCard;
 
 type BatchPromptItem = PromptResult & {
   id: string;
@@ -76,7 +75,12 @@ Page({
 
     const spaceCards: SpaceCard[] = library.spaces.map((space) => {
       const cabinets = this.getCabinetsForSpace(space.id);
-      const selectedCount = selectedCabinetIdsBySpace[space.id]?.length || 0;
+      const selectedCabinetIds = selectedCabinetIdsBySpace[space.id] || [];
+      const selectedCount = selectedCabinetIds.length;
+      const cabinetCards = cabinets.map((cabinet) => ({
+        ...cabinet,
+        isSelected: selectedCabinetIds.includes(cabinet.id)
+      }));
 
       return {
         ...space,
@@ -86,22 +90,12 @@ Page({
           : `${cabinets.length} 个柜体`,
         cabinetCount: cabinets.length,
         selectedCount,
-        isSelected: selectedSpaceIds.includes(space.id)
+        isSelected: selectedSpaceIds.includes(space.id),
+        cabinets: cabinetCards
       };
     });
 
-    const selectedSpaceGroups: SelectedSpaceGroup[] = spaceCards
-      .filter((space) => space.isSelected)
-      .map((space) => {
-        const selectedCabinetIds = selectedCabinetIdsBySpace[space.id] || [];
-        return {
-          ...space,
-          cabinets: this.getCabinetsForSpace(space.id).map((cabinet) => ({
-            ...cabinet,
-            isSelected: selectedCabinetIds.includes(cabinet.id)
-          }))
-        };
-      });
+    const selectedSpaceGroups: SelectedSpaceGroup[] = spaceCards.filter((space) => space.isSelected);
 
     const comboCount = selectedSpaceGroups.reduce((total, group) => total + group.selectedCount, 0);
     const isReady = Boolean(selectedStyleId && selectedMaterialId && comboCount > 0);

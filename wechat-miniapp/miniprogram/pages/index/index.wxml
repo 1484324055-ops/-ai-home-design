@@ -19,12 +19,11 @@
     <button class="quick-button" bindtap="goProfile">我的</button>
   </view>
 
-  <view class="planner-card">
+  <view class="planner-card compact-planner">
     <view class="planner-head">
       <view>
         <text class="eyebrow">CURRENT PLAN</text>
-        <view class="planner-title">{{selectionSummaryTitle}}</view>
-        <view class="planner-subtitle">{{selectionSummarySubtitle}}</view>
+        <view class="planner-subtitle compact-subtitle">{{nextStepText}}</view>
       </view>
       <view class="planner-percent">{{progressPercent}}%</view>
     </view>
@@ -38,13 +37,6 @@
         <view class="progress-dot">{{item.index}}</view>
         <view class="progress-label">{{item.label}}</view>
         <view class="progress-value">{{item.value}}</view>
-      </view>
-    </view>
-
-    <view class="summary-chips">
-      <view wx:for="{{selectionChips}}" wx:key="label" class="summary-chip {{item.state}}">
-        <text class="chip-label">{{item.label}}</text>
-        <text class="chip-value">{{item.value}}</text>
       </view>
     </view>
   </view>

@@ -99,6 +99,9 @@
 }
 
 .planner-card {
+  position: sticky;
+  top: 0;
+  z-index: 12;
   margin-bottom: 18rpx;
   padding: 24rpx;
   border: 1rpx solid rgba(148, 163, 184, 0.26);
@@ -107,6 +110,16 @@
     radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.12), transparent 32%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96));
   box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.06);
+}
+
+.compact-planner {
+  padding: 18rpx;
+  border-color: rgba(37, 99, 235, 0.18);
+  border-radius: 28rpx;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96)),
+    #ffffff;
+  box-shadow: 0 20rpx 46rpx rgba(15, 23, 42, 0.1);
 }
 
 .planner-head {
@@ -131,6 +144,16 @@
   line-height: 1.45;
 }
 
+.compact-subtitle {
+  margin-top: 6rpx;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 22rpx;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .planner-percent {
   display: flex;
   min-width: 92rpx;
@@ -153,6 +176,11 @@
   background: #e4e7ec;
 }
 
+.compact-planner .progress-track {
+  height: 10rpx;
+  margin-top: 14rpx;
+}
+
 .progress-fill {
   height: 100%;
   border-radius: 999rpx;
@@ -166,12 +194,23 @@
   margin-top: 18rpx;
 }
 
+.compact-planner .progress-row {
+  gap: 8rpx;
+  margin-top: 12rpx;
+}
+
 .progress-step {
   min-width: 0;
   padding: 12rpx 8rpx;
   border-radius: 20rpx;
   background: rgba(248, 250, 252, 0.9);
   text-align: center;
+}
+
+.compact-planner .progress-step {
+  min-height: 80rpx;
+  padding: 10rpx 6rpx;
+  border-radius: 18rpx;
 }
 
 .progress-step.done {
@@ -195,6 +234,12 @@
   font-weight: 900;
 }
 
+.compact-planner .progress-dot {
+  width: 34rpx;
+  height: 34rpx;
+  font-size: 18rpx;
+}
+
 .progress-step.done .progress-dot {
   background: #2563eb;
   color: #ffffff;
@@ -212,6 +257,11 @@
   font-weight: 850;
 }
 
+.compact-planner .progress-label {
+  margin-top: 6rpx;
+  font-size: 20rpx;
+}
+
 .progress-value {
   margin-top: 4rpx;
   overflow: hidden;
@@ -219,6 +269,11 @@
   font-size: 19rpx;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.compact-planner .progress-value {
+  margin-top: 2rpx;
+  font-size: 18rpx;
 }
 
 .summary-chips {
