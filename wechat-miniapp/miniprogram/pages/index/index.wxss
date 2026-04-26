@@ -460,7 +460,7 @@
 
 .result-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 20rpx;
 }
@@ -473,10 +473,18 @@
   line-height: 1.35;
 }
 
+.result-subtitle {
+  margin-top: 8rpx;
+  color: #667085;
+  font-size: 23rpx;
+  line-height: 1.45;
+}
+
 .copy-button {
   display: flex;
   min-width: 112rpx;
   min-height: 68rpx;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-radius: 22rpx;
@@ -512,12 +520,45 @@
 
 .prompt-box {
   margin-top: 18rpx;
+  max-height: 560rpx;
+  min-height: 260rpx;
   padding: 22rpx;
   border: 1rpx solid #e4e7ec;
   border-radius: 24rpx;
-  background: #f8fafc;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(248, 250, 252, 0.96)),
+    #f8fafc;
   color: #182230;
   font-size: 26rpx;
   line-height: 1.75;
   user-select: text;
+}
+
+.result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-top: 18rpx;
+}
+
+.copy-tip {
+  min-width: 0;
+  flex: 1;
+  color: #667085;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+.copy-wide-button {
+  display: flex;
+  min-width: 220rpx;
+  min-height: 74rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  background: #111827;
+  color: #ffffff;
+  font-size: 25rpx;
+  font-weight: 800;
 }

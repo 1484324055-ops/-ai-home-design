@@ -138,6 +138,7 @@
       <view>
         <text class="eyebrow">GENERATED</text>
         <view class="result-title">{{promptResult.title}}</view>
+        <view class="result-subtitle">优先复制中文版本，可直接粘贴到生图平台继续出图。</view>
       </view>
       <button class="copy-button" bindtap="copyPrompt">复制</button>
     </view>
@@ -159,9 +160,14 @@
       </button>
     </view>
 
-    <view class="prompt-box">
-      <text wx:if="{{activePromptTab === 'chinese'}}">{{promptResult.chinese}}</text>
-      <text wx:else>{{promptResult.english}}</text>
+    <scroll-view class="prompt-box" scroll-y="true">
+      <text user-select="true" wx:if="{{activePromptTab === 'chinese'}}">{{promptResult.chinese}}</text>
+      <text user-select="true" wx:else>{{promptResult.english}}</text>
+    </scroll-view>
+
+    <view class="result-footer">
+      <view class="copy-tip">长按文本也可以选择复制</view>
+      <button class="copy-wide-button" bindtap="copyPrompt">复制当前提示词</button>
     </view>
   </view>
 </view>
