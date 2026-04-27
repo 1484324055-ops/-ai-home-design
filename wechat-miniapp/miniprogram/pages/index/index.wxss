@@ -27,6 +27,40 @@ button::after {
   border: 0;
 }
 
+@keyframes result-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22rpx) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sheet-soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(24rpx);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-soft-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 .hero {
   display: flex;
   align-items: center;
@@ -126,6 +160,7 @@ button::after {
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
 .quick-button.accent {
@@ -136,6 +171,10 @@ button::after {
 
 .quick-button::after {
   border: 0;
+}
+
+.quick-button:active {
+  transform: scale(0.97);
 }
 
 .planner-card {
@@ -199,6 +238,11 @@ button::after {
   padding: 0 24rpx;
   background: transparent;
   text-align: left;
+  transition: transform 140ms ease, background 180ms ease;
+}
+
+.advanced-toggle:active {
+  transform: scale(0.985);
 }
 
 .advanced-toggle-copy {
@@ -290,6 +334,7 @@ button::after {
 
 .advanced-body {
   padding: 0 18rpx 18rpx;
+  animation: sheet-soft-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .advanced-group {
@@ -337,6 +382,11 @@ button::after {
   font-weight: 800;
   line-height: 1.15;
   text-align: center;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.advanced-option:active {
+  transform: scale(0.98);
 }
 
 .advanced-toggle::after,
@@ -477,6 +527,7 @@ button::after {
   height: 100%;
   border-radius: 999rpx;
   background: linear-gradient(90deg, #2563eb, #0ea5e9);
+  transition: width 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .progress-row {
@@ -619,6 +670,10 @@ button::after {
   box-shadow: 0 18rpx 50rpx rgba(16, 24, 40, 0.05);
 }
 
+.result-panel.result-entering {
+  animation: result-rise 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .disabled-panel {
   opacity: 0.55;
 }
@@ -698,6 +753,7 @@ button::after {
   background: rgba(255, 255, 255, 0.96);
   text-align: left;
   line-height: normal;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
 .space-option {
@@ -838,6 +894,11 @@ button::after {
   border-color: #2563eb;
   background: #eff6ff;
   box-shadow: 0 14rpx 32rpx rgba(37, 99, 235, 0.12);
+  transform: translateY(-1rpx);
+}
+
+.option-card:active {
+  transform: scale(0.98);
 }
 
 .selected .option-mark {
@@ -1013,6 +1074,7 @@ button::after {
   border-radius: 28rpx;
   font-size: 30rpx;
   font-weight: 800;
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .primary-button {
@@ -1031,6 +1093,15 @@ button::after {
 
 .button-disabled {
   opacity: 0.45;
+}
+
+.primary-button:active,
+.secondary-button:active {
+  transform: scale(0.98);
+}
+
+.button-disabled:active {
+  transform: none;
 }
 
 .result-header {
@@ -1074,6 +1145,11 @@ button::after {
   color: #ffffff;
   font-size: 24rpx;
   font-weight: 800;
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.copy-button:active {
+  transform: scale(0.96);
 }
 
 .tab-row {
@@ -1093,6 +1169,11 @@ button::after {
   color: #667085;
   font-size: 24rpx;
   font-weight: 700;
+  transition: transform 140ms ease, background 180ms ease, color 180ms ease;
+}
+
+.tab:active {
+  transform: scale(0.97);
 }
 
 .active-tab {
@@ -1149,6 +1230,13 @@ button::after {
   overflow: hidden;
   text-align: center;
   white-space: nowrap;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.favorite-button:active,
+.edit-prompt-button:active,
+.copy-wide-button:active {
+  transform: scale(0.97);
 }
 
 .favorite-button {
@@ -1182,6 +1270,7 @@ button::after {
   align-items: stretch;
   justify-content: center;
   background: #f8fafc;
+  animation: fade-soft-in 180ms ease both;
 }
 
 .editor-sheet {
@@ -1198,6 +1287,7 @@ button::after {
     radial-gradient(circle at 100% 18%, rgba(14, 165, 233, 0.1), transparent 32%),
     #ffffff;
   box-shadow: none;
+  animation: sheet-soft-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .editor-head {
@@ -1293,6 +1383,27 @@ button::after {
   border-radius: 24rpx;
   font-size: 27rpx;
   font-weight: 850;
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.editor-close,
+.feedback-close,
+.wechat-profile-button,
+.feedback-secondary,
+.feedback-primary,
+.platform-card {
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.editor-close:active,
+.editor-secondary:active,
+.editor-primary:active,
+.feedback-close:active,
+.wechat-profile-button:active,
+.feedback-secondary:active,
+.feedback-primary:active,
+.platform-card:active {
+  transform: scale(0.97);
 }
 
 .editor-secondary {
@@ -1315,6 +1426,7 @@ button::after {
   align-items: flex-end;
   justify-content: center;
   background: rgba(15, 23, 42, 0.42);
+  animation: fade-soft-in 180ms ease both;
 }
 
 .feedback-sheet {
@@ -1326,6 +1438,7 @@ button::after {
     radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.12), transparent 36%),
     #ffffff;
   box-shadow: 0 -24rpx 70rpx rgba(15, 23, 42, 0.22);
+  animation: sheet-soft-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .feedback-head {
@@ -1450,6 +1563,7 @@ button::after {
   border-radius: 24rpx;
   font-size: 27rpx;
   font-weight: 850;
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .feedback-secondary {

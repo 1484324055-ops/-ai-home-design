@@ -184,13 +184,13 @@
     </button>
   </view>
 
-  <view wx:if="{{results.length}}" class="result-panel">
+  <view wx:if="{{results.length}}" class="result-panel {{resultMotionClass}}">
     <view class="result-top">
       <view>
         <text class="eyebrow">批量结果</text>
         <view class="result-title">已生成 {{results.length}} 条提示词</view>
       </view>
-      <button class="copy-all-button" bindtap="copyAll">复制全部</button>
+      <button class="copy-all-button" bindtap="copyAll">{{copyAllText}}</button>
     </view>
 
     <view class="result-list">
@@ -200,7 +200,7 @@
             <view class="record-title">{{index + 1}}. {{item.title}}</view>
             <view class="record-sub">{{item.spaceName}} · {{item.cabinetName}}</view>
           </view>
-          <button class="copy-one-button" data-id="{{item.id}}" bindtap="copyOne">复制</button>
+          <button class="copy-one-button" data-id="{{item.id}}" bindtap="copyOne">{{copiedResultId === item.id ? '已复制' : '复制'}}</button>
         </view>
         <view class="prompt-preview">{{item.chinese}}</view>
       </view>

@@ -26,6 +26,30 @@ button::after {
   border: 0;
 }
 
+@keyframes result-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22rpx) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sheet-soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(18rpx);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero {
   display: flex;
   align-items: center;
@@ -136,6 +160,11 @@ button::after {
   padding: 0 24rpx;
   background: transparent;
   text-align: left;
+  transition: transform 140ms ease, background 180ms ease;
+}
+
+.advanced-toggle:active {
+  transform: scale(0.985);
 }
 
 .advanced-toggle-copy {
@@ -227,6 +256,7 @@ button::after {
 
 .advanced-body {
   padding: 0 18rpx 18rpx;
+  animation: sheet-soft-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .advanced-group {
@@ -274,6 +304,11 @@ button::after {
   font-weight: 800;
   line-height: 1.15;
   text-align: center;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.advanced-option:active {
+  transform: scale(0.98);
 }
 
 .advanced-toggle::after,
@@ -435,6 +470,11 @@ button::after {
   overflow: hidden;
   text-align: left;
   line-height: normal;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.chip-card:active {
+  transform: scale(0.985);
 }
 
 .chip-card::after {
@@ -531,6 +571,12 @@ button::after {
   color: #475467;
   font-size: 22rpx;
   font-weight: 800;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.mini-button:active,
+.small-toggle:active {
+  transform: scale(0.98);
 }
 
 .mini-button {
@@ -559,6 +605,7 @@ button::after {
   border-radius: 30rpx;
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 12rpx 32rpx rgba(16, 24, 40, 0.04);
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
 .space-row.active {
@@ -584,6 +631,11 @@ button::after {
   border-radius: 24rpx;
   background: #f8fafc;
   text-align: left;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.space-row-head:active {
+  transform: scale(0.985);
 }
 
 .space-row-head::after,
@@ -861,6 +913,11 @@ button::after {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: transform 140ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+}
+
+.cabinet-card:active {
+  transform: scale(0.98);
 }
 
 .cabinet-card.matrix-cabinet {
@@ -945,6 +1002,7 @@ button::after {
   border-radius: 28rpx;
   font-size: 30rpx;
   font-weight: 900;
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .primary-button {
@@ -965,6 +1023,19 @@ button::after {
   opacity: 0.45;
 }
 
+.primary-button:active,
+.secondary-button:active {
+  transform: scale(0.98);
+}
+
+.button-disabled:active {
+  transform: none;
+}
+
+.result-panel.result-entering {
+  animation: result-rise 280ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .result-title {
   margin-top: 8rpx;
   color: #101828;
@@ -983,6 +1054,12 @@ button::after {
   color: #ffffff;
   font-size: 24rpx;
   font-weight: 850;
+  transition: transform 140ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.copy-all-button:active,
+.copy-one-button:active {
+  transform: scale(0.96);
 }
 
 .copy-all-button {

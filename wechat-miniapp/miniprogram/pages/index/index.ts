@@ -201,6 +201,9 @@ Page({
     isPromptEditorOpen: false,
     editChinese: "",
     editEnglish: "",
+    copyButtonText: "复制",
+    copyWideButtonText: "复制当前提示词",
+    resultMotionClass: "",
     isFeedbackOpen: false,
     feedbackText: "",
     feedbackContact: "",
@@ -652,8 +655,12 @@ Page({
       promptResult,
       activePromptTab: "chinese",
       lastGeneratedRecord,
-      isFavoriteCurrent: false
+      isFavoriteCurrent: false,
+      copyButtonText: "复制",
+      copyWideButtonText: "复制当前提示词",
+      resultMotionClass: "result-entering"
     });
+    setTimeout(() => this.setData({ resultMotionClass: "" }), 320);
     this.persistCurrentSelection();
 
     wx.showToast({
@@ -713,8 +720,12 @@ Page({
       },
       activePromptTab: "chinese",
       lastGeneratedRecord: record,
-      isFavoriteCurrent: Boolean(record.isFavorite)
+      isFavoriteCurrent: Boolean(record.isFavorite),
+      copyButtonText: "复制",
+      copyWideButtonText: "复制当前提示词",
+      resultMotionClass: "result-entering"
     });
+    setTimeout(() => this.setData({ resultMotionClass: "" }), 320);
     this.refreshDerivedOptions();
     this.persistCurrentSelection();
   },
@@ -730,6 +741,16 @@ Page({
     wx.setClipboardData({
       data: text,
       success: () => {
+        this.setData({
+          copyButtonText: "已复制",
+          copyWideButtonText: "已复制"
+        });
+        setTimeout(() => {
+          this.setData({
+            copyButtonText: "复制",
+            copyWideButtonText: "复制当前提示词"
+          });
+        }, 1400);
         wx.showToast({
           title: "已复制",
           icon: "success"
@@ -754,7 +775,10 @@ Page({
       isAdvancedOpen: false,
       isPromptEditorOpen: false,
       editChinese: "",
-      editEnglish: ""
+      editEnglish: "",
+      copyButtonText: "复制",
+      copyWideButtonText: "复制当前提示词",
+      resultMotionClass: ""
     });
     wx.removeStorageSync(LAST_SELECTION_KEY);
     this.refreshDerivedOptions();

@@ -224,14 +224,14 @@
     </button>
   </view>
 
-  <view id="result" wx:if="{{promptResult}}" class="result-panel">
+  <view id="result" wx:if="{{promptResult}}" class="result-panel {{resultMotionClass}}">
     <view class="result-header">
       <view class="result-copy">
         <text class="eyebrow">生成结果</text>
         <view class="result-title">{{promptResult.title}}</view>
         <view class="result-subtitle">复制中文提示词，粘贴到生图平台继续出图。</view>
       </view>
-      <view class="copy-button" bindtap="copyPrompt">复制</view>
+      <view class="copy-button" bindtap="copyPrompt">{{copyButtonText}}</view>
     </view>
 
     <view class="tab-row">
@@ -263,7 +263,7 @@
           {{isFavoriteCurrent ? '已收藏' : '收藏常用'}}
         </view>
         <view class="edit-prompt-button" bindtap="openPromptEditor">编辑提示词</view>
-        <view class="copy-wide-button" bindtap="copyPrompt">复制当前提示词</view>
+        <view class="copy-wide-button" bindtap="copyPrompt">{{copyWideButtonText}}</view>
       </view>
     </view>
 

@@ -105,7 +105,10 @@ Page({
     isReady: false,
     isLoadingAssets: true,
     assetMessage: "",
-    isAdvancedOpen: false
+    isAdvancedOpen: false,
+    copyAllText: "复制全部",
+    copiedResultId: "",
+    resultMotionClass: ""
   },
 
   async onLoad() {
@@ -183,7 +186,10 @@ Page({
     this.setData({
       selectedStyleId: id,
       selectedMaterialId: "",
-      results: []
+      results: [],
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   },
@@ -192,7 +198,10 @@ Page({
     const id = event.currentTarget.dataset.id as string;
     this.setData({
       selectedMaterialId: id,
-      results: []
+      results: [],
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   },
@@ -238,13 +247,19 @@ Page({
           ...selectedCabinetIdsBySpace,
           [id]: []
         },
-        results: []
+        results: [],
+        copyAllText: "复制全部",
+        copiedResultId: "",
+        resultMotionClass: ""
       });
     } else {
       this.setData({
         selectedSpaceIds: [...selectedSpaceIds, id],
         selectedCabinetIdsBySpace,
-        results: []
+        results: [],
+        copyAllText: "复制全部",
+        copiedResultId: "",
+        resultMotionClass: ""
       });
     }
 
@@ -261,7 +276,10 @@ Page({
     this.setData({
       selectedSpaceIds: library.spaces.map((space) => space.id),
       selectedCabinetIdsBySpace,
-      results: []
+      results: [],
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   },
@@ -270,7 +288,10 @@ Page({
     this.setData({
       selectedSpaceIds: [],
       selectedCabinetIdsBySpace: {},
-      results: []
+      results: [],
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   },
@@ -299,7 +320,10 @@ Page({
     this.setData({
       selectedSpaceIds,
       selectedCabinetIdsBySpace,
-      results: []
+      results: [],
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   },
@@ -327,7 +351,10 @@ Page({
     this.setData({
       selectedSpaceIds,
       selectedCabinetIdsBySpace,
-      results: []
+      results: [],
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   },
@@ -358,7 +385,13 @@ Page({
       };
     });
 
-    this.setData({ results });
+    this.setData({
+      results,
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: "result-entering"
+    });
+    setTimeout(() => this.setData({ resultMotionClass: "" }), 320);
 
     wx.showToast({
       title: (this.data.comboCount as number) > MAX_BATCH_RESULTS ? "已生成前60条" : "批量生成完成",
@@ -420,7 +453,11 @@ Page({
 
     wx.setClipboardData({
       data: record.chinese,
-      success: () => wx.showToast({ title: "已复制", icon: "success" })
+      success: () => {
+        this.setData({ copiedResultId: id });
+        setTimeout(() => this.setData({ copiedResultId: "" }), 1400);
+        wx.showToast({ title: "已复制", icon: "success" });
+      }
     });
   },
 
@@ -433,7 +470,11 @@ Page({
 
     wx.setClipboardData({
       data: results.map((item, index) => `${index + 1}. ${item.title}\n${item.chinese}`).join("\n\n---\n\n"),
-      success: () => wx.showToast({ title: "已复制全部", icon: "success" })
+      success: () => {
+        this.setData({ copyAllText: "已复制" });
+        setTimeout(() => this.setData({ copyAllText: "复制全部" }), 1400);
+        wx.showToast({ title: "已复制全部", icon: "success" });
+      }
     });
   },
 
@@ -447,7 +488,10 @@ Page({
       selectedSpaceIds: [],
       selectedCabinetIdsBySpace: {},
       results: [],
-      isAdvancedOpen: false
+      isAdvancedOpen: false,
+      copyAllText: "复制全部",
+      copiedResultId: "",
+      resultMotionClass: ""
     });
     this.refreshViewState();
   }
