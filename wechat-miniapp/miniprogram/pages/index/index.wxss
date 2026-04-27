@@ -706,24 +706,24 @@ button::after {
 }
 
 .compact-space-card {
-  min-height: 82rpx;
-  gap: 8rpx;
-  padding: 12rpx 10rpx;
+  min-height: 96rpx;
+  gap: 12rpx;
+  padding: 16rpx 12rpx;
   border-radius: 22rpx;
 }
 
 .compact-space-card .option-mark {
-  width: 40rpx;
-  height: 40rpx;
-  border-radius: 13rpx;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 18rpx;
 }
 
 .compact-space-card .option-emoji {
-  font-size: 22rpx;
+  font-size: 30rpx;
 }
 
 .compact-space-card .option-name {
-  font-size: 25rpx;
+  font-size: 28rpx;
   font-weight: 900;
   line-height: 1.1;
 }
