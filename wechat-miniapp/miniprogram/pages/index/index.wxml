@@ -220,7 +220,7 @@
   <view class="action-bar">
     <button class="secondary-button" bindtap="resetAll">重置</button>
     <button class="primary-button {{isReady ? '' : 'button-disabled'}}" bindtap="generatePrompt">
-      生成提示词
+      {{generateButtonText}}
     </button>
   </view>
 

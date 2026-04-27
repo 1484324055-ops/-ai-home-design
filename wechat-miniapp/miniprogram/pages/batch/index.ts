@@ -108,6 +108,7 @@ Page({
     isAdvancedOpen: false,
     copyAllText: "复制全部",
     copiedResultId: "",
+    batchButtonText: "生成 0 条",
     resultMotionClass: ""
   },
 
@@ -172,7 +173,8 @@ Page({
       spaceCards,
       selectedSpaceGroups,
       comboCount,
-      isReady
+      isReady,
+      batchButtonText: `生成 ${comboCount} 条`
     });
   },
 
@@ -210,6 +212,16 @@ Page({
     this.setData({
       isAdvancedOpen: !this.data.isAdvancedOpen
     });
+  },
+
+  scrollToBatchResult() {
+    setTimeout(() => {
+      wx.pageScrollTo({
+        selector: "#batchResult",
+        duration: 320,
+        offsetTop: 24
+      });
+    }, 80);
   },
 
   selectResidenceType(event: WechatMiniprogram.TouchEvent) {
@@ -372,6 +384,8 @@ Page({
       return;
     }
 
+    this.setData({ batchButtonText: "生成中..." });
+
     const combos = this.buildSelections(style, material).slice(0, MAX_BATCH_RESULTS);
     const results: BatchPromptItem[] = combos.map((selection) => {
       const promptResult = generatePrompts(selection);
@@ -389,9 +403,16 @@ Page({
       results,
       copyAllText: "复制全部",
       copiedResultId: "",
+      batchButtonText: `已生成 ${results.length} 条`,
       resultMotionClass: "result-entering"
     });
+    this.scrollToBatchResult();
     setTimeout(() => this.setData({ resultMotionClass: "" }), 320);
+    setTimeout(() => {
+      if ((this.data.results as BatchPromptItem[]).length) {
+        this.setData({ batchButtonText: `生成 ${this.data.comboCount as number} 条` });
+      }
+    }, 1800);
 
     wx.showToast({
       title: (this.data.comboCount as number) > MAX_BATCH_RESULTS ? "已生成前60条" : "批量生成完成",
@@ -491,6 +512,7 @@ Page({
       isAdvancedOpen: false,
       copyAllText: "复制全部",
       copiedResultId: "",
+      batchButtonText: "生成 0 条",
       resultMotionClass: ""
     });
     this.refreshViewState();

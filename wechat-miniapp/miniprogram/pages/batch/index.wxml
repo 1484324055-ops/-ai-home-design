@@ -180,11 +180,11 @@
   <view class="action-bar">
     <button class="secondary-button" bindtap="resetBatch">重置</button>
     <button class="primary-button {{isReady ? '' : 'button-disabled'}}" bindtap="generateBatch">
-      生成 {{comboCount}} 条
+      {{batchButtonText}}
     </button>
   </view>
 
-  <view wx:if="{{results.length}}" class="result-panel {{resultMotionClass}}">
+  <view id="batchResult" wx:if="{{results.length}}" class="result-panel {{resultMotionClass}}">
     <view class="result-top">
       <view>
         <text class="eyebrow">批量结果</text>

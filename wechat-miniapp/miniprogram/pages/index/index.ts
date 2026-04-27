@@ -203,6 +203,7 @@ Page({
     editEnglish: "",
     copyButtonText: "复制",
     copyWideButtonText: "复制当前提示词",
+    generateButtonText: "生成提示词",
     resultMotionClass: "",
     isFeedbackOpen: false,
     feedbackText: "",
@@ -469,6 +470,16 @@ Page({
     });
   },
 
+  scrollToResult() {
+    setTimeout(() => {
+      wx.pageScrollTo({
+        selector: "#result",
+        duration: 320,
+        offsetTop: 24
+      });
+    }, 80);
+  },
+
   openPromptEditor() {
     const promptResult = this.data.promptResult as PromptResult | null;
 
@@ -649,6 +660,8 @@ Page({
       return;
     }
 
+    this.setData({ generateButtonText: "生成中..." });
+
     const promptResult = generatePrompts(selection);
     const lastGeneratedRecord = saveLocalHistory(selection, promptResult);
     this.setData({
@@ -658,9 +671,16 @@ Page({
       isFavoriteCurrent: false,
       copyButtonText: "复制",
       copyWideButtonText: "复制当前提示词",
+      generateButtonText: "已生成，查看下方",
       resultMotionClass: "result-entering"
     });
+    this.scrollToResult();
     setTimeout(() => this.setData({ resultMotionClass: "" }), 320);
+    setTimeout(() => {
+      if (this.data.promptResult) {
+        this.setData({ generateButtonText: "生成提示词" });
+      }
+    }, 1800);
     this.persistCurrentSelection();
 
     wx.showToast({
@@ -723,6 +743,7 @@ Page({
       isFavoriteCurrent: Boolean(record.isFavorite),
       copyButtonText: "复制",
       copyWideButtonText: "复制当前提示词",
+      generateButtonText: "生成提示词",
       resultMotionClass: "result-entering"
     });
     setTimeout(() => this.setData({ resultMotionClass: "" }), 320);
@@ -778,6 +799,7 @@ Page({
       editEnglish: "",
       copyButtonText: "复制",
       copyWideButtonText: "复制当前提示词",
+      generateButtonText: "生成提示词",
       resultMotionClass: ""
     });
     wx.removeStorageSync(LAST_SELECTION_KEY);
