@@ -32,7 +32,7 @@ button::after {
   align-items: center;
   justify-content: space-between;
   gap: 14rpx;
-  padding: 18rpx 0 14rpx;
+  padding: 10rpx 0 14rpx;
 }
 
 .hero > view:first-child {
@@ -48,20 +48,20 @@ button::after {
 }
 
 .title {
-  margin-top: 8rpx;
+  margin-top: 0;
   color: #101828;
-  font-size: 34rpx;
+  font-size: 33rpx;
   font-weight: 900;
-  line-height: 1.2;
+  line-height: 1.18;
   letter-spacing: -0.5rpx;
 }
 
 .subtitle {
-  margin-top: 10rpx;
+  margin-top: 8rpx;
   max-width: 470rpx;
   color: #667085;
-  font-size: 23rpx;
-  line-height: 1.45;
+  font-size: 22rpx;
+  line-height: 1.4;
 }
 
 .hero-card {
@@ -672,7 +672,7 @@ button::after {
 
 .compact-space-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12rpx;
+  gap: 14rpx;
 }
 
 .regular-space-grid {
@@ -707,25 +707,6 @@ button::after {
 
 .compact-space-card {
   min-height: 96rpx;
-  gap: 12rpx;
-  padding: 16rpx 12rpx;
-  border-radius: 22rpx;
-}
-
-.compact-space-card .option-mark {
-  width: 56rpx;
-  height: 56rpx;
-  border-radius: 18rpx;
-}
-
-.compact-space-card .option-emoji {
-  font-size: 30rpx;
-}
-
-.compact-space-card .option-name {
-  font-size: 28rpx;
-  font-weight: 900;
-  line-height: 1.1;
 }
 
 .regular-space-card {

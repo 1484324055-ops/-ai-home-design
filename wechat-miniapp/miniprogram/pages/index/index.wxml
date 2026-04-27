@@ -1,7 +1,6 @@
 <view class="page safe-bottom">
   <view class="hero">
     <view>
-      <text class="eyebrow">提示词工作台</text>
       <view class="title">全屋定制 AI 效果图 Prompt 生成器</view>
       <view class="subtitle">选择空间、柜体、风格和材质，快速生成可复制的生图提示词。</view>
     </view>
