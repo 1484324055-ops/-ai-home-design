@@ -320,23 +320,10 @@
         bindinput="onFeedbackTextInput"
       />
 
-      <input
-        class="feedback-input"
-        value="{{feedbackContact}}"
-        placeholder="联系方式（选填）"
-        bindinput="onFeedbackContactInput"
-      />
-
-      <view class="wechat-profile-card">
-        <view class="wechat-profile-copy">
-          <view class="wechat-profile-title">微信身份</view>
-          <view class="wechat-profile-desc">
-            {{wechatProfile ? wechatProfile.nickName : '授权后，反馈会带上你的微信昵称，方便我知道是谁提的建议。'}}
-          </view>
-        </view>
-        <button class="wechat-profile-button" bindtap="requestWechatProfile">
-          {{wechatProfile ? '已授权' : '微信授权'}}
-        </button>
+      <view class="privacy-note">
+        <text>当前反馈默认匿名提交，仅用于改进小程序。请勿填写手机号、微信号等敏感信息。提交即代表你已阅读</text>
+        <text class="privacy-link" bindtap="goPrivacy">《隐私说明》</text>
+        <text>。</text>
       </view>
 
       <view class="feedback-actions">

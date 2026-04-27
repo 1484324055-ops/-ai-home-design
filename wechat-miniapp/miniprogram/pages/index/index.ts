@@ -33,11 +33,6 @@ type TextareaInputEvent = WechatMiniprogram.BaseEvent & {
   };
 };
 
-type WechatProfile = {
-  nickName: string;
-  avatarUrl: string;
-};
-
 type LastSelectionState = {
   selectedSpaceId?: string;
   selectedCabinetId?: string;
@@ -206,9 +201,7 @@ Page({
     generateButtonText: "生成提示词",
     resultMotionClass: "",
     isFeedbackOpen: false,
-    feedbackText: "",
-    feedbackContact: "",
-    wechatProfile: null as WechatProfile | null
+    feedbackText: ""
   },
 
   async onLoad() {
@@ -518,44 +511,6 @@ Page({
     });
   },
 
-  onFeedbackContactInput(event: TextareaInputEvent) {
-    this.setData({
-      feedbackContact: event.detail.value
-    });
-  },
-
-  requestWechatProfile() {
-    if (!wx.getUserProfile) {
-      wx.showToast({
-        title: "当前微信版本暂不支持",
-        icon: "none"
-      });
-      return;
-    }
-
-    wx.getUserProfile({
-      desc: "用于标记反馈来源",
-      success: (res) => {
-        this.setData({
-          wechatProfile: {
-            nickName: res.userInfo.nickName,
-            avatarUrl: res.userInfo.avatarUrl
-          }
-        });
-        wx.showToast({
-          title: "已绑定微信身份",
-          icon: "success"
-        });
-      },
-      fail: () => {
-        wx.showToast({
-          title: "未授权也可以提交",
-          icon: "none"
-        });
-      }
-    });
-  },
-
   submitFeedback() {
     const content = this.data.feedbackText.trim();
 
@@ -569,15 +524,12 @@ Page({
 
     saveMiniappFeedback({
       content,
-      contact: this.data.feedbackContact.trim(),
-      page: "home",
-      user: this.data.wechatProfile || undefined
+      page: "home"
     });
 
     this.setData({
       isFeedbackOpen: false,
-      feedbackText: "",
-      feedbackContact: ""
+      feedbackText: ""
     });
 
     wx.showToast({
@@ -812,6 +764,10 @@ Page({
 
   goHistory() {
     wx.navigateTo({ url: "/pages/history/index" });
+  },
+
+  goPrivacy() {
+    wx.navigateTo({ url: "/pages/privacy/index" });
   },
 
   goProfile() {

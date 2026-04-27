@@ -1388,7 +1388,6 @@ button::after {
 
 .editor-close,
 .feedback-close,
-.wechat-profile-button,
 .feedback-secondary,
 .feedback-primary,
 .platform-card {
@@ -1399,7 +1398,6 @@ button::after {
 .editor-secondary:active,
 .editor-primary:active,
 .feedback-close:active,
-.wechat-profile-button:active,
 .feedback-secondary:active,
 .feedback-primary:active,
 .platform-card:active {
@@ -1475,8 +1473,7 @@ button::after {
   line-height: 1;
 }
 
-.feedback-textarea,
-.feedback-input {
+.feedback-textarea {
   width: 100%;
   box-sizing: border-box;
   border: 1rpx solid #dbe2ea;
@@ -1493,57 +1490,19 @@ button::after {
   line-height: 1.6;
 }
 
-.feedback-input {
-  height: 82rpx;
-  margin-top: 16rpx;
-  padding: 0 20rpx;
-}
-
-.wechat-profile-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18rpx;
+.privacy-note {
   margin-top: 16rpx;
   padding: 18rpx;
-  border: 1rpx solid #e4e7ec;
+  border: 1rpx solid #dbeafe;
   border-radius: 24rpx;
-  background: #ffffff;
-}
-
-.wechat-profile-copy {
-  min-width: 0;
-  flex: 1;
-}
-
-.wechat-profile-title {
-  color: #101828;
-  font-size: 25rpx;
-  font-weight: 850;
-}
-
-.wechat-profile-desc {
-  display: -webkit-box;
-  margin-top: 6rpx;
-  overflow: hidden;
-  color: #667085;
+  background: rgba(239, 246, 255, 0.86);
+  color: #475467;
   font-size: 22rpx;
-  line-height: 1.35;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  line-height: 1.55;
 }
 
-.wechat-profile-button {
-  display: flex;
-  min-width: 136rpx;
-  min-height: 64rpx;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999rpx;
-  background: #eff6ff;
+.privacy-link {
   color: #2563eb;
-  font-size: 22rpx;
   font-weight: 850;
 }
 
@@ -1579,7 +1538,6 @@ button::after {
 }
 
 .feedback-close::after,
-.wechat-profile-button::after,
 .feedback-secondary::after,
 .feedback-primary::after {
   border: 0;

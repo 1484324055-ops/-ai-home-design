@@ -3,19 +3,14 @@ const FEEDBACK_STORAGE_KEY = "ai_home_design_feedback";
 export type MiniappFeedback = {
   id: string;
   content: string;
-  contact?: string;
   page: "home" | "batch" | "history" | "profile";
   createdAt: string;
-  user?: {
-    nickName: string;
-    avatarUrl: string;
-  };
 };
 
 const readFeedback = (): MiniappFeedback[] => {
   try {
     return (wx.getStorageSync(FEEDBACK_STORAGE_KEY) as MiniappFeedback[]) || [];
-  } catch (error) {
+  } catch {
     return [];
   }
 };

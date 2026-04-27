@@ -1,0 +1,31 @@
+<view class="privacy-page">
+  <view class="hero-card">
+    <text class="eyebrow">PRIVACY</text>
+    <view class="title">隐私说明</view>
+    <view class="subtitle">我们尽量少收集信息。当前版本的反馈功能默认匿名提交，不需要微信昵称、头像或手机号。</view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">我们会收集什么</view>
+    <view class="section-text">你主动填写的反馈建议内容，例如功能建议、问题描述、希望新增的空间、柜体、风格或材质。</view>
+    <view class="section-text">本小程序会在你的设备本地保存生成历史和反馈记录，用于你自己查看和继续使用。</view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">我们暂时不主动获取什么</view>
+    <view class="section-text">当前版本不会主动获取你的微信昵称、头像、手机号、地理位置、通讯录、相册等个人信息。</view>
+    <view class="section-text">建议反馈也不要求微信授权。如果你在反馈内容里主动填写联系方式，请理解这会变成你主动提供的信息。</view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">信息用途</view>
+    <view class="section-text">反馈内容仅用于改进小程序体验，例如优化选项、补充资产库、修复页面问题和调整提示词生成效果。</view>
+    <view class="section-text">如果后续接入服务器、微信登录或用户身份识别，我们会先更新本说明，并按微信平台要求配置用户隐私保护指引。</view>
+  </view>
+
+  <view class="section-card">
+    <view class="section-title">你的建议</view>
+    <view class="section-text">提交反馈时，建议只写产品体验和功能建议，尽量不要填写手机号、微信号、住址等敏感信息。</view>
+    <view class="update-time">更新日期：2026-04-27</view>
+  </view>
+</view>

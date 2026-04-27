@@ -1,0 +1,66 @@
+.privacy-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 32rpx 28rpx 56rpx;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.16), transparent 32%),
+    linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
+}
+
+.hero-card,
+.section-card {
+  border: 1rpx solid rgba(226, 232, 240, 0.95);
+  border-radius: 32rpx;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 20rpx 60rpx rgba(15, 23, 42, 0.06);
+}
+
+.hero-card {
+  padding: 36rpx 32rpx;
+}
+
+.eyebrow {
+  color: #667085;
+  font-size: 20rpx;
+  font-weight: 900;
+  letter-spacing: 5rpx;
+}
+
+.title {
+  margin-top: 14rpx;
+  color: #101828;
+  font-size: 44rpx;
+  font-weight: 900;
+  letter-spacing: -1rpx;
+}
+
+.subtitle {
+  margin-top: 14rpx;
+  color: #475467;
+  font-size: 27rpx;
+  line-height: 1.65;
+}
+
+.section-card {
+  margin-top: 22rpx;
+  padding: 28rpx;
+}
+
+.section-title {
+  color: #101828;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.section-text {
+  margin-top: 14rpx;
+  color: #475467;
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.update-time {
+  margin-top: 20rpx;
+  color: #98a2b3;
+  font-size: 23rpx;
+}

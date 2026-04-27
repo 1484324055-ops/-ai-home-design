@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/batch/index",
     "pages/history/index",
+    "pages/privacy/index",
     "pages/profile/index"
   ],
   "window": {
