@@ -97,18 +97,18 @@ export default function AssetsPage() {
       return categoryItems.find((item) => item.enabled) ?? categoryItems[0] ?? null;
     };
 
-    const useDraftOrAsset = (category: AssetCategory, preferredIds: string[] = []) =>
+    const getDraftOrAsset = (category: AssetCategory, preferredIds: string[] = []) =>
       draft.category === category ? draft : findAsset(category, preferredIds);
 
-    const cabinetPreview = useDraftOrAsset("cabinet", ["sideboard"]);
-    const spacePreview = useDraftOrAsset(
+    const cabinetPreview = getDraftOrAsset("cabinet", ["sideboard"]);
+    const spacePreview = getDraftOrAsset(
       "space",
       draft.category === "cabinet" && draft.applicableSpaceIds.length > 0
         ? draft.applicableSpaceIds
         : ["dining-room"]
     );
-    const stylePreview = useDraftOrAsset("style", ["modern-minimalist"]);
-    const materialPreview = useDraftOrAsset(
+    const stylePreview = getDraftOrAsset("style", ["modern-minimalist"]);
+    const materialPreview = getDraftOrAsset(
       "material",
       draft.category === "style"
         ? assets
@@ -116,9 +116,9 @@ export default function AssetsPage() {
             .map((item) => item.id)
         : ["a-oak-white"]
     );
-    const residencePreview = useDraftOrAsset("residence", ["standard"]);
-    const cameraPreview = useDraftOrAsset("camera", ["wide-angle"]);
-    const lightingPreview = useDraftOrAsset("lighting", ["natural"]);
+    const residencePreview = getDraftOrAsset("residence", ["standard"]);
+    const cameraPreview = getDraftOrAsset("camera", ["wide-angle"]);
+    const lightingPreview = getDraftOrAsset("lighting", ["natural"]);
 
     if (
       !spacePreview ||

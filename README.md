@@ -1,106 +1,126 @@
 # AI Home Design
 
-AI Home Design 是一个面向全屋定制和室内设计场景的提示词生成网站。
+AI Home Design is an AI prompt generator for whole-house customization and interior design workflows.
 
-用户先注册登录，然后按照“空间 -> 柜体 -> 风格 -> 材质 -> 高级选项”的顺序完成选择，最后一键生成更自然、可直接用于生图的中英文提示词。
+It helps users choose a space, cabinet type, style, material package, and advanced rendering options, then generates natural Chinese and English prompts that can be copied into image-generation tools.
 
-## 当前功能
+The project includes:
 
-- 用户注册、登录、退出
-- 登录态保护，未登录用户不能直接进入主页面
-- 多级联动选择空间、柜体、风格和材质
-- 高级选项支持住宅类型、镜头、光影
-- 生成中英文正向提示词
-- 支持复制中文、英文和完整方案
-- 自动保存历史记录，支持收藏、载入、删除
-- 反馈建议入口，方便持续收集用户意见
-- 提供外部生图网站入口，方便直接跳转继续出图
-- 已部署到 Vercel，可在线访问
+- a Next.js web app
+- a WeChat Mini Program version
+- a Prisma/PostgreSQL backend
+- prompt assets for interior-design scenes
+- feedback and prompt-history workflows
 
-## 技术栈
+## Product Status
 
-- 前端：Next.js 16、React 19、TypeScript、Tailwind CSS
-- 后端：Next.js Route Handlers
-- 数据库：PostgreSQL（Neon）
-- ORM：Prisma
-- 认证：bcryptjs + jose（JWT）
-- 部署：Vercel
+- Web app: deployable on Vercel
+- WeChat Mini Program: first version implemented for prompt generation, copy, local history, batch generation, and privacy notice
+- Public product name: **栖案柜设灵感词**
 
-## 本地开发
+## Features
+
+- User registration, login, logout, and protected routes
+- Space, cabinet, style, and material selectors
+- Advanced options for residence type, camera angle, and lighting
+- Chinese and English prompt generation
+- Editable prompt result
+- Copy Chinese prompt, English prompt, or full solution
+- Prompt history, favorites, load, delete
+- Batch prompt generation
+- Feedback entry
+- External image-generation platform shortcuts
+- Mini Program local history and privacy-first feedback notes
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- Prisma
+- PostgreSQL, tested with Neon
+- bcryptjs + jose for authentication
+- Vercel deployment
+- WeChat Mini Program with TypeScript
+
+## Repository Structure
+
+```text
+app/                  Next.js app routes and API routes
+src/components/       UI components
+src/lib/              auth, session, data, history, prompt generation
+prisma/               database schema and migrations
+public/reference-images/
+                      reference-image assets
+wechat-miniapp/       WeChat Mini Program version
+```
+
+## Local Development
 
 ```bash
 npm install
 cp .env.example .env
+npx prisma migrate dev
 npm run dev
 ```
 
-默认开发地址：
+Default local URL:
 
 ```text
 http://localhost:3000
 ```
 
-## 环境变量
+## Environment Variables
 
-项目依赖两个核心环境变量：
+See [`.env.example`](.env.example).
 
-- `DATABASE_URL`
-  作用：连接 PostgreSQL 数据库
-- `JWT_SECRET`
-  作用：用于登录态签名，保证用户身份不被伪造
+Required:
 
-参考示例见 `.env.example`。
+- `DATABASE_URL`: PostgreSQL connection string
+- `JWT_SECRET`: long random string for signing login tokens
 
-## 上线流程
+Optional:
 
-这个项目的上线流程可以简单理解为：
+- `ADMIN_USERNAME`
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `SMTP_PASS`
+- `SMTP_FROM`
+- `FEEDBACK_NOTIFY_EMAIL`
 
-1. Open Code 负责把网站代码写出来
-2. 代码上传到 GitHub 仓库
-3. Vercel 从 GitHub 自动拉取代码并构建部署
-4. Neon 提供线上 PostgreSQL 数据库
-5. Vercel 通过环境变量连接 Neon
-6. 用户通过 Vercel 提供的网址在线使用网站
+## WeChat Mini Program
 
-## 项目结构
+Open `wechat-miniapp/` in WeChat DevTools.
 
-```text
-app/
-  api/                接口路由（注册、登录、用户、历史记录、反馈）
-  login/              登录页
-  register/           注册页
-  layout.tsx          全局布局
-  page.tsx            主页面
+See [`wechat-miniapp/README.md`](wechat-miniapp/README.md) for setup details.
 
-src/components/
-  common/             通用组件
-  feedback/           反馈入口组件
-  generator/          提示词生成、历史记录、生图入口相关组件
-  layout/             顶部栏、主题切换、用户菜单
+## Deployment
 
-src/lib/
-  auth.ts             JWT 和密码相关逻辑
-  data.ts             空间、柜体、风格、材质等静态数据
-  history.ts          历史记录转换逻辑
-  prisma.ts           Prisma 客户端
-  prompt-generator.ts 提示词组装逻辑
-  session.ts          登录态读取逻辑
+The recommended deployment path is:
 
-prisma/
-  schema.prisma       数据模型
-  migrations/         数据库迁移文件
-```
+1. Push the repository to GitHub.
+2. Import the repository into Vercel.
+3. Configure `DATABASE_URL` and `JWT_SECRET`.
+4. Use Neon or another PostgreSQL provider.
+5. Run Prisma migrations.
+6. Deploy.
 
-## 后续建议
+See [`DEPLOY.md`](DEPLOY.md) and [`VERCEL_DEPLOY.md`](VERCEL_DEPLOY.md).
 
-如果要继续把这个项目打磨成更完整的产品，建议优先做下面几项：
+## Roadmap
 
-- 继续优化移动端交互和排版
-- 增加更多平台适配的提示词格式
-- 加强账号安全和接口限流
-- 增加数据统计和后台管理能力
-- 支持导出方案或分享方案链接
+See [`ROADMAP.md`](ROADMAP.md).
 
-## 许可证
+## Contributing
 
-MIT
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Security
+
+See [`SECURITY.md`](SECURITY.md).
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
